@@ -26,22 +26,22 @@ export default function BlogDetail(){
                     <div className="col-12">
                         <div className="title-heading text-center">
                             <span className="badge bg-primary">{data?.tag ? data.tag : 'Jobnova'}</span>
-                            <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark mt-4">{data?.title ? data.title  : 'Using Banner Stands To Increase Trade Show Traffic'}</h5>
+                            <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark mt-4">{data?.title ? data.title  : 'Sử Dụng Banner Stands Để Tăng Lưu Lượng Truy Cập Tại Triển Lãm Thương Mại'}</h5>
 
                             <ul className="list-inline text-center mb-0">
                                 <li className="list-inline-item mx-4 mt-4">
-                                    <span className="text-white-50 d-block">Author</span>
+                                    <span className="text-white-50 d-block">Tác giả</span>
                                     <Link to="#" className="text-white title-dark">{data?.company ? data.company : 'Facebook'}</Link>
                                 </li>
 
                                 <li className="list-inline-item mx-4 mt-4">
-                                    <span className="text-white-50 d-block">Date</span>
-                                    <span className="text-white title-dark">{data?.date ? data.date : '19th June 2023'}</span>
+                                    <span className="text-white-50 d-block">Ngày</span>
+                                    <span className="text-white title-dark">{data?.date ? data.date : '19 tháng 6, 2023'}</span>
                                 </li>
 
                                 <li className="list-inline-item mx-4 mt-4">
-                                    <span className="text-white-50 d-block">Read Time</span>
-                                    <span className="text-white title-dark">{data?.time ? data.time : '8 min read'}</span>
+                                    <span className="text-white-50 d-block">Thời gian đọc</span>
+                                    <span className="text-white title-dark">{data?.time ? data.time : '8 phút đọc'}</span>
                                 </li>
                             </ul>
                         </div>
@@ -53,7 +53,7 @@ export default function BlogDetail(){
                         <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
                             <li className="breadcrumb-item"><Link to="/">Jobnova</Link></li>
                             <li className="breadcrumb-item"><Link to="/blogs">Blogs</Link></li>
-                            <li className="breadcrumb-item active" aria-current="page">Detail</li>
+                            <li className="breadcrumb-item active" aria-current="page">Chi Tiết</li>
                         </ul>
                     </nav>
                 </div>
@@ -75,22 +75,22 @@ export default function BlogDetail(){
                             <img src={data?.image ? data?.image : image1} className="img-fluid" alt=""/>
 
                             <div className="card-body">
-                                <p className="text-muted">The most well-known dummy text is the 'Lorem Ipsum', which is said to have originated in the 16th century. Lorem Ipsum is composed in a pseudo-Latin language which more or less corresponds to 'proper' Latin. It contains a series of real Latin words. This ancient dummy text is also incomprehensible, but it imitates the rhythm of most European languages in Latin script. The advantage of its Latin origin and the relative meaninglessness of Lorum Ipsum is that the text does not attract attention to itself or distract the viewer's attention from the layout.</p>
-                                <p className="text-muted">Thus, Lorem Ipsum has only limited suitability as a visual filler for German texts. If the fill text is intended to illustrate the characteristics of different typefaces, it sometimes makes sense to select texts containing the various letters and symbols specific to the output language.</p>
+                                <p className="text-muted">Văn bản giả nổi tiếng nhất là 'Lorem Ipsum', được cho là xuất hiện vào thế kỷ 16. Lorem Ipsum được viết bằng ngôn ngữ giả Latinh mà phần lớn tương ứng với tiếng Latinh 'đúng'. Nó chứa một loạt các từ Latinh thực sự. Văn bản giả cổ đại này cũng không thể hiểu được, nhưng nó bắt chước nhịp điệu của hầu hết các ngôn ngữ châu Âu trong chữ Latinh. Ưu điểm của nguồn gốc Latinh và tính chất vô nghĩa tương đối của Lorem Ipsum là văn bản không thu hút sự chú ý vào chính nó hoặc làm người xem mất tập trung khỏi bố cục.</p>
+                                <p className="text-muted">Vì vậy, Lorem Ipsum chỉ phù hợp có hạn như một chất làm đầy hình ảnh cho các văn bản tiếng Đức. Nếu văn bản điền được dự định minh họa các đặc điểm của các kiểu chữ khác nhau, đôi khi có ý nghĩa để chọn các văn bản chứa các chữ cái và ký hiệu khác nhau đặc trưng cho ngôn ngữ đầu ra.</p>
                             
-                                <blockquote className="text-center mx-auto blockquote"><i className="mdi mdi-format-quote-open mdi-48px text-muted opacity-2 d-block"></i> The man who comes back through the door in the wall will never be quite the same as the man who went out. <small className="d-block text-muted mt-2">- Jobnova Template</small></blockquote>
+                                <blockquote className="text-center mx-auto blockquote"><i className="mdi mdi-format-quote-open mdi-48px text-muted opacity-2 d-block"></i> Người đàn ông trở về qua cánh cửa trên tường sẽ không bao giờ giống như người đàn ông đã đi ra ngoài. <small className="d-block text-muted mt-2">- Mẫu Jobnova</small></blockquote>
                             
-                                <p className="text-muted">There is now an abundance of readable dummy texts. These are usually used when a text is required purely to fill a space. These alternatives to the classic Lorem Ipsum texts are often amusing and tell short, funny or nonsensical stories.</p>
+                                <p className="text-muted">Hiện tại có rất nhiều văn bản giả có thể đọc được. Chúng thường được sử dụng khi một văn bản cần thiết chỉ để lấp đầy không gian. Các lựa chọn thay thế cho các văn bản Lorem Ipsum cổ điển thường hài hước và kể những câu chuyện ngắn, hài hước hoặc vô nghĩa.</p>
                             
-                                <Link to="#" className="badge badge-link bg-primary">Minimal</Link>
-                                <Link to="#" className="badge badge-link bg-primary">Interior</Link>
-                                <Link to="#" className="badge badge-link bg-primary">Furniture</Link>
+                                <Link to="#" className="badge badge-link bg-primary">Tối Giản</Link>
+                                <Link to="#" className="badge badge-link bg-primary">Nội Thất</Link>
+                                <Link to="#" className="badge badge-link bg-primary">Nội Thất</Link>
                             </div>
                         </div>
 
                         <div className="card shadow rounded border-0 mt-4">
                             <div className="card-body">
-                                <h5 className="card-title mb-0">Comments :</h5>
+                                <h5 className="card-title mb-0">Bình Luận :</h5>
 
                                 <ul className="media-list list-unstyled mb-0">
                                     {commentsData.map((item,index)=>{
@@ -106,7 +106,7 @@ export default function BlogDetail(){
                                                         <small className="text-muted">{item.time}</small>
                                                     </div>
                                                 </div>
-                                                <Link to="#" className="text-muted"><i className="mdi mdi-reply"></i> Reply</Link>
+                                                <Link to="#" className="text-muted"><i className="mdi mdi-reply"></i> Trả lời</Link>
                                             </div>
                                             <div className="mt-3">
                                                 <p className="text-muted fst-italic p-3 bg-light rounded">{item.desc}</p>
@@ -120,34 +120,34 @@ export default function BlogDetail(){
 
                         <div className="card shadow rounded mt-4">
                             <div className="card-body">
-                                <h5 className="card-title mb-0">Leave A Comment :</h5>
+                                <h5 className="card-title mb-0">Để Lại Bình Luận :</h5>
 
                                 <form className="mt-4">
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="mb-3">
-                                                <label className="form-label">Your Comment</label>
-                                                <textarea id="message" placeholder="Your Comment" rows="5" name="message" className="form-control" required=""></textarea>
+                                                <label className="form-label">Bình Luận Của Bạn</label>
+                                                <textarea id="message" placeholder="Bình Luận Của Bạn" rows="5" name="message" className="form-control" required=""></textarea>
                                             </div>
                                         </div>
     
                                         <div className="col-lg-6">
                                             <div className="mb-3">
-                                                <label className="form-label">Name <span className="text-danger">*</span></label>
-                                                <input id="name" name="name" type="text" placeholder="Name" className="form-control" required=""/>
+                                                <label className="form-label">Tên <span className="text-danger">*</span></label>
+                                                <input id="name" name="name" type="text" placeholder="Tên" className="form-control" required=""/>
                                             </div>
                                         </div>
     
                                         <div className="col-lg-6">
                                             <div className="mb-3">
-                                                <label className="form-label">Your Email <span className="text-danger">*</span></label>
+                                                <label className="form-label">Email Của Bạn <span className="text-danger">*</span></label>
                                                 <input id="email" type="email" placeholder="Email" name="email" className="form-control" required=""/>
                                             </div>
                                         </div>
     
                                         <div className="col-md-12">
                                             <div className="send d-grid">
-                                                <button type="submit" className="btn btn-primary">Send Message</button>
+                                                <button type="submit" className="btn btn-primary">Gửi Tin Nhắn</button>
                                             </div>
                                         </div>
                                     </div>
