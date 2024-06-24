@@ -12,7 +12,7 @@ import api from '../../api/http'
 import '../../assets/css/eyes.css'
 export default function Login() {
     const navigate = useNavigate();
-    // useProtectRoute()
+
     const [showPassword, setShowPassword] = useState(false);
     //hien password
     const togglePasswordVisibility = () => {
@@ -29,6 +29,7 @@ export default function Login() {
             return api.post("reverify", formData);
         },
     });
+
 
     // doc phan event nhap vao
     const handleSubmit = (e) => {
@@ -50,7 +51,8 @@ export default function Login() {
                         { email: body.email },
                         {
                             onSuccess: () => {
-                                navigate(`/verify?email=${body.email}`);
+                                toast.success('Please check your email to verify your account!'); // Hiển thị thông báo
+                                navigate('/login');
                             },
                         }
                     );
@@ -98,7 +100,7 @@ export default function Login() {
                                     <span className="forgot-pass text-muted small mb-0"><Link to="/reset-password" className="text-muted">Forgot password ?</Link></span>
                                 </div>
 
-                                <button className="btn btn-primary w-100" type="submit">Sign in as Job Seeker</button>
+                                <button className="btn btn-primary w-100" type="submit">Sign in</button>
 
                                 <div className="col-12 text-center mt-3">
                                     <span><span className="text-muted me-2 small">Don't have an account ?</span> <Link to="/signup" className="text-dark fw-semibold small">Sign Up</Link></span>
