@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import bg1 from "../assets/images/hero/bg5.jpg";
 import company1 from "../assets/images/company/linkedin.png";
 import company2 from "../assets/images/company/lenovo-logo.png";
-import NavbarDark from "../componants/navbarDark";
-import Footer from "../componants/footer";
-import ScrollTop from "../componants/scrollTop";
+import NavbarDark from "../components/navbarDark";
+import Footer from "../components/footer";
+import ScrollTop from "../components/scrollTop";
 import { candidateSkill, candidatesData } from "../data/data";
 import {
   FiSettings,
@@ -24,18 +24,21 @@ import {
   FiFileText,
 } from "../assets/icons/vander";
 import { useMutation } from "@tanstack/react-query";
-import useUserInfo from "../hook/useUserInfo";
+
+import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 import 'react-toastify/dist/ReactToastify.css';
 
 import api from "../api/http";
-import Loading from "../componants/loading";
-import { ContactUs } from "../componants/contact";
+import Loading from "../components/loading";
+import { ContactUs } from "../components/contact";
 export default function CandidateProfile() {
 
   const token = localStorage.getItem("token");
-  const { data: userData } = useUserInfo();
-  const user = userData?.data;
+  const { data: jobseekerData } = useJobSeekerInfo();
+  const jobseeker = jobseekerData?.data;
+  const jobSeekerRole = localStorage.getItem("roleJobSeeker");
+  const enterpriseRole = localStorage.getItem("roleEnterprise");
 
   const uploadAvatar = useMutation({
     mutationFn: (formData) => {
@@ -66,28 +69,29 @@ export default function CandidateProfile() {
                   ) : (
                     <div className="d-flex align-items-end">
                       <img
-                        src={user?.avatar_url}
+                        src={jobseeker?.avatar_url}
                         className="rounded-pill shadow border border-3 avatar avatar-medium"
                         alt=""
                       />
 
                       <div className="ms-2">
                         <h5 className="mb-0">
-                          {user?.gender === 0 ? "Mr. " : "Mrs. "}{" "}
-                          {user?.firstName == null && user?.last_name == null
-                            ? user?.user_name
-                            : user?.first_name + " " + user?.last_name}
+                          {jobseeker?.gender === 0 ? "Mr. " : "Mrs. "}{" "}
+                          {jobseeker?.firstName == null && jobseeker?.last_name == null
+                            ? jobseeker?.user_name
+                            : jobseeker?.first_name + " " + jobseeker?.last_name}
                         </h5>
-                        <p className="text-muted mb-0">{user?.occupation}</p>
+                        <p className="text-muted mb-0">{jobseeker?.occupation}</p>
                       </div>
                     </div>
                   )}
-                  <Link
+                  {jobSeekerRole && <Link
                     to="/candidate-profile-setting"
                     className="btn btn-sm btn-icon btn-pills btn-soft-primary"
                   >
                     <FiSettings className="icons" />
-                  </Link>
+                  </Link>}
+
                 </div>
               </div>
             </div>
@@ -99,7 +103,7 @@ export default function CandidateProfile() {
             <div className="col-lg-8 col-md-7 col-12">
               <h5 className="mb-4">Introduction:</h5>
 
-              <p className="text-muted">{user?.intro}</p>
+              <p className="text-muted">{jobseeker?.intro}</p>
 
               <h5 className="mt-4">Skills:</h5>
 
@@ -288,9 +292,9 @@ export default function CandidateProfile() {
                       <FiMail className="fea icon-sm me-2" /> Email:
                     </span>
                     <span className="fw-medium">
-                      {user && user.user_name === "Johny Sins"
+                      {jobseeker && jobseeker.user_name === "Johny Sins"
                         ? "johnysins@gmail.com"
-                        : user?.email}
+                        : jobseeker?.email}
                     </span>
                   </div>
 
@@ -312,7 +316,7 @@ export default function CandidateProfile() {
                     <span className="d-inline-flex align-items-center text-muted fw-medium">
                       <FiMapPin className="fea icon-sm me-2" /> Province:
                     </span>
-                    <span className="fw-medium">{user?.state}</span>
+                    <span className="fw-medium">{jobseeker?.state}</span>
                   </div>
 
                   <div className="d-flex align-items-center justify-content-between mt-3">
@@ -326,7 +330,7 @@ export default function CandidateProfile() {
                     <span className="d-inline-flex align-items-center text-muted fw-medium">
                       <FiPhone className="fea icon-sm me-2" /> Mobile:
                     </span>
-                    <span className="fw-medium">{user?.phone}</span>
+                    <span className="fw-medium">{jobseeker?.phone}</span>
                   </div>
 
                   <div className="d-flex align-items-center justify-content-between mt-3">
@@ -384,11 +388,11 @@ export default function CandidateProfile() {
                   <div className="p-3 rounded shadow bg-white mt-2">
                     <div className="d-flex align-items-center mb-2">
                       <FiFileText className="fea icon-md" />
-                      <h6 className="mb-0 ms-2">user?.resume_url</h6>
+                      <h6 className="mb-0 ms-2">CV</h6>
                     </div>
 
                     <Link
-                      to={user?.resume_url}
+                      to={jobseeker?.resume_url}
                       download="pdf"
                       target="_blank"
                       className="btn btn-primary w-100"
@@ -402,7 +406,7 @@ export default function CandidateProfile() {
           </div>
         </div>
 
-        <div className="container mt-100 mt-60">
+        {enterpriseRole && <div className="container mt-100 mt-60">
           <div className="row justify-content-center mb-4 pb-2">
             <div className="col-12">
               <div className="section-title text-center">
@@ -493,6 +497,8 @@ export default function CandidateProfile() {
             })}
           </div>
         </div>
+        }
+
       </section>
       <Footer top={true} />
       <ScrollTop />
