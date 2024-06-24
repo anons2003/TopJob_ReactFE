@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import logoDark from "../assets/images/logo-dark.png"
-import logoWhite from "../assets/images/logo-white.png"
 import logoLight from "../assets/images/logo-light.png"
-import { LuSearch, FiUser, FiSettings, FiLock, FiLogOut, FiLogIn } from "../assets/icons/vander";
+import { LuSearch, FiUser, FiSettings, FiLogOut, FiLogIn } from "../assets/icons/vander";
 
-import useUserInfo from '../hook/useUserInfo'
+import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 import useEnterpriseInfo from '../hook/useEnterpriseInfo'
 
-
-export default function Navbar({ navClass, navLight }) {
+export default function NavbarDark() {
     let [isOpen, setMenu] = useState(true);
     let [scroll, setScroll] = useState(false);
     let [search, setSearch] = useState(false);
@@ -20,29 +18,27 @@ export default function Navbar({ navClass, navLight }) {
     const cartDropdownRef = useRef(null);
     const navigate = useNavigate();
 
-    const { data: userData } = useUserInfo();
+    const { data: jobseekerData } = useJobSeekerInfo();
     const { data: enterpriseData } = useEnterpriseInfo();
-    const userRole = localStorage.getItem("roleUser");
+    const jobSeekerRole = localStorage.getItem("roleJobSeeker");
     const enterpriseRole = localStorage.getItem("roleEnterprise");
-    const user = userData?.data;
+    const jobseeker = jobseekerData?.data;
     const enterprise = enterpriseData?.data;
 
-
     useEffect(() => {
-        const current = location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
-        setManu(current);
+        let current = location.pathname.substring(location.pathname.lastIndexOf('/') + 1)
+        setManu(current)
     }, [location.pathname]);
-
 
     useEffect(() => {
         function scrollHandler() {
-            setScroll(window.scrollY > 50);
+            setScroll(window.scrollY > 50)
         }
-
         window.addEventListener('scroll', scrollHandler);
 
-        const searchModal = () => setSearch(false);
+        let searchModal = () => { setSearch(false) }
         document.addEventListener('mousedown', searchModal);
+
 
         const cartModal = (event) => {
             if (cartDropdownRef.current && !cartDropdownRef.current.contains(event.target)) {
@@ -57,8 +53,8 @@ export default function Navbar({ navClass, navLight }) {
             document.removeEventListener('mousedown', searchModal);
             document.removeEventListener('mousedown', cartModal);
         };
-    }, []);
 
+    }, []);
     const toggleMenu = () => {
         setMenu(!isOpen)
         if (document.getElementById("navigation")) {
@@ -76,12 +72,12 @@ export default function Navbar({ navClass, navLight }) {
             });
         }
     }
-    // Function to get avatar_url from user or enterprise
+
     const getAvatarUrl = () => {
-        if (userRole&&user?.avatar_url) {
-            return user.avatar_url;
+        if (jobSeekerRole && jobseeker?.avatar_url) {
+            return jobseeker.avatar_url;
         }
-        else if (enterpriseRole&&enterprise?.avatar_url) {
+        else if (enterpriseRole && enterprise?.avatar_url) {
             return enterprise.avatar_url;
         }
 
@@ -91,19 +87,18 @@ export default function Navbar({ navClass, navLight }) {
         <div className="dropdown dropdown-primary" ref={cartDropdownRef}>
             <button type="button" onClick={() => setCartitem(!cartitem)} className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary">
                 <img src={getAvatarUrl()} className="img-fluid rounded-pill" alt="" />
-
             </button>
             <div style={{ display: cartitem === true ? 'block' : 'none' }}>
                 <div className={`dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}>
-                    {userRole && (
+                    {jobseeker && (
                         <Link to="/candidate-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
                     )}{enterpriseRole && (
                         <Link to="/employer-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
                     )}
-                    {userRole && (
+                    {jobseeker && (
                         <Link to="/candidate-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
                     )}{enterpriseRole && (
-                        <Link to="/employer-profile" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
+                        <Link to="/employer-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
                     )}
                     <div className="dropdown-divider border-top"></div>
 
@@ -120,24 +115,12 @@ export default function Navbar({ navClass, navLight }) {
     );
 
     return (
-        <header id="topnav" className={`${scroll ? 'nav-sticky' : ''} ${navClass}`}>
+        <header id="topnav" className={`${scroll ? 'nav-sticky' : ''} defaultscroll sticky`}>
             <div className="container">
-                {navLight === true ?
-                    <Link className="logo" to="/">
-                        <span className="logo-light-mode">
-                            <img src={logoDark} className="l-dark" alt="" />
-                            <img src={logoLight} className="l-light" alt="" />
-                        </span>
-                        <img src={logoLight} className="logo-dark-mode" alt="" />
-                    </Link> :
-                    <Link className="logo" to="/">
-                        <span className="logo-light-mode">
-                            <img src={logoDark} className="l-dark" alt="" />
-                            <img src={logoWhite} className="l-light" alt="" />
-                        </span>
-                        <img src={logoWhite} className="logo-dark-mode" alt="" />
-                    </Link>
-                }
+                <Link className="logo" to="/">
+                    <img src={logoDark} className="logo-light-mode" alt="" />
+                    <img src={logoLight} className="logo-dark-mode" alt="" />
+                </Link>
                 <div className="menu-extras">
                     <div className="menu-item">
                         <Link to='#' className="navbar-toggle" id="isToggle" onClick={toggleMenu}>
@@ -172,49 +155,44 @@ export default function Navbar({ navClass, navLight }) {
                     </li>
 
                     <li className="list-inline-item ps-1 mb-0">
-                        {user || enterprise ? (
+                        {jobseeker || enterprise ? (
                             renderUser()
                         ) : (
-                            <div className="dropdown dropdown-primary" ref={cartDropdownRef}>
-                                <button type="button" onClick={() => setCartitem(!cartitem)} className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary">
-                                    <FiLogIn />
-                                </button>
-                                <div style={{ display: cartitem === true ? 'block' : 'none' }}>
-                                    <div className={`dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}>
-                                        <Link to="/login" className="dropdown-item fw-medium fs-6">Login as Job Seeker</Link>
-                                        <div className="dropdown-divider border-top"></div>
-                                        <Link to="/En-login" className="dropdown-item fw-medium fs-6">Login as Enterprise</Link>
-                                    </div>
-                                </div>
-                            </div>
+                            <Link to="/login" className="btn btn-sm btn-icon btn-pills btn-primary">
+                                <FiLogIn className="icons" />
+                            </Link>
                         )}
                     </li>
                 </ul>
 
                 <div id="navigation">
-                    <ul className="navigation-menu nav-right nav-light">
+                    <ul className="navigation-menu nav-right">
                         <li className={manu === "index-two" ? "active" : ""}>
                             <Link to="/index-two">Home</Link>
                         </li>
 
                         <li className={`${["job-categories", "job-grid-two", "job-list-one", "job-detail-three", "job-apply", "job-post", "career"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}><Link to="#"> Jobs </Link><span className="menu-arrow"></span>
+
                             <ul className="submenu">
                                 {/* Job Categories */}
                                 <li className={manu === "job-categories" ? "active" : ""}><Link to="/job-categories" className="sub-menu-item">Job Categories</Link></li>
                                 {/* Job Grids Two */}
-                                <li className={manu === "job-grid-two" ? "active" : ""}><Link to="/job-grid-two" className="sub-menu-item"> Job Grids</Link>
+                                <li className={manu === "job-grid-two" ? "active" : ""}>
+                                    <Link to="/job-grid-two"
+                                        className="sub-menu-item"> Job Grids</Link>
                                 </li>
                                 {/* Job Lists One */}
-                                <li className={manu === "job-list-one" ? "active" : ""}> <Link to="/job-list-one" className="sub-menu-item"> Job Lists</Link>
+                                <li className={manu === "job-list-one" ? "active" : ""}>
+                                    <Link to="/job-list-one"
+                                        className="sub-menu-item"> Job Lists</Link>
+
                                 </li>
+                                
                             </ul>
                         </li>
+                        
 
-                        {enterpriseRole && (
-                            <li className={manu === "job-post" ? "active" : ""}><Link to="/job-post" className="sub-menu-item">Post Job</Link></li>
-                        )}
-
-                        <li className={`${["aboutus", "services", "pricing", "helpcenter-overview", "helpcenter-faqs", "helpcenter-guides", 'helpcenter-support', "blogs", "blog-sidebar", "blog-detail", "login", "signup", "reset-password", "lock-screen", "terms", "privacy"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}>
+                        <li className={`${["aboutus", "services", "pricing", "helpcenter-overview", "helpcenter-faqs", "helpcenter-guides", 'helpcenter-support'].includes(manu) ? "active" : ""} has-submenu parent-menu-item,"blogs", "blog-sidebar","blog-detail","login", "signup","reset-password","lock-screen","terms", "privacy"`}>
                             <Link to="#">Support</Link><span className="menu-arrow"></span>
                             <ul className="submenu">
                                 <li className={manu === "aboutus" ? "active" : ""}><Link to="/aboutus" className="sub-menu-item">About Us</Link></li>
@@ -231,7 +209,13 @@ export default function Navbar({ navClass, navLight }) {
                                     </ul>
                                 </li>
 
-
+                                <li className={`${["blogs", "blog-sidebar", "blog-detail"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}><Link to="#"> Blog </Link><span className="submenu-arrow"></span>
+                                    <ul className="submenu">
+                                        <li className={manu === "blogs" ? "active" : ""}><Link to="/blogs" className="sub-menu-item"> Blogs</Link></li>
+                                        <li className={manu === "blog-sidebar" ? "active" : ""}><Link to="/blog-sidebar" className="sub-menu-item"> Blog Sidebar</Link></li>
+                                        <li className={manu === "blog-detail" ? "active" : ""}><Link to="/blog-detail" className="sub-menu-item"> Blog Detail</Link></li>
+                                    </ul>
+                                </li>
 
                                 {/* <li className={`${["login", "signup", "reset-password", "lock-screen"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}><Link to="#"> Auth Pages </Link><span className="submenu-arrow"></span>
                                     <ul className="submenu">
@@ -258,22 +242,20 @@ export default function Navbar({ navClass, navLight }) {
                                 </li> */}
                             </ul>
                         </li>
-
-                        <li className={`${["blogs", "blog-sidebar", "blog-detail"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}>
-                        <Link to="#"> Blog </Link><span className="submenu-arrow"></span>
+                        <li className={`${["blogs", "blog-sidebar", "blog-detail"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}><Link to="#"> Blog </Link><span className="submenu-arrow"></span>
                             <ul className="submenu">
                                 <li className={manu === "blogs" ? "active" : ""}><Link to="/blogs" className="sub-menu-item"> Blogs</Link></li>
                                 <li className={manu === "blog-sidebar" ? "active" : ""}><Link to="/blog-sidebar" className="sub-menu-item"> Blog Sidebar</Link></li>
                                 <li className={manu === "blog-detail" ? "active" : ""}><Link to="/blog-detail" className="sub-menu-item"> Blog Detail</Link></li>
                             </ul>
                         </li>
-                        {userRole && (
-                        <li className={manu === "createCV" ? "active" : ""}><Link to="/create-CV" className="sub-menu-item">Create CV</Link></li>
+                        {jobseeker && (
+                            <li className={manu === "createCV" ? "active" : ""}><Link to="/template" className="sub-menu-item">Create CV</Link></li>
                         )}
                         <li className={manu === "contactus" ? "active" : ""}><Link to="/contactus" className="sub-menu-item">Contact Us</Link></li>
                     </ul>
                 </div>
             </div>
-        </header >
+        </header>
     )
 }
