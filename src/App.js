@@ -43,8 +43,24 @@ import Maintenance from "./pages/maintenance";
 import UpdatePassword from "./pages/update-password/update-password";
 import CreatePassword from "./pages/change-password/create-password"
 import ProtectedRoute from './hook/useProtectRoute';
-import CreateTemplate from './pages/create-cv/CreateTemplate';
-import TemplateContainer from './pages/create-cv/TemplateContainer';
+// import CreateTemplate from './pages/create-cv/CreateTemplate';
+// import TemplateContainer from './pages/create-cv/TemplateContainer';
+
+// admin
+import Single from "./pages/single/Single";
+import New from "./pages/new/New";
+
+import { productInputs, userInputs } from "./data/formSource";
+import { useContext } from "react";
+import ListJobPosts from "./pages/list/ListJobPosts";
+// page admin
+import SingleJobPosts from "./pages/single/SingleJobPosts";
+import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
+import SingleJobPostsModeration from "./pages/single/SingleJobPostsModeration";
+import SingleAdmin from "./pages/single/SingleAdmin";
+import UserDetail from "./pages/single/UserDetail";
+import Home from "./pages/home/Home";
+import ListJobSeekers from "./pages/list/ListJobSeekers";
 function App() {
   return (
     <>
@@ -95,8 +111,64 @@ function App() {
         <Route path='/maintenance' element={<Maintenance />} />
         <Route path='/update-password' element={<UpdatePassword />} />
         <Route path='/change-password' element={<CreatePassword />} />
-        <Route path='/create-template' element={<CreateTemplate />} />
-        <Route path='/template' element={<TemplateContainer />} />
+        {/* <Route path='/create-template' element={<CreateTemplate />} />
+        <Route path='/template' element={<TemplateContainer />} /> */}
+
+        {/* admin route */}
+
+        {/* dashboard */}
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+
+          {/* users */}
+          <Route path="users/job-seekers">
+            <Route index element={<ListJobSeekers />} />
+            <Route path=":userId" element={<Single />} />
+            <Route
+              path="add"
+              element={<New inputs={userInputs} title="Add New User" />}
+            />
+          </Route>
+          {/* job post */}
+          <Route path="jobPosts">
+            <Route index element={<ListJobPosts />} />
+            <Route path=":productId" element={<SingleJobPosts />} />
+          </Route>
+          {/* The article requires moderation */}
+          <Route path="jobPostsModeration">
+            <Route index element={<ListJobPostsModeration />} />
+            <Route path=":productId" element={<SingleJobPostsModeration />} />
+          </Route>
+          {/* package services */}
+          <Route path="packageService">
+            <Route index element={<packageServices />} />
+            <Route path=":userId" element={<Single />} />
+            <Route
+              path="add"
+              element={<New inputs={userInputs} title="Add New User" />}
+            />
+          </Route>
+
+          {/* profile */}
+          <Route path="profileAdmin">
+            <Route index element={<packageServices />} />
+          </Route>
+
+          <Route>
+            <Route>
+              <Route path="/users">
+                <Route index element={<users />} />
+                <Route path="view/:id" element={<UserDetail />} />
+              </Route>
+            </Route>
+          </Route>
+
+          {/* logout */}
+          <Route path="/logout">
+            <Route index element={<logout />} />
+          </Route>
+        </Route>
       </Routes>
     </>
   );
