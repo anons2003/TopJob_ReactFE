@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import logoDark from "../assets/images/logo-dark.png"
 import logoLight from "../assets/images/logo-light.png"
-import { LuSearch, FiUser, FiSettings, FiLock, FiLogOut, FiLogIn } from "../assets/icons/vander";
+import { LuSearch, FiUser, FiSettings, FiLogOut, FiLogIn } from "../assets/icons/vander";
 
-import useUserInfo from '../hook/useUserInfo'
+import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 import useEnterpriseInfo from '../hook/useEnterpriseInfo'
 
 export default function NavbarDark() {
@@ -18,12 +18,11 @@ export default function NavbarDark() {
     const cartDropdownRef = useRef(null);
     const navigate = useNavigate();
 
-    const { data: userData } = useUserInfo();
+    const { data: jobseekerData } = useJobSeekerInfo();
     const { data: enterpriseData } = useEnterpriseInfo();
-    
-    const userRole = localStorage.getItem("roleUser");
+    const jobSeekerRole = localStorage.getItem("roleJobSeeker");
     const enterpriseRole = localStorage.getItem("roleEnterprise");
-    const user = userData?.data;
+    const jobseeker = jobseekerData?.data;
     const enterprise = enterpriseData?.data;
 
     useEffect(() => {
@@ -75,10 +74,10 @@ export default function NavbarDark() {
     }
 
     const getAvatarUrl = () => {
-        if (userRole&&user?.avatar_url) {
-            return user.avatar_url;
+        if (jobSeekerRole && jobseeker?.avatar_url) {
+            return jobseeker.avatar_url;
         }
-        else if (enterpriseRole&&enterprise?.avatar_url) {
+        else if (enterpriseRole && enterprise?.avatar_url) {
             return enterprise.avatar_url;
         }
 
@@ -91,12 +90,12 @@ export default function NavbarDark() {
             </button>
             <div style={{ display: cartitem === true ? 'block' : 'none' }}>
                 <div className={`dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}>
-                    {userRole && (
+                    {jobseeker && (
                         <Link to="/candidate-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
                     )}{enterpriseRole && (
                         <Link to="/employer-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
                     )}
-                    {userRole && (
+                    {jobseeker && (
                         <Link to="/candidate-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
                     )}{enterpriseRole && (
                         <Link to="/employer-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
@@ -156,7 +155,7 @@ export default function NavbarDark() {
                     </li>
 
                     <li className="list-inline-item ps-1 mb-0">
-                        {user || enterprise ? (
+                        {jobseeker || enterprise ? (
                             renderUser()
                         ) : (
                             <Link to="/login" className="btn btn-sm btn-icon btn-pills btn-primary">
@@ -188,10 +187,10 @@ export default function NavbarDark() {
                                         className="sub-menu-item"> Job Lists</Link>
 
                                 </li>
-                                
+
                             </ul>
                         </li>
-                        
+
 
                         <li className={`${["aboutus", "services", "pricing", "helpcenter-overview", "helpcenter-faqs", "helpcenter-guides", 'helpcenter-support'].includes(manu) ? "active" : ""} has-submenu parent-menu-item,"blogs", "blog-sidebar","blog-detail","login", "signup","reset-password","lock-screen","terms", "privacy"`}>
                             <Link to="#">Support</Link><span className="menu-arrow"></span>
@@ -250,8 +249,8 @@ export default function NavbarDark() {
                                 <li className={manu === "blog-detail" ? "active" : ""}><Link to="/blog-detail" className="sub-menu-item"> Blog Detail</Link></li>
                             </ul>
                         </li>
-                        {userRole && (
-                            <li className={manu === "createCV" ? "active" : ""}><Link to="/create-CV" className="sub-menu-item">Create CV</Link></li>
+                        {jobseeker && (
+                            <li className={manu === "createCV" ? "active" : ""}><Link to="/template" className="sub-menu-item">Create CV</Link></li>
                         )}
                         <li className={manu === "contactus" ? "active" : ""}><Link to="/contactus" className="sub-menu-item">Contact Us</Link></li>
                     </ul>

@@ -40,16 +40,11 @@ import Error from "./pages/error";
 import Comingsoom from "./pages/comingsoon";
 import Maintenance from "./pages/maintenance";
 
-import LoginEn from "./pages/login/loginAsEn";
-import SignupEn from "./pages/signup/signupAsEn";
-import ResetPasswordEn from "./pages/reset-password/reset-passwordAsEn";
 import UpdatePassword from "./pages/update-password/update-password";
-import UpdatePasswordEn from "./pages/update-password/update-passwordAsEn";
 import CreatePassword from "./pages/change-password/create-password"
-import CreatePasswordEn from "./pages/change-password/create-passwordAsEn";
 import ProtectedRoute from './hook/useProtectRoute';
-import CreateCV from './pages/create-cv/create-cv';
-
+import CreateTemplate from './pages/create-cv/CreateTemplate';
+import TemplateContainer from './pages/create-cv/TemplateContainer';
 function App() {
   return (
     <>
@@ -87,11 +82,8 @@ function App() {
         <Route path='/blog-detail' element={<BlogDetail />} />
         <Route path='/blog-detail/:id' element={<BlogDetail />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/En-login' element={<LoginEn />} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/En-signup' element={<SignupEn />} />
         <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='/En-reset-password' element={<ResetPasswordEn />} />
         <Route path='/lock-screen' element={<LockScreen />} />
 
         <Route path='/terms' element={<Terms />} />
@@ -102,10 +94,9 @@ function App() {
         <Route path='/comingsoon' element={<Comingsoom />} />
         <Route path='/maintenance' element={<Maintenance />} />
         <Route path='/update-password' element={<UpdatePassword />} />
-        <Route path='/En-update-password' element={<UpdatePasswordEn />} />
         <Route path='/change-password' element={<CreatePassword />} />
-        <Route path='/En-change-password' element={<CreatePasswordEn />} />
-        <Route path='/create-CV' element={<CreateCV />} />
+        <Route path='/create-template' element={<CreateTemplate />} />
+        <Route path='/template' element={<TemplateContainer />} />
       </Routes>
     </>
   );

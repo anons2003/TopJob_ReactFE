@@ -3,11 +3,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import logoDark from "../assets/images/logo-dark.png"
 import logoWhite from "../assets/images/logo-white.png"
 import logoLight from "../assets/images/logo-light.png"
-import { LuSearch, FiUser, FiSettings, FiLock, FiLogOut, FiLogIn } from "../assets/icons/vander";
+import { LuSearch, FiUser, FiSettings, FiLogOut, FiLogIn } from "../assets/icons/vander";
 
-import useUserInfo from '../hook/useUserInfo'
-import useEnterpriseInfo from '../hook/useEnterpriseInfo'
-
+import useEnterpriseInfo from '../hook/useEnterpriseInfo';
+import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 export default function Navbar({ navClass, navLight }) {
     let [isOpen, setMenu] = useState(true);
@@ -20,13 +19,12 @@ export default function Navbar({ navClass, navLight }) {
     const cartDropdownRef = useRef(null);
     const navigate = useNavigate();
 
-    const { data: userData } = useUserInfo();
+    const { data: jobseekerData } = useJobSeekerInfo();
     const { data: enterpriseData } = useEnterpriseInfo();
-    const userRole = localStorage.getItem("roleUser");
+    const jobSeekerRole = localStorage.getItem("roleJobSeeker");
     const enterpriseRole = localStorage.getItem("roleEnterprise");
-    const user = userData?.data;
+    const jobseeker = jobseekerData?.data;
     const enterprise = enterpriseData?.data;
-
 
     useEffect(() => {
         const current = location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
@@ -78,15 +76,14 @@ export default function Navbar({ navClass, navLight }) {
     }
     // Function to get avatar_url from user or enterprise
     const getAvatarUrl = () => {
-        if (userRole&&user?.avatar_url) {
-            return user.avatar_url;
+        if (jobSeekerRole && jobseeker?.avatar_url) {
+            return jobseeker.avatar_url;
         }
-        else if (enterpriseRole&&enterprise?.avatar_url) {
+        else if (enterpriseRole && enterprise?.avatar_url) {
             return enterprise.avatar_url;
         }
 
     };
-
     const renderUser = () => (
         <div className="dropdown dropdown-primary" ref={cartDropdownRef}>
             <button type="button" onClick={() => setCartitem(!cartitem)} className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary">
@@ -95,16 +92,17 @@ export default function Navbar({ navClass, navLight }) {
             </button>
             <div style={{ display: cartitem === true ? 'block' : 'none' }}>
                 <div className={`dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}>
-                    {userRole && (
+                    {jobSeekerRole && (
                         <Link to="/candidate-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
                     )}{enterpriseRole && (
                         <Link to="/employer-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
                     )}
-                    {userRole && (
-                        <Link to="/candidate-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
-                    )}{enterpriseRole && (
-                        <Link to="/employer-profile" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
-                    )}
+                    {jobSeekerRole
+                        && (
+                            <Link to="/candidate-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
+                        )}{enterpriseRole && (
+                            <Link to="/employer-profile" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
+                        )}
                     <div className="dropdown-divider border-top"></div>
 
                     {/* <Link to="/lock-screen" className="dropdown-item fw-medium fs-6"><FiLock className="fea icon-sm me-2 align-middle" />Lockscreen</Link> */}
@@ -172,20 +170,13 @@ export default function Navbar({ navClass, navLight }) {
                     </li>
 
                     <li className="list-inline-item ps-1 mb-0">
-                        {user || enterprise ? (
+                        {jobseeker || enterprise ? (
                             renderUser()
                         ) : (
-                            <div className="dropdown dropdown-primary" ref={cartDropdownRef}>
-                                <button type="button" onClick={() => setCartitem(!cartitem)} className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary">
+                            <div className="dropdown dropdown-primary">
+                                <Link to="/login" className="btn btn-sm btn-icon btn-pills btn-primary">
                                     <FiLogIn />
-                                </button>
-                                <div style={{ display: cartitem === true ? 'block' : 'none' }}>
-                                    <div className={`dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}>
-                                        <Link to="/login" className="dropdown-item fw-medium fs-6">Login as Job Seeker</Link>
-                                        <div className="dropdown-divider border-top"></div>
-                                        <Link to="/En-login" className="dropdown-item fw-medium fs-6">Login as Enterprise</Link>
-                                    </div>
-                                </div>
+                                </Link>
                             </div>
                         )}
                     </li>
@@ -233,42 +224,19 @@ export default function Navbar({ navClass, navLight }) {
 
 
 
-                                {/* <li className={`${["login", "signup", "reset-password", "lock-screen"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}><Link to="#"> Auth Pages </Link><span className="submenu-arrow"></span>
-                                    <ul className="submenu">
-                                        <li className={manu === "login" ? "active" : ""}><Link to="/login" className="sub-menu-item"> Login</Link></li>
-                                        <li className={manu === "signup" ? "active" : ""}><Link to="/signup" className="sub-menu-item"> Signup</Link></li>
-                                        <li className={manu === "reset-password" ? "active" : ""}><Link to="/reset-password" className="sub-menu-item"> Forgot Password</Link></li>
-                                        <li className={manu === "lock-screen" ? "active" : ""}><Link to="/lock-screen" className="sub-menu-item"> Lock Screen</Link></li>
-                                    </ul>
-                                </li> */}
-
-                                {/* <li className={`${["terms", "privacy"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}><Link to="#"> Utility </Link><span className="submenu-arrow"></span>
-                                    <ul className="submenu">
-                                        <li className={manu === "terms" ? "active" : ""}><Link to="/terms" className="sub-menu-item">Terms of Services</Link></li>
-                                        <li className={manu === "privacy" ? "active" : ""}><Link to="/privacy" className="sub-menu-item">Privacy Policy</Link></li>
-                                    </ul>
-                                </li> */}
-
-                                {/* <li className={`${["comingsoon", "maintenance", "error"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}><Link to="#"> Special </Link><span className="submenu-arrow"></span>
-                                    <ul className="submenu">
-                                        <li className={manu === "comingsoon" ? "active" : ""}><Link to="/comingsoon" className="sub-menu-item"> Coming Soon</Link></li>
-                                        <li className={manu === "maintenance" ? "active" : ""}><Link to="/maintenance" className="sub-menu-item"> Maintenance</Link></li>
-                                        <li className={manu === "error" ? "active" : ""}><Link to="/error" className="sub-menu-item"> 404! Error</Link></li>
-                                    </ul>
-                                </li> */}
                             </ul>
                         </li>
 
                         <li className={`${["blogs", "blog-sidebar", "blog-detail"].includes(manu) ? "active" : ""} has-submenu parent-menu-item`}>
-                        <Link to="#"> Blog </Link><span className="submenu-arrow"></span>
+                            <Link to="#"> Blog </Link><span className="submenu-arrow"></span>
                             <ul className="submenu">
                                 <li className={manu === "blogs" ? "active" : ""}><Link to="/blogs" className="sub-menu-item"> Blogs</Link></li>
                                 <li className={manu === "blog-sidebar" ? "active" : ""}><Link to="/blog-sidebar" className="sub-menu-item"> Blog Sidebar</Link></li>
                                 <li className={manu === "blog-detail" ? "active" : ""}><Link to="/blog-detail" className="sub-menu-item"> Blog Detail</Link></li>
                             </ul>
                         </li>
-                        {userRole && (
-                        <li className={manu === "createCV" ? "active" : ""}><Link to="/create-CV" className="sub-menu-item">Create CV</Link></li>
+                        {jobSeekerRole && (
+                            <li className={manu === "createCV" ? "active" : ""}><Link to="/template" className="sub-menu-item">Create CV</Link></li>
                         )}
                         <li className={manu === "contactus" ? "active" : ""}><Link to="/contactus" className="sub-menu-item">Contact Us</Link></li>
                     </ul>

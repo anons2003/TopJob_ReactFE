@@ -14,15 +14,17 @@ class Api {
       (response) => {
         if (
           response.config.url === "login" ||
-          response.config.url === "social" ||
-          response.config.url === "enterprise/login" ||
-          response.config.url === "enterprise/social"
+          response.config.url === "social"
+
         ) {
+          console.log("Response data:", response.data);
           localStorage.setItem("token", response.data.token);
+
           // Check the role and store accordingly
-          if (response.data.role === "user") {
-            localStorage.setItem("roleUser", response.data.role);
-          } else if (response.data.role === "enterprise") {
+          if (response.data.role === "Job-seeker") {
+            console.log("Setting roleJobSeeker");
+            localStorage.setItem("roleJobSeeker", response.data.role);
+          } else if (response.data.role === "Enterprise") {
             localStorage.setItem("roleEnterprise", response.data.role);
           }
           window.location.replace("/");
@@ -41,4 +43,6 @@ class Api {
 }
 const api = new Api().instance;
 export default api;
+
+
 
