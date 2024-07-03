@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Select from 'react-select';
 import { FiBriefcase, FiMapPin, FiSearch } from "../assets/icons/vander";
 import ToggleSelect from "./ToggleSelect";
 

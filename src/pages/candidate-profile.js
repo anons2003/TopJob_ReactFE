@@ -34,11 +34,11 @@ import Loading from "../components/loading";
 import { ContactUs } from "../components/contact";
 export default function CandidateProfile() {
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { data: jobseekerData } = useJobSeekerInfo();
   const jobseeker = jobseekerData?.data;
-  const jobSeekerRole = localStorage.getItem("roleJobSeeker");
-  const enterpriseRole = localStorage.getItem("roleEnterprise");
+  const jobSeekerRole = sessionStorage.getItem("roleJobSeeker");
+  const enterpriseRole = sessionStorage.getItem("roleEnterprise");
 
   const uploadAvatar = useMutation({
     mutationFn: (formData) => {
