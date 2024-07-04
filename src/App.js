@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
 import "./assets/scss/style.scss"
 import "./assets/css/materialdesignicons.min.css"
+
 import Index from "./pages";
 import IndexTwo from "./pages/index-two";
 
@@ -43,8 +44,11 @@ import Maintenance from "./pages/maintenance";
 import UpdatePassword from "./pages/update-password/update-password";
 import CreatePassword from "./pages/change-password/create-password"
 import ProtectedRoute from './hook/useProtectRoute';
-import CreateTemplate from './pages/create-cv/CreateTemplate';
+import CreateTemplate from './pages/create-cv/CreateTemplates';
 import TemplateContainer from './pages/create-cv/TemplateContainer';
+import TemplateDesignPinDetail from './pages/create-cv/TemplateDesignPinDetail';
+import CreateResume from './pages/create-cv/CreateResume';
+
 function App() {
   return (
     <>
@@ -95,8 +99,11 @@ function App() {
         <Route path='/maintenance' element={<Maintenance />} />
         <Route path='/update-password' element={<UpdatePassword />} />
         <Route path='/change-password' element={<CreatePassword />} />
+
         <Route path='/create-template' element={<CreateTemplate />} />
         <Route path='/template' element={<TemplateContainer />} />
+        <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
+        <Route path="/resume/*" element={<CreateResume />} />
       </Routes>
     </>
   );

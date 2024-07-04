@@ -1,5 +1,5 @@
 import axios from "axios";
-
+//change to session storage
 class Api {
   instance;
   constructor() {
@@ -15,17 +15,16 @@ class Api {
         if (
           response.config.url === "login" ||
           response.config.url === "social"
-
         ) {
           console.log("Response data:", response.data);
-          localStorage.setItem("token", response.data.token);
+          sessionStorage.setItem("token", response.data.token);
 
           // Check the role and store accordingly
           if (response.data.role === "Job-seeker") {
             console.log("Setting roleJobSeeker");
-            localStorage.setItem("roleJobSeeker", response.data.role);
+            sessionStorage.setItem("roleJobSeeker", response.data.role);
           } else if (response.data.role === "Enterprise") {
-            localStorage.setItem("roleEnterprise", response.data.role);
+            sessionStorage.setItem("roleEnterprise", response.data.role);
           }
           window.location.replace("/");
         }
@@ -33,7 +32,7 @@ class Api {
       },
       (error) => {
         if (error.response.data.message === "expired_session") {
-          localStorage.removeItem("token");
+          sessionStorage.removeItem("token");
           window.location.replace("login");
         }
         return Promise.reject(error);
@@ -41,8 +40,6 @@ class Api {
     );
   }
 }
+
 const api = new Api().instance;
 export default api;
-
-
-

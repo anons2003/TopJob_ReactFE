@@ -3,58 +3,58 @@ import React, { useState, useEffect } from "react";
 const NotificationSettings = () => {
   // Load state from local storage or set default values
   const [mentionNotification, setMentionNotification] = useState(
-    () => JSON.parse(localStorage.getItem("mentionNotification")) || false
+    () => JSON.parse(sessionStorage.getItem("mentionNotification")) || false
   );
   const [followNotification, setFollowNotification] = useState(
-    () => JSON.parse(localStorage.getItem("followNotification")) || false
+    () => JSON.parse(sessionStorage.getItem("followNotification")) || false
   );
   const [shareNotification, setShareNotification] = useState(
-    () => JSON.parse(localStorage.getItem("shareNotification")) || false
+    () => JSON.parse(sessionStorage.getItem("shareNotification")) || false
   );
   const [messageNotification, setMessageNotification] = useState(
-    () => JSON.parse(localStorage.getItem("messageNotification")) || false
+    () => JSON.parse(sessionStorage.getItem("messageNotification")) || false
   );
   // Add more state variables for other checkboxes
   const [saleNotification, setSaleNotification] = useState(
-    () => JSON.parse(localStorage.getItem("saleNotification")) || false
+    () => JSON.parse(sessionStorage.getItem("saleNotification")) || false
   );
   const [companyNewsNotification, setCompanyNewsNotification] = useState(
-    () => JSON.parse(localStorage.getItem("companyNewsNotification")) || false
+    () => JSON.parse(sessionStorage.getItem("companyNewsNotification")) || false
   );
   const [weeklyJobsNotification, setWeeklyJobsNotification] = useState(
-    () => JSON.parse(localStorage.getItem("weeklyJobsNotification")) || false
+    () => JSON.parse(sessionStorage.getItem("weeklyJobsNotification")) || false
   );
   const [unsubscribeNewsNotification, setUnsubscribeNewsNotification] =
     useState(
       () =>
-        JSON.parse(localStorage.getItem("unsubscribeNewsNotification")) || false
+        JSON.parse(sessionStorage.getItem("unsubscribeNewsNotification")) || false
     );
   // Add more state variables for other checkboxes
 
   // Update local storage whenever state changes
   useEffect(() => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       "mentionNotification",
       JSON.stringify(mentionNotification)
     );
   }, [mentionNotification]);
 
   useEffect(() => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       "followNotification",
       JSON.stringify(followNotification)
     );
   }, [followNotification]);
 
   useEffect(() => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       "shareNotification",
       JSON.stringify(shareNotification)
     );
   }, [shareNotification]);
 
   useEffect(() => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       "messageNotification",
       JSON.stringify(messageNotification)
     );
@@ -62,25 +62,25 @@ const NotificationSettings = () => {
 
   // Add similar useEffect blocks for other checkboxes
   useEffect(() => {
-    localStorage.setItem("saleNotification", JSON.stringify(saleNotification));
+    sessionStorage.setItem("saleNotification", JSON.stringify(saleNotification));
   }, [saleNotification]);
 
   useEffect(() => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       "companyNewsNotification",
       JSON.stringify(companyNewsNotification)
     );
   }, [companyNewsNotification]);
 
   useEffect(() => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       "weeklyJobsNotification",
       JSON.stringify(weeklyJobsNotification)
     );
   }, [weeklyJobsNotification]);
 
   useEffect(() => {
-    localStorage.setItem(
+    sessionStorage.setItem(
       "unsubscribeNewsNotification",
       JSON.stringify(unsubscribeNewsNotification)
     );
