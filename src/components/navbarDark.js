@@ -9,6 +9,7 @@ import {
   FiLogOut,
   FiLogIn,
   FiBookmark,
+  FiBook,
 } from "../assets/icons/vander";
 
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
@@ -151,6 +152,15 @@ export default function NavbarDark() {
             </Link>
           )}
 
+          {jobSeekerRole && (
+            <Link
+              to="/cv-applied-list"
+              className="dropdown-item fw-medium fs-6"
+            >
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              Applied List
+            </Link>
+          )}
           <div className="dropdown-divider border-top"></div>
 
           {/* <Link to="/lock-screen" className="dropdown-item fw-medium fs-6"><FiLock className="fea icon-sm me-2 align-middle" />Lockscreen</Link> */}

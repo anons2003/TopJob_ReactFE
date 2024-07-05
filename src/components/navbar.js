@@ -10,6 +10,7 @@ import {
   FiLogOut,
   FiLogIn,
   FiBookmark,
+  FiBook,
 } from "../assets/icons/vander";
 
 import useEnterpriseInfo from "../hook/useEnterpriseInfo";
@@ -152,7 +153,15 @@ export default function Navbar({ navClass, navLight }) {
               Bookmark
             </Link>
           )}
-
+          {jobSeekerRole && (
+            <Link
+              to="/cv-applied-list"
+              className="dropdown-item fw-medium fs-6"
+            >
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              Applied List
+            </Link>
+          )}
           <div className="dropdown-divider border-top"></div>
 
           <span
