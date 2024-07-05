@@ -67,6 +67,11 @@ function App() {
           element={<ProtectedRoute element={JobApply} />}
         />
         <Route
+          path="/job-apply/:id"
+          element={<ProtectedRoute element={JobApply} />}
+        />
+
+        <Route
           path="/job-post"
           element={<ProtectedRoute element={JobPost} />}
         />
