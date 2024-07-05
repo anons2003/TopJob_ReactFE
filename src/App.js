@@ -139,6 +139,7 @@ function App() {
         <Route path="bookmark-list" element={<BookmarksList />} />
         <Route path="cv-applied-list" element={<CVAppliedList />} />
         <Route path="reapply-job" element={<ReApply />} />
+        <Route path="reapply-job/:id" element={<ReApply />} />
       </Routes>
     </>
   );

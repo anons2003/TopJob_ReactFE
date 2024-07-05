@@ -309,16 +309,6 @@ export default function ReApply() {
                         />
                       </div>
                     </div>
-                    {showWarning && (
-                      <div className="row">
-                        <div className="col-12">
-                          <p className="text-danger">
-                            You need to accept the terms and conditions before
-                            applying.
-                          </p>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </form>
               </div>
