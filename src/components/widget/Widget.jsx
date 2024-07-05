@@ -16,7 +16,7 @@ const Widget = ({ type }) => {
 
   useEffect(() => {
     if (type === "user") {
-      axios.get("http://localhost:8080/api/totalUsers")
+      axios.get("http://localhost:8080/totalUsers")
         .then(response => {
           setTotalUsers(response.data);
           setIsLoading(false);
@@ -37,7 +37,6 @@ const Widget = ({ type }) => {
     case "user":
       data = {
         title: "USERS",
-        link: "See all users",
         icon: (
           <PersonOutlinedIcon
             className="icon"
@@ -52,7 +51,6 @@ const Widget = ({ type }) => {
     case "postjob":
       data = {
         title: "All Job Posts",
-        link: "View all job posts",
         icon: (
           <WorkIcon
             className="icon"
@@ -67,7 +65,6 @@ const Widget = ({ type }) => {
     case "earning":
       data = {
         title: "Package Services",
-        link: "View all package service ",
         icon: (
           <ExtensionIcon
             className="icon"
@@ -88,7 +85,6 @@ const Widget = ({ type }) => {
         <span className="counter">
           {data.isMoney && "$"} {isLoading ? "Loading..." : amount}
         </span>
-        <span className="link">{data.link}</span>
       </div>
       <div className="right">
         <div className="percentage positive">
