@@ -16,7 +16,7 @@ export default function CandidateProfileSetting() {
   //   let [file, setFile] = useState(image1);
 
   const queryClient = useQueryClient();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
 
@@ -329,7 +329,7 @@ export default function CandidateProfileSetting() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("USER_PROFILE");
+      queryClient.invalidateQueries("JOBSEEKER_PROFILE");
       notification.success({ message: "Update avatar successfully" });
     },
     onError: () => {
@@ -347,7 +347,7 @@ export default function CandidateProfileSetting() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("USER_PROFILE");
+      queryClient.invalidateQueries("JOBSEEKER_PROFILE");
       notification.success({ message: "Upload resume successfully" });
     },
     onError: () => {
@@ -415,7 +415,7 @@ export default function CandidateProfileSetting() {
     const body = { puser_name: name };
     changeNameMutation.mutate(body, {
       onSuccess() {
-        queryClient.invalidateQueries("USER_PROFILE");
+        queryClient.invalidateQueries("JOBSEEKER_PROFILE");
         notification.success({ message: "Edit name successfully" });
       },
       onError() {

@@ -1,8 +1,10 @@
 import React from "react";
+
 import { Route, Routes } from "react-router-dom";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./assets/scss/style.scss";
 import "./assets/css/materialdesignicons.min.css";
+
 import Index from "./pages";
 import IndexTwo from "./pages/index-two";
 
@@ -43,8 +45,12 @@ import Maintenance from "./pages/maintenance";
 import UpdatePassword from "./pages/update-password/update-password";
 import CreatePassword from "./pages/change-password/create-password";
 import ProtectedRoute from "./hook/useProtectRoute";
-// import CreateTemplate from './pages/create-cv/CreateTemplate';
-// import TemplateContainer from './pages/create-cv/TemplateContainer';
+
+import CreateTemplate from './pages/create-cv/CreateTemplates';
+import TemplateContainer from './pages/create-cv/TemplateContainer';
+import TemplateDesignPinDetail from './pages/create-cv/TemplateDesignPinDetail';
+import CreateResume from './pages/create-cv/CreateResume';
+
 
 // admin
 import Single from "./pages/single/Single";
@@ -63,10 +69,12 @@ import Home from "./pages/home/Home";
 import ListJobSeekers from "./pages/list/ListJobSeekers";
 
 import ListEnterprise from "./pages/list/ListEnterprise";
+
 function App() {
   return (
     <>
       <Routes>
+
         <Route path="/" element={<Index />} />
         <Route path="/index-two" element={<IndexTwo />} />
         <Route path="/job-categories" element={<JobCategories />} />
@@ -137,9 +145,11 @@ function App() {
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/change-password" element={<CreatePassword />} />
-        {/* <Route path='/create-template' element={<CreateTemplate />} />
-        <Route path='/template' element={<TemplateContainer />} /> */}
-
+        
+        <Route path='/create-template' element={<CreateTemplate />} />
+        <Route path='/template' element={<TemplateContainer />} />
+        <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
+        <Route path="/resume/*" element={<CreateResume />} />
         {/* admin route */}
 
         {/* dashboard */}
@@ -202,6 +212,7 @@ function App() {
             <Route index element={<logout />} />
           </Route>
         </Route>
+
       </Routes>
     </>
   );
