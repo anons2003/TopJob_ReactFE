@@ -50,6 +50,7 @@ import TemplateDesignPinDetail from "./pages/create-cv/TemplateDesignPinDetail";
 import CreateResume from "./pages/create-cv/CreateResume";
 import BookmarksList from "./pages/bookmark-list";
 import CVAppliedList from "./pages/job-applied-list";
+import ReApply from "./pages/reapply-job";
 
 function App() {
   return (
@@ -137,6 +138,7 @@ function App() {
         {/* new */}
         <Route path="bookmark-list" element={<BookmarksList />} />
         <Route path="cv-applied-list" element={<CVAppliedList />} />
+        <Route path="reapply-job" element={<ReApply />} />
       </Routes>
     </>
   );

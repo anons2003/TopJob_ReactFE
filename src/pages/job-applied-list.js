@@ -75,7 +75,7 @@ const CVList = () => {
                           Delete
                         </button>
                         <Link
-                          to={`/job-apply`}
+                          to={`/reapply-job`}
                           className="btn btn-primary btn-sm"
                         >
                           Update
