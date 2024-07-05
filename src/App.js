@@ -1,8 +1,9 @@
 import React from "react";
-import { Route, Routes } from 'react-router-dom';
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
-import "./assets/scss/style.scss"
-import "./assets/css/materialdesignicons.min.css"
+
+import { Route, Routes } from "react-router-dom";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "./assets/scss/style.scss";
+import "./assets/css/materialdesignicons.min.css";
 
 import Index from "./pages";
 import IndexTwo from "./pages/index-two";
@@ -42,68 +43,176 @@ import Comingsoom from "./pages/comingsoon";
 import Maintenance from "./pages/maintenance";
 
 import UpdatePassword from "./pages/update-password/update-password";
-import CreatePassword from "./pages/change-password/create-password"
-import ProtectedRoute from './hook/useProtectRoute';
+import CreatePassword from "./pages/change-password/create-password";
+import ProtectedRoute from "./hook/useProtectRoute";
+
 import CreateTemplate from './pages/create-cv/CreateTemplates';
 import TemplateContainer from './pages/create-cv/TemplateContainer';
 import TemplateDesignPinDetail from './pages/create-cv/TemplateDesignPinDetail';
 import CreateResume from './pages/create-cv/CreateResume';
 
+
+// admin
+import Single from "./pages/single/Single";
+import New from "./pages/new/New";
+
+import { productInputs, userInputs } from "./data/formSource";
+import { useContext } from "react";
+import ListJobPosts from "./pages/list/ListJobPosts";
+// page admin
+import SingleJobPosts from "./pages/single/SingleJobPosts";
+import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
+import SingleJobPostsModeration from "./pages/single/SingleJobPostsModeration";
+import SingleAdmin from "./pages/single/SingleAdmin";
+import UserDetail from "./pages/single/UserDetail";
+import Home from "./pages/home/Home";
+import ListJobSeekers from "./pages/list/ListJobSeekers";
+
+import ListEnterprise from "./pages/list/ListEnterprise";
+
 function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Index />} />
-        <Route path='/index-two' element={<IndexTwo />} />
-        <Route path='/job-categories' element={<JobCategories />} />
-        <Route path='/job-grid-two' element={<JobGridTwo />} />
-        <Route path='/job-list-one' element={<JobListOne />} />
 
-        <Route path='/job-apply' element={<ProtectedRoute element={JobApply} />} />
-        <Route path='/job-post' element={<ProtectedRoute element={JobPost} />} />
-        <Route path='/career' element={<ProtectedRoute element={Career} />} />
-        <Route path='/job-detail-three' element={<JobDetailThree />} />
-        <Route path='/job-detail-three/:id' element={<JobDetailThree />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/index-two" element={<IndexTwo />} />
+        <Route path="/job-categories" element={<JobCategories />} />
+        <Route path="/job-grid-two" element={<JobGridTwo />} />
+        <Route path="/job-list-one" element={<JobListOne />} />
 
-        <Route path='/employers' element={<ProtectedRoute element={Employers} />} />
-        <Route path='/employer-profile' element={<EmployerProfile />} />
-        <Route path='/employer-profile/:id' element={<ProtectedRoute element={EmployerProfile} />} />
+        <Route
+          path="/job-apply"
+          element={<ProtectedRoute element={JobApply} />}
+        />
+        <Route
+          path="/job-post"
+          element={<ProtectedRoute element={JobPost} />}
+        />
+        <Route path="/career" element={<ProtectedRoute element={Career} />} />
+        <Route path="/job-detail-three" element={<JobDetailThree />} />
+        <Route path="/job-detail-three/:id" element={<JobDetailThree />} />
 
-        <Route path='/candidates' element={<ProtectedRoute element={Candidates} />} />
-        <Route path='/candidate-profile' element={<ProtectedRoute element={CandidateProfile} />} />
-        <Route path='/candidate-profile/:id' element={<ProtectedRoute element={CandidateProfile} />} />
-        <Route path='/candidate-profile-setting' element={<ProtectedRoute element={CandidateProfileSetting} />} />
+        <Route
+          path="/employers"
+          element={<ProtectedRoute element={Employers} />}
+        />
+        <Route path="/employer-profile" element={<EmployerProfile />} />
+        <Route
+          path="/employer-profile/:id"
+          element={<ProtectedRoute element={EmployerProfile} />}
+        />
 
-        <Route path='/aboutus' element={<AboutUs />} />
-        <Route path='/services' element={<Services />} />
-        <Route path='/pricing' element={<Pricing />} />
-        <Route path='/helpcenter-overview' element={<HelpcenterOverview />} />
-        <Route path='/helpcenter-faqs' element={<HelpcenterFaq />} />
-        <Route path='/helpcenter-guides' element={<HelpcenterGuides />} />
-        <Route path='/helpcenter-support' element={<HelpcenterSupport />} />
-        <Route path='/blogs' element={<Blogs />} />
-        <Route path='/blog-sidebar' element={<BlogSidebar />} />
-        <Route path='/blog-detail' element={<BlogDetail />} />
-        <Route path='/blog-detail/:id' element={<BlogDetail />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='/lock-screen' element={<LockScreen />} />
+        <Route
+          path="/candidates"
+          element={<ProtectedRoute element={Candidates} />}
+        />
+        <Route
+          path="/candidate-profile"
+          element={<ProtectedRoute element={CandidateProfile} />}
+        />
+        <Route
+          path="/candidate-profile/:id"
+          element={<ProtectedRoute element={CandidateProfile} />}
+        />
+        <Route
+          path="/candidate-profile-setting"
+          element={<ProtectedRoute element={CandidateProfileSetting} />}
+        />
 
-        <Route path='/terms' element={<Terms />} />
-        <Route path='/privacy' element={<Privacy />} />
-        <Route path='/contactus' element={<ContactUs />} />
-        <Route path='*' element={<Error />} />
-        <Route path='/error' element={<Error />} />
-        <Route path='/comingsoon' element={<Comingsoom />} />
-        <Route path='/maintenance' element={<Maintenance />} />
-        <Route path='/update-password' element={<UpdatePassword />} />
-        <Route path='/change-password' element={<CreatePassword />} />
+        <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/helpcenter-overview" element={<HelpcenterOverview />} />
+        <Route path="/helpcenter-faqs" element={<HelpcenterFaq />} />
+        <Route path="/helpcenter-guides" element={<HelpcenterGuides />} />
+        <Route path="/helpcenter-support" element={<HelpcenterSupport />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blog-sidebar" element={<BlogSidebar />} />
+        <Route path="/blog-detail" element={<BlogDetail />} />
+        <Route path="/blog-detail/:id" element={<BlogDetail />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/lock-screen" element={<LockScreen />} />
 
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/contactus" element={<ContactUs />} />
+        <Route path="*" element={<Error />} />
+        <Route path="/error" element={<Error />} />
+        <Route path="/comingsoon" element={<Comingsoom />} />
+        <Route path="/maintenance" element={<Maintenance />} />
+        <Route path="/update-password" element={<UpdatePassword />} />
+        <Route path="/change-password" element={<CreatePassword />} />
+        
         <Route path='/create-template' element={<CreateTemplate />} />
         <Route path='/template' element={<TemplateContainer />} />
         <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
         <Route path="/resume/*" element={<CreateResume />} />
+        {/* admin route */}
+
+        {/* dashboard */}
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+
+          {/* users */}
+          <Route path="users">
+            <Route path="job-seekers">
+              <Route index element={<ListJobSeekers />} />
+              <Route path=":userId" element={<Single />} />
+              <Route
+                path="add"
+                element={<New inputs={userInputs} title="Add New User" />}
+              />
+            </Route>
+            <Route path="enterprise">
+              <Route index element={<ListEnterprise />} />
+              <Route path=":enterpriseId" element={<Single />} />
+            </Route>
+          </Route>
+
+          {/* job post */}
+          <Route path="jobPosts">
+            <Route index element={<ListJobPosts />} />
+            <Route path=":productId" element={<SingleJobPosts />} />
+          </Route>
+          {/* The article requires moderation */}
+          <Route path="jobPostsModeration">
+            <Route index element={<ListJobPostsModeration />} />
+            <Route path=":productId" element={<SingleJobPostsModeration />} />
+          </Route>
+          {/* package services */}
+          <Route path="packageService">
+            <Route index element={<packageServices />} />
+            <Route path=":userId" element={<Single />} />
+            <Route
+              path="add"
+              element={<New inputs={userInputs} title="Add New User" />}
+            />
+          </Route>
+
+          {/* profile */}
+          <Route path="profileAdmin">
+            <Route index element={<packageServices />} />
+          </Route>
+
+          <Route>
+            <Route>
+              <Route path="/users">
+                <Route index element={<users />} />
+                <Route path="view/:id" element={<UserDetail />} />
+              </Route>
+            </Route>
+          </Route>
+
+          {/* logout */}
+          <Route path="/logout">
+            <Route index element={<logout />} />
+          </Route>
+        </Route>
+
       </Routes>
     </>
   );
