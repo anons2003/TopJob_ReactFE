@@ -19,7 +19,7 @@ export default function JobApply() {
   const user = userData?.data;
   const token = localStorage.getItem("token");
 
-  const [eid, setEid] = useState("10"); // Default eid to 9 if not in URL
+  const [eid, setEid] = useState("3"); // Default eid to 9 if not in URL
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ export default function JobApply() {
 
   const applyResumeMutation = useMutation({
     mutationFn: (formData) => {
-      return api.post(`/apply-cv/${eid}`, formData, {
+      return api.post(`jobSeeker/apply-cv/${eid}`, formData, {
         headers: {
           Authorization: token,
         },
@@ -52,6 +52,7 @@ export default function JobApply() {
       setPhone(user.phone);
       setOccupation(user.occupation);
       setFullName(firstName + " " + lastName);
+      setResume(user.resume_url);
     }
   }, [user, firstName, lastName, eidFromUrl]);
 
