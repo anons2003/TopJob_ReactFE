@@ -11,7 +11,7 @@ import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 import api from "../api/http";
 
-export default function JobApply() {
+export default function ReApply() {
   const { id: eidFromUrl } = useParams(); // Extract eid from URL
   const location = useLocation();
   const jobData = location.state?.job;
@@ -19,7 +19,7 @@ export default function JobApply() {
   const user = userData?.data;
   const token = localStorage.getItem("token");
 
-  const [eid, setEid] = useState("3"); // Default eid to 9 if not in URL
+  const [eid, setEid] = useState("2"); // Default eid to 9 if not in URL
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ export default function JobApply() {
 
   const applyResumeMutation = useMutation({
     mutationFn: (formData) => {
-      return api.post(`jobSeeker/apply-cv/${eid}`, formData, {
+      return api.patch(`jobSeeker/reapply-cv/${eid}`, formData, {
         headers: {
           Authorization: token,
         },
@@ -302,23 +302,13 @@ export default function JobApply() {
                           id="submit2"
                           name="send"
                           className="submitBtn btn btn-primary"
-                          value="Apply Now"
+                          value="Re Apply"
                           style={{
                             opacity: isAccepted ? 1 : 0.5,
                           }}
                         />
                       </div>
                     </div>
-                    {showWarning && (
-                      <div className="row">
-                        <div className="col-12">
-                          <p className="text-danger">
-                            You need to accept the terms and conditions before
-                            applying.
-                          </p>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </form>
               </div>

@@ -46,10 +46,14 @@ import UpdatePassword from "./pages/update-password/update-password";
 import CreatePassword from "./pages/change-password/create-password";
 import ProtectedRoute from "./hook/useProtectRoute";
 
-import CreateTemplate from './pages/create-cv/CreateTemplates';
-import TemplateContainer from './pages/create-cv/TemplateContainer';
-import TemplateDesignPinDetail from './pages/create-cv/TemplateDesignPinDetail';
-import CreateResume from './pages/create-cv/CreateResume';
+import CreateTemplate from "./pages/create-cv/CreateTemplates";
+import TemplateContainer from "./pages/create-cv/TemplateContainer";
+import TemplateDesignPinDetail from "./pages/create-cv/TemplateDesignPinDetail";
+import CreateResume from "./pages/create-cv/CreateResume";
+import BookmarksList from "./pages/bookmark-list";
+import CVAppliedList from "./pages/job-applied-list";
+import ReApply from "./pages/reapply-job";
+
 
 
 // admin
@@ -74,7 +78,6 @@ function App() {
   return (
     <>
       <Routes>
-
         <Route path="/" element={<Index />} />
         <Route path="/index-two" element={<IndexTwo />} />
         <Route path="/job-categories" element={<JobCategories />} />
@@ -83,6 +86,10 @@ function App() {
 
         <Route
           path="/job-apply"
+          element={<ProtectedRoute element={JobApply} />}
+        />
+         <Route
+          path="/job-apply/:id"
           element={<ProtectedRoute element={JobApply} />}
         />
         <Route
@@ -136,6 +143,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/lock-screen" element={<LockScreen />} />
 
+
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/contactus" element={<ContactUs />} />
@@ -145,11 +153,16 @@ function App() {
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/change-password" element={<CreatePassword />} />
-        
+
         <Route path='/create-template' element={<CreateTemplate />} />
         <Route path='/template' element={<TemplateContainer />} />
         <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
         <Route path="/resume/*" element={<CreateResume />} />
+         {/* new */}
+        <Route path="bookmark-list" element={<BookmarksList />} />
+        <Route path="cv-applied-list" element={<CVAppliedList />} />
+        <Route path="reapply-job" element={<ReApply />} />
+        <Route path="reapply-job/:id" element={<ReApply />} />
         {/* admin route */}
 
         {/* dashboard */}
@@ -212,7 +225,6 @@ function App() {
             <Route index element={<logout />} />
           </Route>
         </Route>
-
       </Routes>
     </>
   );

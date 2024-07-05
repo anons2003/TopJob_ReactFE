@@ -11,12 +11,13 @@ import { Input, Modal, notification } from "antd";
 import Loading from "../components/loading";
 import { FiCamera } from "../assets/icons/vander";
 import NotificationSettings from "../components/notification-setting/notificationSettings";
+import RichTextEditor from "../components/richtexteditor/RichTextEditor";
 
 export default function CandidateProfileSetting() {
   //   let [file, setFile] = useState(image1);
 
   const queryClient = useQueryClient();
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
 
@@ -44,7 +45,7 @@ export default function CandidateProfileSetting() {
     if (user) {
       setFirstName(user.first_name);
       setLastName(user.last_name);
-      setEmail(user.email);
+      setEmail(user.user.email);
       setSelectedState(user.state);
       setIntro(user.intro);
       setOccupation(user.occupation);
@@ -86,8 +87,9 @@ export default function CandidateProfileSetting() {
     }
   }
 
-  const firstNameRegex = /^[a-zA-ZÀ-ÿ\- ']+$/;
-  const lastNameRegex = /^[a-zA-ZÀ-ÿ\- ']+$/;
+  const firstNameRegex = /^[a-zA-Z\u00C0-\u017F\s]+$/u;
+
+  const lastNameRegex = /^[a-zA-Z]/u;
   function validateForm() {
     let valid = true;
     const errorsCopy = { ...errors };
@@ -150,11 +152,9 @@ export default function CandidateProfileSetting() {
           notification.success({
             message: "Contact info updated successfully:",
           });
-          // Optionally, you can perform any other actions here after updating the contact info
         },
         onError: (error) => {
           notification.error({ message: "Error updating contact info:" });
-          // Optionally, handle the error or show a notification to the user
         },
       });
     }
@@ -329,7 +329,7 @@ export default function CandidateProfileSetting() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("JOBSEEKER_PROFILE");
+      queryClient.invalidateQueries("USER_PROFILE");
       notification.success({ message: "Update avatar successfully" });
     },
     onError: () => {
@@ -347,7 +347,7 @@ export default function CandidateProfileSetting() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("JOBSEEKER_PROFILE");
+      queryClient.invalidateQueries("USER_PROFILE");
       notification.success({ message: "Upload resume successfully" });
     },
     onError: () => {
@@ -415,7 +415,7 @@ export default function CandidateProfileSetting() {
     const body = { puser_name: name };
     changeNameMutation.mutate(body, {
       onSuccess() {
-        queryClient.invalidateQueries("JOBSEEKER_PROFILE");
+        queryClient.invalidateQueries("USER_PROFILE");
         notification.success({ message: "Edit name successfully" });
       },
       onError() {
@@ -715,15 +715,7 @@ export default function CandidateProfileSetting() {
                           <label className="form-label fw-semibold">
                             Introduction :
                           </label>
-                          <textarea
-                            name="comments"
-                            id="comments2"
-                            rows="4"
-                            className="form-control"
-                            placeholder="Introduction :"
-                            value={intro}
-                            onChange={(e) => setIntro(e.target.value)}
-                          ></textarea>
+                          <RichTextEditor value={intro} onChange={setIntro} />
                         </div>
                       </div>
 
