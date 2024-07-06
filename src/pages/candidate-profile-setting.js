@@ -1,3 +1,5 @@
+//Part 1:
+
 import { useEffect, useState } from "react";
 
 import api from "../api/http";
@@ -154,7 +156,7 @@ export default function CandidateProfileSetting() {
           });
         },
         onError: (error) => {
-          notification.error({ message: "Error updating contact info:" });
+          notification.error({ message: "Error updating contact info" });
         },
       });
     }
@@ -346,13 +348,13 @@ export default function CandidateProfileSetting() {
         },
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries("USER_PROFILE");
-      notification.success({ message: "Upload resume successfully" });
-    },
-    onError: () => {
-      notification.error({ message: "Upload resume failed" });
-    },
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries("USER_PROFILE");
+    //   notification.success({ message: "Upload resume successfully" });
+    // },
+    // onError: () => {
+    //   notification.error({ message: "Upload resume failed" });
+    // },
   });
 
   // Function to handle file selection
@@ -971,3 +973,377 @@ export default function CandidateProfileSetting() {
     </>
   );
 }
+
+//Part 2:
+// export default function CandidateProfileSetting() {
+//   //   let [file, setFile] = useState(image1);
+
+//   const queryClient = useQueryClient();
+//   const token = localStorage.getItem("token");
+//   const { data: userData } = useJobSeekerInfo();
+//   const user = userData?.data;
+
+//   const [firstName, setFirstName] = useState("");
+//   const [lastName, setLastName] = useState("");
+//   const [email, setEmail] = useState("");
+//   const [occupation, setOccupation] = useState("");
+//   const [selectedState, setSelectedState] = useState("");
+//   const [phone, setPhone] = useState("");
+//   const [webUrl, setWebUrl] = useState("");
+//   const [intro, setIntro] = useState("");
+//   const [errors, setErrors] = useState({}); // Define errors state
+
+//   const updateUserInfoMutation = useMutation({
+//     mutationFn: (body) => {
+//       return api.patch("/update-info", body, {
+//         headers: {
+//           "content-type": "multipart/form-data",
+//           Authorization: token,
+//         },
+//       });
+//     },
+//   });
+
+//   useEffect(() => {
+//     if (user) {
+//       setFirstName(user.first_name);
+//       setLastName(user.last_name);
+//       setEmail(user.user.email);
+//       setSelectedState(user.state);
+//       setIntro(user.intro);
+//       setOccupation(user.occupation);
+//       setPhone(user.phone);
+//       setWebUrl(user.web_url);
+//       setResume(user.resume);
+//     }
+//   }, [user]);
+
+//   const handleInfoSubmit = (e) => {
+//     e.preventDefault();
+//     updateUserInfo(); // Trigger user info update
+//     // if (resume) {
+//     //   handleUploadResume();
+//     // }
+//   };
+
+//   function updateUserInfo() {
+//     if (validateForm()) {
+//       const formData = new FormData();
+
+//       formData.append("state", selectedState);
+//       formData.append("first_name", firstName);
+//       formData.append("last_name", lastName);
+//       formData.append("email", email);
+//       formData.append("occupation", occupation);
+//       formData.append("intro", intro);
+
+//       // Add the resume file if it exists
+//       if (resume) {
+//         formData.append("resume", resume);
+//       }
+
+//       // Convert the rest of the body to JSON and append it
+//       const updateInfoDTO = {
+//         state: selectedState,
+//         first_name: firstName,
+//         last_name: lastName,
+//         email: email,
+//         occupation: occupation,
+//         intro: intro,
+//       };
+
+//       formData.append("updateInfoDTO", JSON.stringify(updateInfoDTO));
+
+//       updateUserInfoMutation.mutate(formData, {
+//         onSuccess: (data) => {
+//           notification.success({ message: "User info updated successfully:" });
+//           // Optionally, you can perform any other actions here after updating the user info
+//         },
+//         onError: (error) => {
+//           notification.error({ message: "Error updating user info:" });
+//           // Optionally, handle the error or show a notification to the user
+//         },
+//       });
+//     }
+//   }
+
+//   const firstNameRegex = /^[a-zA-Z\u00C0-\u017F\s]+$/u;
+
+//   const lastNameRegex = /^[a-zA-Z]/u;
+//   function validateForm() {
+//     let valid = true;
+//     const errorsCopy = { ...errors };
+
+//     // Validate First Name using regex
+//     if (!firstNameRegex.test(firstName.trim())) {
+//       errorsCopy.firstName = "Invalid First Name";
+//       valid = false;
+//       notification.error({ message: "Please enter a valid first name!" });
+//     }
+
+//     // Validate Last Name using regex
+//     if (!lastNameRegex.test(lastName.trim())) {
+//       errorsCopy.lastName = "Invalid Last Name";
+//       valid = false;
+//       notification.error({ message: "Please enter a valid last name!" });
+//     }
+
+//     // Validate Email
+//     if (!email.trim()) {
+//       errorsCopy.email = "Email is Required";
+//       valid = false;
+//       notification.error({ message: "Please enter email address!" });
+//     } else {
+//       const emailRegex = /^\S+@\S+\.\S+$/;
+//       if (!emailRegex.test(email)) {
+//         errorsCopy.email = "Invalid Email Format";
+//         valid = false;
+//         notification.error({ message: "Please enter a valid email address!" });
+//       } else {
+//         errorsCopy.email = "";
+//       }
+//     }
+
+//     setErrors(errorsCopy);
+
+//     return valid;
+//   }
+//   //Contact Info Update
+//   const updateContactInfo = useMutation({
+//     mutationFn: (body) => {
+//       return api.patch("/update-contact-info", body, {
+//         headers: {
+//           Authorization: token,
+//         },
+//       });
+//     },
+//   });
+
+//   const handleSubmitContactInfo = (e) => {
+//     e.preventDefault();
+//     if (validateContactForm()) {
+//       const body = {
+//         phone: phone,
+//         web_url: webUrl,
+//       };
+
+//       updateContactInfo.mutate(body, {
+//         onSuccess: (data) => {
+//           notification.success({
+//             message: "Contact info updated successfully:",
+//           });
+//         },
+//         onError: (error) => {
+//           notification.error({ message: "Error updating contact info:" });
+//         },
+//       });
+//     }
+//   };
+
+//   function validateContactForm() {
+//     let valid = true;
+//     const errorsCopy = {};
+
+//     // Validate Phone Number
+//     if (phone.trim()) {
+//       // Check if the phone number is in a valid format
+//       const phoneRegex = /^[0-9]{10}$/; // Assuming a 10-digit phone number format
+//       if (!phoneRegex.test(phone)) {
+//         errorsCopy.phone = "Invalid Phone Number Format";
+//         valid = false;
+//         notification.error({ message: "Please enter correct phone number" });
+//       } else {
+//         errorsCopy.phone = "";
+//       }
+//     } else {
+//       errorsCopy.phone = "Phone Number is Required";
+//       valid = false;
+//     }
+
+//     // Validate Website URL
+//     if (webUrl.trim()) {
+//       // Check if the website URL is in a valid format
+//       const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+//       if (!urlRegex.test(webUrl)) {
+//         errorsCopy.webUrl = "Invalid Website URL Format";
+//         valid = false;
+//       } else {
+//         errorsCopy.webUrl = "";
+//       }
+//     } else {
+//       errorsCopy.webUrl = "Website URL is Required";
+//       valid = false;
+//     }
+
+//     // Set the updated errors object to the state
+//     setErrors(errorsCopy);
+
+//     return valid;
+//   }
+//   //  update password
+
+//   // Function to handle form submission
+//   const updatePasswordMutation = useMutation({
+//     mutationFn: (body) => {
+//       return api.patch("/update-password", body, {
+//         headers: {
+//           Authorization: token,
+//         },
+//       });
+//     },
+//   });
+
+//   const [oldPassword, setOldPassword] = useState("");
+//   const [newPassword, setNewPassword] = useState("");
+//   const [confirmPassword, setConfirmPassword] = useState("");
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     if (validatePasswrodForm()) {
+//       const body = { oldPassword, newPassword };
+//       updatePasswordMutation.mutate(body, {
+//         onSuccess() {
+//           notification.success({ message: "Updated password successfully" });
+//         },
+//         onError(error) {
+//           const errorMessage =
+//             error.response?.data?.message || "An error occurred";
+//           notification.error({ message: errorMessage });
+//         },
+//       });
+//     }
+//   };
+
+//   const validatePasswrodForm = () => {
+//     let valid = true;
+//     const errorsCopy = {};
+
+//     if (!oldPassword.trim()) {
+//       errorsCopy.oldPassword = "Old Password is Required";
+//       valid = false;
+//     }
+
+//     if (!newPassword.trim()) {
+//       errorsCopy.newPassword = "New Password is Required";
+//       notification.error({ message: "New Password is Required" });
+//       valid = false;
+//     } else if (
+//       !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]).{8,}/.test(
+//         newPassword
+//       )
+//     ) {
+//       errorsCopy.newPassword =
+//         "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.";
+//       valid = false;
+//       notification.error({
+//         message:
+//           "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.",
+//       });
+//     }
+
+//     if (!confirmPassword.trim()) {
+//       errorsCopy.confirmPassword = "Confirm Password is Required";
+//       valid = false;
+//       notification.error({ message: "New Password is Required" });
+//     } else if (newPassword !== confirmPassword) {
+//       errorsCopy.confirmPassword = "Passwords do not match";
+//       valid = false;
+//       notification.error({ message: "New Passwords do not match" });
+//     }
+
+//     // Check if new password is same as old password
+//     if (oldPassword === newPassword) {
+//       errorsCopy.newPassword =
+//         "New Password must be different from Old Password";
+//       valid = false;
+//       notification.error({
+//         message: "New Password must be different from Old Password",
+//       });
+//     }
+
+//     setErrors(errorsCopy);
+//     return valid;
+//   };
+//   //delete
+
+//   // State to track deletion status
+//   const [showDelModal, setShowDelModal] = useState(false);
+//   const [deletionStatus, setDeletionStatus] = useState("");
+
+//   // Mutation to handle user deletion
+//   const deleteMutation = useMutation({
+//     mutationFn: () => {
+//       return api.delete("/delete-account", {
+//         headers: {
+//           Authorization: token,
+//         },
+//       });
+//     },
+//   });
+
+//   // Function to handle user deletion
+//   const handleDeleteUser = async () => {
+//     try {
+//       const response = await deleteMutation.mutateAsync();
+//       if (response.status === 200) {
+//         setDeletionStatus("User deleted successfully.");
+//       } else {
+//         setDeletionStatus("Error deleting user. Please try again.");
+//       }
+//     } catch (error) {
+//       setDeletionStatus("Error deleting user. Please try again.");
+//     }
+//   };
+//   //
+//   //Upload CV
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [file, setFile] = useState(null);
+//   const [resume, setResume] = useState(null);
+
+//   const uploadAvatar = useMutation({
+//     mutationFn: (formData) => {
+//       return api.patch("/update-avatar", formData, {
+//         headers: {
+//           "content-type": "multipart/form-data",
+//           Authorization: token,
+//         },
+//       });
+//     },
+//     onSuccess: () => {
+//       queryClient.invalidateQueries("USER_PROFILE");
+//       notification.success({ message: "Update avatar successfully" });
+//     },
+//     onError: () => {
+//       notification.error({ message: "Update avatar failed" });
+//     },
+//   });
+
+//   const uploadResume = useMutation({
+//     mutationFn: (formData) => {
+//       return api.patch("/update-resume", formData, {
+//         headers: {
+//           "content-type": "multipart/form-data",
+//           Authorization: token,
+//         },
+//       });
+//     },
+//     onSuccess: () => {
+//       queryClient.invalidateQueries("USER_PROFILE");
+//       notification.success({ message: "Upload resume successfully" });
+//     },
+//     onError: () => {
+//       notification.error({ message: "Upload resume failed" });
+//     },
+//   });
+
+//   // Function to handle file selection
+//   const handleFileChange = (e) => {
+//     setResume(e.target.files[0]); // Update state with the selected resume file
+//   };
+
+//   // Function to handle form submission or other action to upload resume
+//   const handleUploadResume = () => {
+//     const formData = new FormData();
+//     formData.append("resume", resume);
+//     console.log("FormData:", formData);
+//     uploadResume.mutate(formData);
+//   };
