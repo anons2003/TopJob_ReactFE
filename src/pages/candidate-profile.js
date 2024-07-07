@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useParams } from "react-router-dom";
 import bg1 from "../assets/images/hero/bg5.jpg";
 import company1 from "../assets/images/company/linkedin.png";
 import company2 from "../assets/images/company/lenovo-logo.png";
@@ -22,31 +22,18 @@ import {
   FiDownload,
   FiMessageCircle,
   FiFileText,
+  FiGift,
 } from "../assets/icons/vander";
-import { useMutation } from "@tanstack/react-query";
 
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 import "react-toastify/dist/ReactToastify.css";
 
-import api from "../api/http";
-import Loading from "../components/loading";
 import { ContactUs } from "../components/contact";
 export default function CandidateProfile() {
-  const token = localStorage.getItem("token");
-  const { data: userData } = useJobSeekerInfo();
+  const { jid } = useParams();
+  const { data: userData } = useJobSeekerInfo(jid);
   const user = userData?.data;
-
-  const uploadAvatar = useMutation({
-    mutationFn: (formData) => {
-      return api.patch("/update-avatar", formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-          Authorization: token,
-        },
-      });
-    },
-  });
 
   return (
     <>
@@ -60,27 +47,23 @@ export default function CandidateProfile() {
                   <img src={bg1} className="img-fluid rounded shadow" alt="" />
                 </div>
                 <div className="candidate-profile d-flex align-items-end justify-content-between mx-2">
-                  {uploadAvatar.isPending ? (
-                    <Loading />
-                  ) : (
-                    <div className="d-flex align-items-end">
-                      <img
-                        src={user?.avatar_url}
-                        className="rounded-pill shadow border border-3 avatar avatar-medium"
-                        alt=""
-                      />
+                  <div className="d-flex align-items-end">
+                    <img
+                      src={user?.avatar_url}
+                      className="rounded-pill shadow border border-3 avatar avatar-medium"
+                      alt=""
+                    />
 
-                      <div className="ms-2">
-                        <h5 className="mb-0">
-                          {user?.gender === 0 ? "Mr. " : "Mrs. "}{" "}
-                          {user?.firstName == null && user?.last_name == null
-                            ? user?.user_name
-                            : user?.first_name + " " + user?.last_name}
-                        </h5>
-                        <p className="text-muted mb-0">{user?.occupation}</p>
-                      </div>
+                    <div className="ms-2">
+                      <h5 className="mb-0">
+                        {user?.gender === 0 ? "Mr. " : "Mrs. "}{" "}
+                        {user?.firstName == null && user?.last_name == null
+                          ? user?.user_name
+                          : user?.first_name + " " + user?.last_name}
+                      </h5>
+                      <p className="text-muted mb-0">{user?.occupation}</p>
                     </div>
-                  )}
+                  </div>
                   <Link
                     to="/candidate-profile-setting"
                     className="btn btn-sm btn-icon btn-pills btn-soft-primary"
@@ -181,7 +164,7 @@ export default function CandidateProfile() {
                       />
                       <h6 className="text-muted mt-2 mb-0">2017-19</h6>
                     </div>
-
+                    ``{" "}
                     <div className="ms-3">
                       <h6 className="mb-0">Back-end Developer</h6>
                       <p className="text-muted">Lenovo - China</p>
@@ -293,12 +276,12 @@ export default function CandidateProfile() {
                     </span>
                   </div>
 
-                  {/* <div className="d-flex align-items-center justify-content-between mt-3">
+                  <div className="d-flex align-items-center justify-content-between mt-3">
                     <span className="d-inline-flex align-items-center text-muted fw-medium">
                       <FiGift className="fea icon-sm me-2" /> D.O.B.:
                     </span>
-                    <span className="fw-medium">31st Dec, 1996</span>
-                  </div> */}
+                    <span className="fw-medium">{user?.dob}</span>
+                  </div>
 
                   {/* <div className="d-flex align-items-center justify-content-between mt-3">
                     <span className="d-inline-flex align-items-center text-muted fw-medium">

@@ -1,14 +1,17 @@
-
 import { useQuery } from "@tanstack/react-query";
 import api from "../api/http";
 
-const useJobSeekerInfo = () => {
+const useJobSeekerInfo = (jid) => {
   const token = sessionStorage.getItem("token");
 
+  const endpoint = jid
+    ? `/jobSeeker/candidate-profile/${jid}`
+    : "/jobSeeker/candidate-profile";
+
   return useQuery({
-    queryKey: ["JOBSEEKER_PROFILE"],
+    queryKey: ["JOBSEEKER_PROFILE", jid],
     queryFn: () =>
-      api.get("/candidate-profile", {
+      api.get(endpoint, {
         headers: {
           Authorization: token, // Truyền token trực tiếp
         },
@@ -25,5 +28,3 @@ const useJobSeekerInfo = () => {
 };
 
 export default useJobSeekerInfo;
-
-

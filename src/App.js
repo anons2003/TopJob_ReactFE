@@ -54,8 +54,6 @@ import BookmarksList from "./pages/bookmark-list";
 import CVAppliedList from "./pages/job-applied-list";
 import ReApply from "./pages/reapply-job";
 
-
-
 // admin
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
@@ -88,7 +86,7 @@ function App() {
           path="/job-apply"
           element={<ProtectedRoute element={JobApply} />}
         />
-         <Route
+        <Route
           path="/job-apply/:id"
           element={<ProtectedRoute element={JobApply} />}
         />
@@ -115,11 +113,12 @@ function App() {
           element={<ProtectedRoute element={Candidates} />}
         />
         <Route
-          path="/candidate-profile"
+          path="/candidate-profile/:jid"
           element={<ProtectedRoute element={CandidateProfile} />}
         />
+
         <Route
-          path="/candidate-profile/:id"
+          path="/candidate-profile"
           element={<ProtectedRoute element={CandidateProfile} />}
         />
         <Route
@@ -143,7 +142,6 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/lock-screen" element={<LockScreen />} />
 
-
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/contactus" element={<ContactUs />} />
@@ -154,15 +152,19 @@ function App() {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/change-password" element={<CreatePassword />} />
 
-        <Route path='/create-template' element={<CreateTemplate />} />
-        <Route path='/template' element={<TemplateContainer />} />
-        <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
+        <Route path="/create-template" element={<CreateTemplate />} />
+        <Route path="/template" element={<TemplateContainer />} />
+        <Route
+          path="/resumeDetail/:templateID"
+          element={<TemplateDesignPinDetail />}
+        />
         <Route path="/resume/*" element={<CreateResume />} />
-         {/* new */}
+        {/* new */}
         <Route path="bookmark-list" element={<BookmarksList />} />
         <Route path="cv-applied-list" element={<CVAppliedList />} />
         <Route path="reapply-job" element={<ReApply />} />
         <Route path="reapply-job/:id" element={<ReApply />} />
+
         {/* admin route */}
 
         {/* dashboard */}
