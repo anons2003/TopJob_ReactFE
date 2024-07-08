@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import api from "../api/http";
 
 const fetchAppliedCVs = async () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { data } = await axios.get("http://localhost:8080/jobSeeker/get-cvs", {
     headers: {
       Authorization: token,
@@ -22,7 +22,7 @@ const CVList = () => {
 
   const deleteCVMutation = useMutation({
     mutationFn: (eid) => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       return api.delete(`/jobSeeker/delete-cv/${eid}`, {
         headers: {
           Authorization: token,

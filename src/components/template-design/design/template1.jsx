@@ -330,6 +330,7 @@ const Template1 = () => {
     const imgData = canvas.toDataURL('image/png');
     pdf.addImage(imgData, 'PNG', 0, 0);
     pdf.save('document.pdf');
+    toast.success('PDF generated successfully!');
   };
 
   const generateImage = async () => {
@@ -340,6 +341,7 @@ const Template1 = () => {
     link.href = imgData;
     link.download = 'image.png';
     link.click();
+    toast.success('image generated successfully!');
   };
 
   const generatePng = generateImage;
@@ -351,6 +353,7 @@ const Template1 = () => {
     link.href = 'data:image/svg+xml;base64,' + btoa(svgData);
     link.download = 'image.svg';
     link.click();
+    toast.success('SVG generated successfully!');
   };
 
 

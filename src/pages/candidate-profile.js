@@ -33,7 +33,7 @@ import api from "../api/http";
 import Loading from "../components/loading";
 import { ContactUs } from "../components/contact";
 export default function CandidateProfile() {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
 

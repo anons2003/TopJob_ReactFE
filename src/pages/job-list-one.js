@@ -30,7 +30,7 @@ export default function JobListOne() {
 
   const bookmarkMutation = useMutation({
     mutationFn: (jobId) => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       return api.post(
         `/jobSeeker/job/${jobId}`,
         {},
@@ -45,7 +45,7 @@ export default function JobListOne() {
 
   const unbookmarkMutation = useMutation({
     mutationFn: (jobId) => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       return api.delete(`/jobSeeker/job/${jobId}`, {
         headers: {
           Authorization: token,
@@ -208,7 +208,7 @@ export default function JobListOne() {
               );
             })}
           </div>
-
+          {/* phan trang */}
           <div className="row">
             <div className="col-12 mt-4 pt-2">
               <ul className="pagination justify-content-center mb-0">

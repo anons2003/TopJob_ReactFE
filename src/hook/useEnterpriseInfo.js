@@ -7,7 +7,7 @@ const useEnterpriseInfo = () => {
     return useQuery({
         queryKey: ["ENTERPRISE_PROFILE"],
         queryFn: () =>
-            api.get("/enterprise/profile", {
+            api.get("/enterprises/enterprise-profile", {
                 headers: {
                     Authorization: token, // Truyền token trực tiếp
                 },

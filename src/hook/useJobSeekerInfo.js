@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import api from "../api/http";
 
@@ -8,7 +7,7 @@ const useJobSeekerInfo = () => {
   return useQuery({
     queryKey: ["JOBSEEKER_PROFILE"],
     queryFn: () =>
-      api.get("/candidate-profile", {
+      api.get("/jobSeeker/candidate-profile", {
         headers: {
           Authorization: token, // Truyền token trực tiếp
         },

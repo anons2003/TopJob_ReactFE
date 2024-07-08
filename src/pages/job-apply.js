@@ -17,7 +17,7 @@ export default function JobApply() {
   const jobData = location.state?.job;
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const [eid, setEid] = useState("3"); // Default eid to 9 if not in URL
   const [firstName, setFirstName] = useState("");

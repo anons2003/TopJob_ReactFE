@@ -2,12 +2,11 @@ import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navbar from "../components/navbar";
 import NavbarDark from "../components/navbarDark";
 import api from "../api/http";
 
 const fetchBookmarkedJobs = async () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { data } = await axios.get(
     "http://localhost:8080/jobSeeker/bookmarks",
     {
@@ -38,7 +37,7 @@ const BookmarksList = () => {
 
   const unbookmarkMutation = useMutation({
     mutationFn: (jobId) => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       return api.delete(`/jobSeeker/job/${jobId}`, {
         headers: {
           Authorization: token,

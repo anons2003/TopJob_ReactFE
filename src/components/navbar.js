@@ -31,6 +31,7 @@ export default function Navbar({ navClass, navLight }) {
   const { data: enterpriseData } = useEnterpriseInfo();
   const jobSeekerRole = sessionStorage.getItem("roleJobSeeker");
   const enterpriseRole = sessionStorage.getItem("roleEnterprise");
+  const adminRole = sessionStorage.getItem('roleAdmin');
   const jobseeker = jobseekerData?.data;
   const enterprise = enterpriseData?.data;
 
@@ -96,6 +97,7 @@ export default function Navbar({ navClass, navLight }) {
     } else if (enterpriseRole && enterprise?.avatar_url) {
       return enterprise.avatar_url;
     }
+    return 'https://res.cloudinary.com/dz9kynjwb/image/upload/v1717770585/OIP_bsmlku.jpg'
   };
 
   const renderUser = () => (
@@ -160,6 +162,17 @@ export default function Navbar({ navClass, navLight }) {
             >
               <FiBook className="fea icon-sm me-2 align-middle" />
               Applied List
+            </Link>
+          )}
+          <div className="dropdown-divider border-top"></div>
+
+          {adminRole && (
+            <Link
+              to="/admin/dashboard"
+              className="dropdown-item fw-medium fs-6"
+            >
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              Admin Dashboard
             </Link>
           )}
           <div className="dropdown-divider border-top"></div>
@@ -261,7 +274,7 @@ export default function Navbar({ navClass, navLight }) {
           </li>
 
           <li className="list-inline-item ps-1 mb-0">
-            {jobSeekerRole || enterpriseRole ? (
+            {jobSeekerRole || enterpriseRole || adminRole ? (
               renderUser()
             ) : (
               <div className="dropdown dropdown-primary">
