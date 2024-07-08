@@ -16,7 +16,7 @@ const Widget = ({ type }) => {
 
   useEffect(() => {
     if (type === "user") {
-      axios.get("http://localhost:8080/api/totalUsers")
+      axios.get("http://localhost:8080/totalUsers")
         .then(response => {
           setTotalUsers(response.data);
           setIsLoading(false);

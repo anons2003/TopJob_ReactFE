@@ -26,12 +26,12 @@ export default function NavbarDark() {
   const cartDropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  const { data: jobseekerData } = useJobSeekerInfo();
-  const { data: enterpriseData } = useEnterpriseInfo();
-  const jobSeekerRole = sessionStorage.getItem("roleJobSeeker");
-  const enterpriseRole = sessionStorage.getItem("roleEnterprise");
-  const jobseeker = jobseekerData?.data;
-  const enterprise = enterpriseData?.data;
+    const { data: jobseekerData } = useJobSeekerInfo();
+    const { data: enterpriseData } = useEnterpriseInfo();
+    const jobSeekerRole = sessionStorage.getItem("roleJobSeeker");
+    const enterpriseRole = sessionStorage.getItem("roleEnterprise");
+    const jobseeker = jobseekerData?.data;
+    const enterprise = enterpriseData?.data;
 
   useEffect(() => {
     let current = location.pathname.substring(
@@ -88,80 +88,34 @@ export default function NavbarDark() {
     }
   };
 
-  const getAvatarUrl = () => {
-    if (jobSeekerRole && jobseeker?.avatar_url) {
-      return jobseeker.avatar_url;
-    } else if (enterpriseRole && enterprise?.avatar_url) {
-      return enterprise.avatar_url;
-    }
-  };
+    const getAvatarUrl = () => {
+        if (jobSeekerRole && jobseeker?.avatar_url) {
+            return jobseeker.avatar_url;
+        }
+        else if (enterpriseRole && enterprise?.avatar_url) {
+            return enterprise.avatar_url;
+        }
 
-  const renderUser = () => (
-    <div className="dropdown dropdown-primary" ref={cartDropdownRef}>
-      <button
-        type="button"
-        onClick={() => setCartitem(!cartitem)}
-        className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary"
-      >
-        <img src={getAvatarUrl()} className="img-fluid rounded-pill" alt="" />
-      </button>
-      <div style={{ display: cartitem === true ? "block" : "none" }}>
-        <div
-          className={`dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}
-        >
-          {jobSeekerRole && (
-            <Link
-              to="/candidate-profile"
-              className="dropdown-item fw-medium fs-6"
-            >
-              <FiUser className="fea icon-sm me-2 align-middle" />
-              Profile
-            </Link>
-          )}
-          {enterpriseRole && (
-            <Link
-              to="/employer-profile"
-              className="dropdown-item fw-medium fs-6"
-            >
-              <FiUser className="fea icon-sm me-2 align-middle" />
-              Profile
-            </Link>
-          )}
-          {jobSeekerRole && (
-            <Link
-              to="/candidate-profile-setting"
-              className="dropdown-item fw-medium fs-6"
-            >
-              <FiSettings className="fea icon-sm me-2 align-middle" />
-              Settings
-            </Link>
-          )}
-          {enterpriseRole && (
-            <Link
-              to="/employer-profile-setting"
-              className="dropdown-item fw-medium fs-6"
-            >
-              <FiSettings className="fea icon-sm me-2 align-middle" />
-              Settings
-            </Link>
-          )}
-          {jobSeekerRole && (
-            <Link to="/bookmark-list" className="dropdown-item fw-medium fs-6">
-              <FiBookmark className="fea icon-sm me-2 align-middle" />
-              Bookmark
-            </Link>
-          )}
+    };
 
-          {jobSeekerRole && (
-            <Link
-              to="/cv-applied-list"
-              className="dropdown-item fw-medium fs-6"
-            >
-              <FiBook className="fea icon-sm me-2 align-middle" />
-              Applied List
-            </Link>
-          )}
-          <div className="dropdown-divider border-top"></div>
+    const renderUser = () => (
+        <div className="dropdown dropdown-primary" ref={cartDropdownRef}>
+            <button type="button" onClick={() => setCartitem(!cartitem)} className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary">
+                <img src={getAvatarUrl()} className="img-fluid rounded-pill" alt="" />
+            </button>
+            <div style={{ display: cartitem === true ? 'block' : 'none' }}>
+                <div className={`dropdown-menu dd-menu dropdown-menu-end bg-white rounded shadow border-0 mt-3 show`}>
+                    {jobSeekerRole && (
+                        <Link to="/candidate-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
+                    )}{enterpriseRole && (
+                        <Link to="/employer-profile" className="dropdown-item fw-medium fs-6"><FiUser className="fea icon-sm me-2 align-middle" />Profile</Link>
+                    )}
+                    {jobSeekerRole && (
+                        <Link to="/candidate-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
+                    )}{enterpriseRole && (
+                        <Link to="/employer-profile-setting" className="dropdown-item fw-medium fs-6"><FiSettings className="fea icon-sm me-2 align-middle" />Settings</Link>
+                    )}
+                    <div className="dropdown-divider border-top"></div>
 
           {/* <Link to="/lock-screen" className="dropdown-item fw-medium fs-6"><FiLock className="fea icon-sm me-2 align-middle" />Lockscreen</Link> */}
 
@@ -251,19 +205,16 @@ export default function NavbarDark() {
             </div>
           </li>
 
-          <li className="list-inline-item ps-1 mb-0">
-            {jobSeekerRole || enterpriseRole ? (
-              renderUser()
-            ) : (
-              <Link
-                to="/login"
-                className="btn btn-sm btn-icon btn-pills btn-primary"
-              >
-                <FiLogIn className="icons" />
-              </Link>
-            )}
-          </li>
-        </ul>
+                    <li className="list-inline-item ps-1 mb-0">
+                        {jobSeekerRole || enterpriseRole ? (
+                            renderUser()
+                        ) : (
+                            <Link to="/login" className="btn btn-sm btn-icon btn-pills btn-primary">
+                                <FiLogIn className="icons" />
+                            </Link>
+                        )}
+                    </li>
+                </ul>
 
         <div id="navigation">
           <ul className="navigation-menu nav-right">

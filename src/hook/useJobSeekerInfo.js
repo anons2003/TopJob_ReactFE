@@ -11,7 +11,7 @@ const useJobSeekerInfo = (jid) => {
   return useQuery({
     queryKey: ["JOBSEEKER_PROFILE", jid],
     queryFn: () =>
-      api.get(endpoint, {
+      api.get("/candidate-profile", {
         headers: {
           Authorization: token, // Truyền token trực tiếp
         },

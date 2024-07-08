@@ -31,13 +31,24 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { ContactUs } from "../components/contact";
 export default function CandidateProfile() {
-  const { jid } = useParams();
-  const { data: userData } = useJobSeekerInfo(jid);
-  const user = userData?.data;
-  const htmlContent = user?.intro?.replace(
-    /<img/g,
-    '<img style="max-width: 100%; height: auto;"'
-  );
+
+  const token = sessionStorage.getItem("token");
+  const { data: jobseekerData } = useJobSeekerInfo();
+  const jobseeker = jobseekerData?.data;
+  const jobSeekerRole = sessionStorage.getItem("roleJobSeeker");
+  const enterpriseRole = sessionStorage.getItem("roleEnterprise");
+
+  const uploadAvatar = useMutation({
+    mutationFn: (formData) => {
+      return api.patch("/update-avatar", formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+          Authorization: token,
+        },
+      });
+    },
+  });
+
 
   return (
     <>
@@ -51,24 +62,28 @@ export default function CandidateProfile() {
                   <img src={bg1} className="img-fluid rounded shadow" alt="" />
                 </div>
                 <div className="candidate-profile d-flex align-items-end justify-content-between mx-2">
-                  <div className="d-flex align-items-end">
-                    <img
-                      src={user?.avatar_url}
-                      className="rounded-pill shadow border border-3 avatar avatar-medium"
-                      alt=""
-                    />
+                  {uploadAvatar.isPending ? (
+                    <Loading />
+                  ) : (
+                    <div className="d-flex align-items-end">
+                      <img
+                        src={jobseeker?.avatar_url}
+                        className="rounded-pill shadow border border-3 avatar avatar-medium"
+                        alt=""
+                      />
 
-                    <div className="ms-2">
-                      <h5 className="mb-0">
-                        {user?.gender === 0 ? "Mr. " : "Mrs. "}{" "}
-                        {user?.firstName == null && user?.last_name == null
-                          ? user?.user_name
-                          : user?.first_name + " " + user?.last_name}
-                      </h5>
-                      <p className="text-muted mb-0">{user?.occupation}</p>
+                      <div className="ms-2">
+                        <h5 className="mb-0">
+                          {jobseeker?.gender === 0 ? "Mr. " : "Mrs. "}{" "}
+                          {jobseeker?.firstName == null && jobseeker?.last_name == null
+                            ? jobseeker?.user_name
+                            : jobseeker?.first_name + " " + jobseeker?.last_name}
+                        </h5>
+                        <p className="text-muted mb-0">{jobseeker?.occupation}</p>
+                      </div>
                     </div>
-                  </div>
-                  <Link
+                  )}
+                  {jobSeekerRole && <Link
                     to="/candidate-profile-setting"
                     className="btn btn-sm btn-icon btn-pills btn-soft-primary"
                   >
@@ -85,7 +100,7 @@ export default function CandidateProfile() {
             <div className="col-lg-8 col-md-7 col-12">
               <h5 className="mb-4">Introduction:</h5>
 
-              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+              <p className="text-muted">{jobseeker?.intro}</p>
 
               <h5 className="mt-4">Skills:</h5>
 

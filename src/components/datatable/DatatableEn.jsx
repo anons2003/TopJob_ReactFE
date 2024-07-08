@@ -1,12 +1,12 @@
 // Import statements
 import { DataGrid } from '@mui/x-data-grid';
-import { userColumns } from '../../data/datatablesource';
+import { userColumns } from '../../data/datatablesourceEn';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import "./datatable.scss";
 
 
-const Datatable = () => {
+const DatatableEn = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const Datatable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:8080/jobSeeker/jobseekers');
+        const response = await fetch('http://localhost:8080/enterprises/enterprise');
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
@@ -75,7 +75,7 @@ const Datatable = () => {
               width: 200,
               renderCell: (params) => (
                 <div className="cellAction">
-                  <Link to={`/users/view/${params.row.jid}`} className="viewButton">
+                  <Link to={`/users/view/${params.row.eid}`} className="viewButton">
                     View
                   </Link>
                   <button className="lockButton" onClick={() => handleDeactivate(params.row.jid)}>
@@ -87,11 +87,11 @@ const Datatable = () => {
           ]}
           pageSize={10}
           rowsPerPageOptions={[10]}
-          getRowId={(row) => row.jid} // Sử dụng jid làm id
+          getRowId={(row) => row.eid} // Sử dụng jid làm id
         />
       )}
     </div>
   );
 };
 
-export default Datatable;
+export default DatatableEn;

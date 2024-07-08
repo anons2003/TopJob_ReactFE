@@ -13,10 +13,6 @@ import { Input, Modal, notification } from "antd";
 import Loading from "../components/loading";
 import { FiCamera } from "../assets/icons/vander";
 import NotificationSettings from "../components/notification-setting/notificationSettings";
-import RichTextEditor from "../components/richtexteditor/RichTextEditor";
-import { toast } from "react-toastify";
-import StateCitySelector from "../components/state-city-selector/State_City";
-import Selector from "../components/state-city-selector/Selector";
 
 export default function CandidateProfileSetting() {
   //   let [file, setFile] = useState(image1);
@@ -53,9 +49,8 @@ export default function CandidateProfileSetting() {
     if (user) {
       setFirstName(user.first_name);
       setLastName(user.last_name);
-      setEmail(user.user.email);
-      setStateName(user.state);
-      setCityName(user.city);
+      setEmail(user.email);
+      setSelectedState(user.state);
       setIntro(user.intro);
       setOccupation(user.occupation);
       setPhone(user.phone);
@@ -160,10 +155,14 @@ export default function CandidateProfileSetting() {
 
       updateContactInfo.mutate(body, {
         onSuccess: (data) => {
-          toast.success("Contact info updated successfully:");
+          notification.success({
+            message: "Contact info updated successfully:",
+          });
+          // Optionally, you can perform any other actions here after updating the contact info
         },
         onError: (error) => {
-          toast.error("Error updating contact info");
+          notification.error({ message: "Error updating contact info:" });
+          // Optionally, handle the error or show a notification to the user
         },
       });
     }
@@ -320,8 +319,8 @@ export default function CandidateProfileSetting() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("USER_PROFILE");
-      toast.success("Update avatar successfully");
+      queryClient.invalidateQueries("JOBSEEKER_PROFILE");
+      notification.success({ message: "Update avatar successfully" });
     },
     onError: () => {
       toast.error("Update avatar failed");
@@ -338,8 +337,8 @@ export default function CandidateProfileSetting() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("USER_PROFILE");
-      toast.success("Upload resume successfully");
+      queryClient.invalidateQueries("JOBSEEKER_PROFILE");
+      notification.success({ message: "Upload resume successfully" });
     },
     onError: () => {
       toast.error("Upload resume failed");
@@ -406,8 +405,8 @@ export default function CandidateProfileSetting() {
     const body = { puser_name: name };
     changeNameMutation.mutate(body, {
       onSuccess() {
-        queryClient.invalidateQueries("USER_PROFILE");
-        toast.success("Edit name successfully");
+        queryClient.invalidateQueries("JOBSEEKER_PROFILE");
+        notification.success({ message: "Edit name successfully" });
       },
       onError() {
         toast.error("Edit name failed, Try again later");

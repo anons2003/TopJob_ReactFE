@@ -28,7 +28,6 @@ const Single = () => {
                   <span className="itemKey">Email:</span>
                   <span className="itemValue">janedoe@gmail.com</span>
                 </div>
-                
                 <div className="detailItem">
                   <span className="itemKey">Phone:</span>
                   <span className="itemValue">+1 2345 67 89</span>

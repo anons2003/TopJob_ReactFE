@@ -132,34 +132,17 @@ export default function JobListOne() {
           </div>
         </div>
 
-        <div className="container mt-60">
-          <div className="row g-4">
-            {filteredJobs.map((item, index) => {
-              const createdAtDate = formatDateTime(item.createdAt);
-              const daysAgo = compareWithCurrentDate(createdAtDate);
-
-              return (
-                <div className="col-12" key={index}>
-                  <div className="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
-                    <div className="d-flex align-items-center w-310px">
-                      <img
-                        src={
-                          item?.enterprise === null
-                            ? "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                            : item.enterprise.avatar_url
-                        }
-                        className="avatar avatar-small rounded shadow p-3 bg-white"
-                        alt=""
-                      />
-                      <div className="ms-3">
-                        <Link
-                          to={`/job-detail-one/${item.id}`}
-                          className="h5 title text-dark"
-                        >
-                          {item.title}
-                        </Link>
-                      </div>
-                    </div>
+                <div className="container mt-60">
+                    <div className="row g-4">
+                        {filteredJobs.map((item, index) => (
+                            <div className="col-12" key={index}>
+                                <div className="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
+                                    <div className="d-flex align-items-center w-310px">
+                                        <img src={item.image} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
+                                        <div className="ms-3">
+                                            <Link to={`/job-detail-one/${item.id}`} className="h5 title text-dark">{item.title}</Link>
+                                        </div>
+                                    </div>
 
                     <div className="d-flex align-items-center justify-content-between d-md-block mt-3 mt-md-0 w-100px">
                       <span className="badge bg-soft-primary rounded-pill">
@@ -181,74 +164,35 @@ export default function JobListOne() {
                       </span>
                     </div>
 
-                    <div className="mt-3 mt-md-0">
-                      <button
-                        className={`btn btn-sm btn-icon btn-pills ${
-                          item.bookmarks.length > 0 &&
-                          item.bookmarks[0].isBookmarked === 1
-                            ? "btn-primary"
-                            : "btn-soft-primary"
-                        } bookmark`}
-                        onClick={() =>
-                          toggleBookmark(
-                            item.id,
-                            item.bookmarks.length > 0
-                              ? item.bookmarks[0].isBookmarked
-                              : 0
-                          )
-                        }
-                      >
-                        <FiBookmark className="icons" />
-                      </button>
-                      <Link
-                        to={`/job-detail-three/${item.id}`}
-                        className="btn btn-sm btn-primary w-full ms-md-1"
-                      >
-                        Apply Now
-                      </Link>
+                                    <div className="mt-3 mt-md-0">
+                                        <Link to="" className="btn btn-sm btn-icon btn-pills btn-soft-primary bookmark"><FiBookmark className="icons" /></Link>
+                                        <Link to={`/job-detail-three/${item.id}`} className="btn btn-sm btn-primary w-full ms-md-1">Apply Now</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
 
-          <div className="row">
-            <div className="col-12 mt-4 pt-2">
-              <ul className="pagination justify-content-center mb-0">
-                <li className="page-item">
-                  <Link className="page-link" to="#" aria-label="Previous">
-                    <span aria-hidden="true">
-                      <i className="mdi mdi-chevron-left fs-6"></i>
-                    </span>
-                  </Link>
-                </li>
-                <li className="page-item">
-                  <Link className="page-link" to="#">
-                    1
-                  </Link>
-                </li>
-                <li className="page-item active">
-                  <Link className="page-link" to="#">
-                    2
-                  </Link>
-                </li>
-                <li className="page-item">
-                  <Link className="page-link" to="#">
-                    3
-                  </Link>
-                </li>
-                <li className="page-item">
-                  <Link className="page-link" to="#" aria-label="Next">
-                    <span aria-hidden="true">
-                      <i className="mdi mdi-chevron-right fs-6"></i>
-                    </span>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+                    <div className="row">
+                        <div className="col-12 mt-4 pt-2">
+                            <ul className="pagination justify-content-center mb-0">
+                                <li className="page-item">
+                                    <Link className="page-link" to="#" aria-label="Previous">
+                                        <span aria-hidden="true"><i className="mdi mdi-chevron-left fs-6"></i></span>
+                                    </Link>
+                                </li>
+                                <li className="page-item"><Link className="page-link" to="#">1</Link></li>
+                                <li className="page-item active"><Link className="page-link" to="#">2</Link></li>
+                                <li className="page-item"><Link className="page-link" to="#">3</Link></li>
+                                <li className="page-item">
+                                    <Link className="page-link" to="#" aria-label="Next">
+                                        <span aria-hidden="true"><i className="mdi mdi-chevron-right fs-6"></i></span>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
         <AboutTwo />
       </section>

@@ -1,42 +1,46 @@
 export const userColumns = [
-  { field: "id", headerName: "ID", width: 70 },
+  { field: "jid", headerName: "ID", width: 70 },
 
   {
-    field: "avatarUrl",
+    field: "avatar_url",
     headerName: "Avatar",
     width: 110,
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img className="cellImg" src={params.row.avatarUrl} alt="avatar" />
-          {params.row.username}
+          <img className="cellImg" src={params.row.avatar_url} alt="avatar" />
         </div>
       );
     },
   },
   {
-    field: "user_name",
+    field: "user.user_name",
     headerName: "User Name",
     width: 150,
+    valueGetter: (params) => params.row.user.user_name,
   },
   {
-    field: "email",
+    field: "user.email",
     headerName: "Email",
     width: 230,
+    valueGetter: (params) => params.row.user.email,
   },
   {
-    field: "created_at",
+    field: "user.created_at",
     headerName: "Registration Date",
     width: 180,
+    valueGetter: (params) => new Date(params.row.user.created_at).toLocaleDateString(),
   },
   {
-    field: "role",
+    field: "user.roleType.roleTypeName",
     headerName: "Occupation",
     width: 130,
+    valueGetter: (params) => params.row.user.roleType.roleTypeName,
   },
   {
-    field: "is_active",
+    field: "user.isActive",
     headerName: "Status",
     width: 160,
+    valueGetter: (params) => (params.row.user.isActive ? 'Active' : 'Inactive'),
   },
 ];

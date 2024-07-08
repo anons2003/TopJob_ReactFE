@@ -25,6 +25,8 @@ class Api {
             sessionStorage.setItem("roleJobSeeker", response.data.role);
           } else if (response.data.role === "Enterprise") {
             sessionStorage.setItem("roleEnterprise", response.data.role);
+          } else if (response.data.role === "Admin") {
+            sessionStorage.setItem("roleAdmin", response.data.role);
           }
           window.location.replace("/");
         }

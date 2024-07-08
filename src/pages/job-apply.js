@@ -1,122 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import bg1 from "../assets/images/hero/bg.jpg";
-import logo1 from "../assets/images/company/lenovo-logo.png";
-import useJobSeekerInfo from "../hook/useJobSeekerInfo";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+
+import bg1 from '../assets/images/hero/bg.jpg'
+import logo1 from '../assets/images/company/lenovo-logo.png'
+
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 import api from "../api/http";
 
 export default function JobApply() {
-  const { id: eidFromUrl } = useParams(); // Extract eid from URL
-  const location = useLocation();
-  const jobData = location.state?.job;
-  const { data: userData } = useJobSeekerInfo();
-  const user = userData?.data;
-  const token = sessionStorage.getItem("token");
-  const queryClient = useQueryClient();
 
-  const [eid, setEid] = useState("1"); // Default eid to 1 if not in URL
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [occupation, setOccupation] = useState("");
-  const [jobType, setJobType] = useState("All Jobs");
-  const [description, setDescription] = useState("");
-  const [resume, setResume] = useState(null);
-  const [isAccepted, setIsAccepted] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
-
-  const applyResumeMutation = useMutation({
-    mutationFn: (formData) => {
-      return api.post(`jobSeeker/apply-cv/${eid}`, formData, {
-        headers: {
-          Authorization: token,
-        },
-      });
-    },
-  });
-
-  useEffect(() => {
-    if (eidFromUrl) {
-      setEid(eidFromUrl);
-    }
-
-    if (user) {
-      setFirstName(user.first_name);
-      setLastName(user.last_name);
-      setEmail(user.user.email);
-      setPhone(user.phone);
-      setOccupation(user.occupation);
-      setFullName(user.first_name + " " + user.last_name);
-      setResume(user.resume_url);
-    }
-  }, [user, eidFromUrl]);
-
-  const handleApplySubmit = (e) => {
-    e.preventDefault();
-    if (!isAccepted) {
-      setShowWarning(true);
-    } else {
-      setShowWarning(false);
-      const formData = new FormData();
-      formData.append("full_name", fullName);
-      formData.append("email", email);
-      formData.append("phone", phone);
-      formData.append("job", occupation);
-      formData.append("jobType", jobType);
-      formData.append("description", `<p>${description}</p>`);
-      applyResumeMutation.mutate(formData, {
-        onSuccess: () => {
-          toast.success("Applying successfully");
-        },
-        onError: (error) => {
-          toast.error("Already Applied!");
-        },
-      });
-      if (resume) {
-        handleUploadResume();
-      }
-    }
-  };
-
-  const handleCheckboxChange = (event) => {
-    setIsAccepted(event.target.checked);
-    setShowWarning(false); // Reset warning when checkbox state changes
-  };
-
-  const uploadResume = useMutation({
-    mutationFn: (formData) => {
-      return api.patch(`/jobSeeker/upload-resume/${eid}`, formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-          Authorization: token,
-        },
-      });
-    },
-    onSuccess: () => {
-      toast.success("Upload resume successfully");
-    },
-    onError: () => {
-      toast.error("Upload resume failed");
-    },
-  });
-
-  const handleFileChange = (e) => {
-    setResume(e.target.files[0]); // Update state with the selected resume file
-  };
-
-  const handleUploadResume = () => {
-    const formData = new FormData();
-    formData.append("resume", resume);
-    uploadResume.mutate(formData);
-  };
+    const location = useLocation();
+    const jobData = location.state?.job;
 
   return (
     <>
@@ -174,186 +70,83 @@ export default function JobApply() {
         </div>
       </div>
 
-      <section className="section bg-light">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-7 col-md-7">
-              <div className="card border-0">
-                <form
-                  className="rounded shadow p-4"
-                  onSubmit={handleApplySubmit}
-                >
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Your Name :<span className="text-danger">*</span>
-                        </label>
-                        <input
-                          name="name"
-                          id="name2"
-                          type="text"
-                          className="form-control"
-                          placeholder="First Name :"
-                          value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Your Email :<span className="text-danger">*</span>
-                        </label>
-                        <input
-                          name="email"
-                          id="email2"
-                          type="email"
-                          className="form-control"
-                          placeholder="Your email :"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Your Phone no. :<span className="text-danger">*</span>
-                        </label>
-                        <input
-                          name="number"
-                          id="number2"
-                          type="text"
-                          className="form-control"
-                          placeholder="Your phone no. :"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Job Title :
-                        </label>
-                        <input
-                          name="subject"
-                          id="subject2"
-                          className="form-control"
-                          placeholder="Title :"
-                          value={occupation}
-                          onChange={(e) => setOccupation(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Types of jobs :
-                        </label>
-                        <select
-                          className="form-control form-select"
-                          id="Sortbylist-Shop"
-                          value={jobType}
-                          onChange={(e) => setJobType(e.target.value)}
-                        >
-                          <option value="All Jobs">All Jobs</option>
-                          <option value="Full Time">Full Time</option>
-                          <option value="Half Time">Half Time</option>
-                          <option value="Remote">Remote</option>
-                          <option value="In Office">In Office</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Description :
-                        </label>
-                        <textarea
-                          name="comments"
-                          id="comments2"
-                          rows="4"
-                          className="form-control"
-                          placeholder="Describe the job :"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                        ></textarea>
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label
-                          htmlFor="formFile"
-                          className="form-label fw-semibold"
-                        >
-                          Upload Your CV / Resume :
-                        </label>
-                        <input
-                          className="form-control"
-                          type="file"
-                          id="formFile"
-                          onChange={handleFileChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="flexCheckDefault"
-                            checked={isAccepted}
-                            onChange={handleCheckboxChange}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexCheckDefault"
-                          >
-                            I Accept{" "}
-                            <Link to="#" className="text-primary">
-                              Terms And Conditions
-                            </Link>
-                          </label>
+            <section className="section bg-light">
+                <div className="container">
+                    <div className="row justify-content-center">
+                        <div className="col-lg-7 col-md-7">
+                            <div className="card border-0">
+                                <form className="rounded shadow p-4">
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <label className="form-label fw-semibold">Your Name :<span className="text-danger">*</span></label>
+                                                <input name="name" id="name2" type="text" className="form-control" placeholder="First Name :" />
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <label className="form-label fw-semibold">Your Email :<span className="text-danger">*</span></label>
+                                                <input name="email" id="email2" type="email" className="form-control" placeholder="Your email :" />
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <label className="form-label fw-semibold">Your Phone no. :<span className="text-danger">*</span></label>
+                                                <input name="number" id="number2" type="number" className="form-control" placeholder="Your phone no. :" />
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <label className="form-label fw-semibold">Job Title :</label>
+                                                <input name="subject" id="subject2" className="form-control" placeholder="Title :" />
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <label className="form-label fw-semibold">Types of jobs :</label>
+                                                <select className="form-control form-select" id="Sortbylist-Shop">
+                                                    <option>All Jobs</option>
+                                                    <option>Full Time</option>
+                                                    <option>Half Time</option>
+                                                    <option>Remote</option>
+                                                    <option>In Office</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <label className="form-label fw-semibold">Description :</label>
+                                                <textarea name="comments" id="comments2" rows="4" className="form-control" placeholder="Describe the job :"></textarea>
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <label htmlFor="formFile" className="form-label fw-semibold">Upload Your Cv / Resume :</label>
+                                                <input className="form-control" type="file" id="formFile" />
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="mb-3">
+                                                <div className="form-check">
+                                                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                                    <label className="form-check-label" htmlFor="flexCheckDefault">I Accept <Link to="#" className="text-primary">Terms And Condition</Link></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <input type="submit" id="submit2" name="send" className="submitBnt btn btn-primary" value="Apply Now" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                    <div className="row">
-                      <div className="col-12">
-                        <input
-                          type="submit"
-                          id="submit2"
-                          name="send"
-                          className="submitBtn btn btn-primary"
-                          value="Apply Now"
-                          style={{
-                            opacity: isAccepted ? 1 : 0.5,
-                          }}
-                        />
-                      </div>
-                    </div>
-                    {showWarning && (
-                      <div className="row">
-                        <div className="col-12">
-                          <p className="text-danger">
-                            You need to accept the terms and conditions before
-                            applying.
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <Footer top={true} />
-      <ScrollTop />
-    </>
-  );
+                </div>
+            </section>
+            <Footer top={true} />
+            <ScrollTop />
+        </>
+    )
 }
