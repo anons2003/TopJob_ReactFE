@@ -43,7 +43,7 @@ const DatatableJobSeeker = () => {
 
   const handleToggleActive = async (id, currentIsActive) => {
     try {
-      const response = await fetch(`http://localhost:8080/job-seekers/toggle-active/${id}`, {
+      const response = await fetch(`http://localhost:8080/jobseekers/toggle-active/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

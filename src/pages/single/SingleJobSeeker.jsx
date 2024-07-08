@@ -14,7 +14,7 @@ const SingleJobSeeker = () => {
   useEffect(() => {
     const fetchJobSeeker = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/job-seekers/view/${id}`);
+        const response = await fetch(`http://localhost:8080/jobseeker/view/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch job seeker');
         }
