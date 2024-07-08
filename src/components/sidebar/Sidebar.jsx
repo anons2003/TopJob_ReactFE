@@ -67,14 +67,14 @@ const Sidebar = () => {
               </li>
 
               <li>
-                <Link to="/users/enterprise" style={{ textDecoration: "none" }}>
+                <Link to="/users/enterprises" style={{ textDecoration: "none" }}>
                   <GroupIcon className="icon" />
                   <span>   Enterprise</span>
                 </Link>
               </li>
 
               <li>
-                <Link to="/users/admin" style={{ textDecoration: "none" }}>
+                <Link to="/users/admins" style={{ textDecoration: "none" }}>
                   <AdminPanelSettingsIcon className="icon" />
                   <span>   Admin</span>
                 </Link>
@@ -134,17 +134,6 @@ const Sidebar = () => {
             </li>
           </Link>
         </ul>
-      </div>
-
-      <div className="bottom">
-        <div
-          className="colorOption"
-          onClick={() => dispatch({ type: "LIGHT" })}
-        ></div>
-        <div
-          className="colorOption"
-          onClick={() => dispatch({ type: "DARK" })}
-        ></div>
       </div>
     </div>
   );

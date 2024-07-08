@@ -9,8 +9,10 @@ import WorkIcon from '@mui/icons-material/Work';
 const Widget = ({ type }) => {
   let data;
 
-  // State to store the total number of users
+  // State to store the total number of users, jobs, and package services
   const [totalUsers, setTotalUsers] = useState(0);
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [totalPackageServices, setTotalPackageServices] = useState(0); // New state for package services
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -26,11 +28,32 @@ const Widget = ({ type }) => {
           setError(error);
           setIsLoading(false);
         });
+    } else if (type === "postjob") {
+      axios.get("http://localhost:8080/jobs/totalJob")
+        .then(response => {
+          setTotalJobs(response.data);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error("There was an error fetching the total jobs!", error);
+          setError(error);
+          setIsLoading(false);
+        });
+    } else if (type === "earning") {
+      axios.get("http://localhost:8080/packages/totalPackageService")
+        .then(response => {
+          setTotalPackageServices(response.data);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error("There was an error fetching the total package services!", error);
+          setError(error);
+          setIsLoading(false);
+        });
     }
   }, [type]);
 
-  //temporary
-  const amount = type === "user" ? totalUsers : 100; // Use totalUsers for user widget
+  const amount = type === "user" ? totalUsers : (type === "postjob" ? totalJobs : totalPackageServices); // Adjusted to include totalPackageServices
   const diff = 20;
 
   switch (type) {
@@ -87,10 +110,6 @@ const Widget = ({ type }) => {
         </span>
       </div>
       <div className="right">
-        <div className="percentage positive">
-          <KeyboardArrowUpIcon />
-          {diff} %
-        </div>
         {data.icon}
       </div>
       {error && <div className="error">Error: {error.message}</div>}

@@ -47,7 +47,6 @@ import ProtectedRoute from "./hook/useProtectRoute";
 // import TemplateContainer from './pages/create-cv/TemplateContainer';
 
 // admin
-import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 
 import { productInputs, userInputs } from "./data/formSource";
@@ -57,10 +56,12 @@ import ListJobPosts from "./pages/list/ListJobPosts";
 import SingleJobPosts from "./pages/single/SingleJobPosts";
 import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import SingleJobPostsModeration from "./pages/single/SingleJobPostsModeration";
-import SingleAdmin from "./pages/single/SingleAdmin";
 import UserDetail from "./pages/single/UserDetail";
 import Home from "./pages/home/Home";
 import ListJobSeekers from "./pages/list/ListJobSeekers";
+import SingleJobSeeker from "./pages/single/SingleJobSeeker";
+import SingleEnterprise from "./pages/single/SingleEnterprise";
+import ListAdmins from "./pages/list/ListAdmin";
 
 import ListEnterprise from "./pages/list/ListEnterprise";
 function App() {
@@ -151,22 +152,25 @@ function App() {
           <Route path="users">
             <Route path="job-seekers">
               <Route index element={<ListJobSeekers />} />
-              <Route path=":userId" element={<Single />} />
+              <Route path="view/:id" element={<SingleJobSeeker />} />
               <Route
                 path="add"
                 element={<New inputs={userInputs} title="Add New User" />}
               />
             </Route>
-            <Route path="enterprise">
+            <Route path="enterprises">
               <Route index element={<ListEnterprise />} />
-              <Route path=":enterpriseId" element={<Single />} />
+              <Route path="view/:id" element={<SingleEnterprise />} />
+            </Route>
+            <Route path="admins">
+              <Route index element={<ListAdmins />} />
             </Route>
           </Route>
 
           {/* job post */}
           <Route path="jobPosts">
             <Route index element={<ListJobPosts />} />
-            <Route path=":productId" element={<SingleJobPosts />} />
+            <Route path="view/:id" element={<SingleJobPosts />} />
           </Route>
           {/* The article requires moderation */}
           <Route path="jobPostsModeration">
@@ -174,14 +178,6 @@ function App() {
             <Route path=":productId" element={<SingleJobPostsModeration />} />
           </Route>
           {/* package services */}
-          <Route path="packageService">
-            <Route index element={<packageServices />} />
-            <Route path=":userId" element={<Single />} />
-            <Route
-              path="add"
-              element={<New inputs={userInputs} title="Add New User" />}
-            />
-          </Route>
 
           {/* profile */}
           <Route path="profileAdmin">
