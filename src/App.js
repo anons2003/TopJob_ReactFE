@@ -1,8 +1,10 @@
 import React from "react";
+
 import { Route, Routes } from "react-router-dom";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./assets/scss/style.scss";
 import "./assets/css/materialdesignicons.min.css";
+
 import Index from "./pages";
 import IndexTwo from "./pages/index-two";
 
@@ -43,8 +45,14 @@ import Maintenance from "./pages/maintenance";
 import UpdatePassword from "./pages/update-password/update-password";
 import CreatePassword from "./pages/change-password/create-password";
 import ProtectedRoute from "./hook/useProtectRoute";
-// import CreateTemplate from './pages/create-cv/CreateTemplate';
-// import TemplateContainer from './pages/create-cv/TemplateContainer';
+
+import CreateTemplate from "./pages/create-cv/CreateTemplates";
+import TemplateContainer from "./pages/create-cv/TemplateContainer";
+import TemplateDesignPinDetail from "./pages/create-cv/TemplateDesignPinDetail";
+import CreateResume from "./pages/create-cv/CreateResume";
+import BookmarksList from "./pages/bookmark-list";
+import CVAppliedList from "./pages/job-applied-list";
+import ReApply from "./pages/reapply-job";
 
 // admin
 import New from "./pages/new/New";
@@ -64,6 +72,7 @@ import SingleEnterprise from "./pages/single/SingleEnterprise";
 import ListAdmins from "./pages/list/ListAdmin";
 
 import ListEnterprise from "./pages/list/ListEnterprise";
+
 function App() {
   return (
     <>
@@ -76,6 +85,10 @@ function App() {
 
         <Route
           path="/job-apply"
+          element={<ProtectedRoute element={JobApply} />}
+        />
+        <Route
+          path="/job-apply/:id"
           element={<ProtectedRoute element={JobApply} />}
         />
         <Route
@@ -101,11 +114,12 @@ function App() {
           element={<ProtectedRoute element={Candidates} />}
         />
         <Route
-          path="/candidate-profile"
+          path="/candidate-profile/:jid"
           element={<ProtectedRoute element={CandidateProfile} />}
         />
+
         <Route
-          path="/candidate-profile/:id"
+          path="/candidate-profile"
           element={<ProtectedRoute element={CandidateProfile} />}
         />
         <Route
@@ -138,8 +152,19 @@ function App() {
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/change-password" element={<CreatePassword />} />
-        {/* <Route path='/create-template' element={<CreateTemplate />} />
-        <Route path='/template' element={<TemplateContainer />} /> */}
+
+        <Route path="/create-template" element={<CreateTemplate />} />
+        <Route path="/template" element={<TemplateContainer />} />
+        <Route
+          path="/resumeDetail/:templateID"
+          element={<TemplateDesignPinDetail />}
+        />
+        <Route path="/resume/*" element={<CreateResume />} />
+        {/* new */}
+        <Route path="bookmark-list" element={<BookmarksList />} />
+        <Route path="cv-applied-list" element={<CVAppliedList />} />
+        <Route path="reapply-job" element={<ReApply />} />
+        <Route path="reapply-job/:id" element={<ReApply />} />
 
         {/* admin route */}
 

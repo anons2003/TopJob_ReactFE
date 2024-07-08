@@ -1,26 +1,56 @@
 import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
-
+import axios from "axios";
+import { useParams } from "react-router-dom";
 export const ContactUs = () => {
-  const form = useRef();
+  const { jid } = useParams();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    body: "",
+    file: null,
+  });
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const sendEmail = (e) => {
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: files ? files : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    emailjs
-      .sendForm("service_wdtvxze", "template_o4ibzfi", form.current, {
-        publicKey: "dQzHPfYRee9Kd65PL",
-      })
-      .then(
-        () => {
-          console.log("SUCCESS!");
-          setIsSuccess(true);
-        },
-        (error) => {
-          console.log("FAILED...", error.text);
+    const data = new FormData();
+    for (let key in formData) {
+      if (formData[key]) {
+        if (key === "file") {
+          for (let i = 0; i < formData.file.length; i++) {
+            data.append(key, formData.file[i]);
+          }
+        } else {
+          data.append(key, formData[key]);
         }
+      }
+    }
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/jobSeeker/send/${jid}`,
+        data
       );
+      if (response.status === 200) {
+        setIsSuccess(true);
+        setErrorMessage("");
+      }
+    } catch (error) {
+      setIsSuccess(false);
+      setErrorMessage("Failed to send email. Please try again.");
+      console.error("Error sending email:", error);
+    }
   };
 
   return (
@@ -30,7 +60,7 @@ export const ContactUs = () => {
           Your message has been sent successfully.
         </div>
       ) : (
-        <form ref={form} onSubmit={sendEmail} className="mt-4">
+        <form onSubmit={handleSubmit} className="mt-4">
           <div className="row">
             <div className="col-md-6">
               <div className="mb-3">
@@ -38,11 +68,14 @@ export const ContactUs = () => {
                   Your Name <span className="text-danger">*</span>
                 </label>
                 <input
-                  name="user_name"
+                  name="name"
                   id="name"
                   type="text"
                   className="form-control"
                   placeholder="Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
                 />
               </div>
             </div>
@@ -53,11 +86,14 @@ export const ContactUs = () => {
                   Your Email <span className="text-danger">*</span>
                 </label>
                 <input
-                  name="user_email"
-                  id="email"
                   type="email"
                   className="form-control"
                   placeholder="Email"
+                  id="email"
+                  name="email"
+                  value={formData.to}
+                  onChange={handleChange}
+                  required
                 />
               </div>
             </div>
@@ -66,10 +102,13 @@ export const ContactUs = () => {
               <div className="mb-3">
                 <label className="form-label fw-semibold">Subject</label>
                 <input
-                  name="user_subject"
+                  name="subject"
                   id="subject"
                   className="form-control"
                   placeholder="Subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  type="text"
                 />
               </div>
             </div>
@@ -80,11 +119,13 @@ export const ContactUs = () => {
                   Comments <span className="text-danger">*</span>
                 </label>
                 <textarea
-                  name="message"
-                  id="comments"
-                  rows="4"
+                  name="body"
+                  id="body"
+                  rows={4}
                   className="form-control"
                   placeholder="Message"
+                  value={formData.body}
+                  onChange={handleChange}
                 ></textarea>
               </div>
             </div>
@@ -92,12 +133,7 @@ export const ContactUs = () => {
           <div className="row">
             <div className="col-12">
               <div className="d-grid">
-                <button
-                  type="submit"
-                  id="submit"
-                  value="Send"
-                  className="btn btn-primary"
-                >
+                <button type="submit" className="btn btn-primary">
                   Send Message
                 </button>
               </div>
@@ -105,6 +141,7 @@ export const ContactUs = () => {
           </div>
         </form>
       )}
+      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
     </>
   );
 };

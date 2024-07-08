@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import bg1 from "../assets/images/hero/bg.jpg";
 import logo1 from "../assets/images/company/lenovo-logo.png";
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
@@ -11,16 +11,15 @@ import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 import api from "../api/http";
 
-export default function JobApply() {
+export default function ReApply() {
   const { id: eidFromUrl } = useParams(); // Extract eid from URL
   const location = useLocation();
   const jobData = location.state?.job;
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
   const token = sessionStorage.getItem("token");
-  const queryClient = useQueryClient();
 
-  const [eid, setEid] = useState("1"); // Default eid to 1 if not in URL
+  const [eid, setEid] = useState("2"); // Default eid to 9 if not in URL
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,12 +29,10 @@ export default function JobApply() {
   const [jobType, setJobType] = useState("All Jobs");
   const [description, setDescription] = useState("");
   const [resume, setResume] = useState(null);
-  const [isAccepted, setIsAccepted] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
 
   const applyResumeMutation = useMutation({
     mutationFn: (formData) => {
-      return api.post(`jobSeeker/apply-cv/${eid}`, formData, {
+      return api.patch(`jobSeeker/reapply-cv/${eid}`, formData, {
         headers: {
           Authorization: token,
         },
@@ -54,16 +51,17 @@ export default function JobApply() {
       setEmail(user.user.email);
       setPhone(user.phone);
       setOccupation(user.occupation);
-      setFullName(user.first_name + " " + user.last_name);
+      setFullName(firstName + " " + lastName);
       setResume(user.resume_url);
     }
-  }, [user, eidFromUrl]);
+  }, [user, firstName, lastName, eidFromUrl]);
 
   const handleApplySubmit = (e) => {
     e.preventDefault();
     if (!isAccepted) {
       setShowWarning(true);
     } else {
+      // Proceed with form submission logic
       setShowWarning(false);
       const formData = new FormData();
       formData.append("full_name", fullName);
@@ -72,50 +70,26 @@ export default function JobApply() {
       formData.append("job", occupation);
       formData.append("jobType", jobType);
       formData.append("description", `<p>${description}</p>`);
+      // Add other form data as necessary
       applyResumeMutation.mutate(formData, {
         onSuccess: () => {
           toast.success("Applying successfully");
         },
         onError: (error) => {
-          toast.error("Already Applied!");
+          // Handle error (e.g., display an error message)
+          toast.error("Error applying:" + error.message);
         },
       });
-      if (resume) {
-        handleUploadResume();
-      }
     }
   };
+
+  //Handle Checkbox
+  const [isAccepted, setIsAccepted] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const handleCheckboxChange = (event) => {
     setIsAccepted(event.target.checked);
     setShowWarning(false); // Reset warning when checkbox state changes
-  };
-
-  const uploadResume = useMutation({
-    mutationFn: (formData) => {
-      return api.patch(`/jobSeeker/upload-resume/${eid}`, formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-          Authorization: token,
-        },
-      });
-    },
-    onSuccess: () => {
-      toast.success("Upload resume successfully");
-    },
-    onError: () => {
-      toast.error("Upload resume failed");
-    },
-  });
-
-  const handleFileChange = (e) => {
-    setResume(e.target.files[0]); // Update state with the selected resume file
-  };
-
-  const handleUploadResume = () => {
-    const formData = new FormData();
-    formData.append("resume", resume);
-    uploadResume.mutate(formData);
   };
 
   return (
@@ -201,7 +175,7 @@ export default function JobApply() {
                       </div>
                     </div>
                     <div className="col-12">
-                      <div className="mb-3">
+                      <div className="mb3">
                         <label className="form-label fw-semibold">
                           Your Email :<span className="text-danger">*</span>
                         </label>
@@ -288,13 +262,13 @@ export default function JobApply() {
                           htmlFor="formFile"
                           className="form-label fw-semibold"
                         >
-                          Upload Your CV / Resume :
+                          Upload Your Cv / Resume :
                         </label>
                         <input
                           className="form-control"
                           type="file"
                           id="formFile"
-                          onChange={handleFileChange}
+                          onChange={(e) => setResume(e.target.files[0])}
                         />
                       </div>
                     </div>
@@ -315,7 +289,7 @@ export default function JobApply() {
                           >
                             I Accept{" "}
                             <Link to="#" className="text-primary">
-                              Terms And Conditions
+                              Terms And Condition
                             </Link>
                           </label>
                         </div>
@@ -328,23 +302,13 @@ export default function JobApply() {
                           id="submit2"
                           name="send"
                           className="submitBtn btn btn-primary"
-                          value="Apply Now"
+                          value="Re Apply"
                           style={{
                             opacity: isAccepted ? 1 : 0.5,
                           }}
                         />
                       </div>
                     </div>
-                    {showWarning && (
-                      <div className="row">
-                        <div className="col-12">
-                          <p className="text-danger">
-                            You need to accept the terms and conditions before
-                            applying.
-                          </p>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </form>
               </div>
