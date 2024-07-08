@@ -143,7 +143,11 @@ export default function JobListOne() {
                   <div className="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
                     <div className="d-flex align-items-center w-310px">
                       <img
-                        src={item.image}
+                        src={
+                          item?.enterprise === null
+                            ? "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                            : item.enterprise.avatar_url
+                        }
                         className="avatar avatar-small rounded shadow p-3 bg-white"
                         alt=""
                       />
