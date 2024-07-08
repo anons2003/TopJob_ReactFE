@@ -34,6 +34,10 @@ export default function CandidateProfile() {
   const { jid } = useParams();
   const { data: userData } = useJobSeekerInfo(jid);
   const user = userData?.data;
+  const htmlContent = user?.intro?.replace(
+    /<img/g,
+    '<img style="max-width: 100%; height: auto;"'
+  );
 
   return (
     <>
@@ -81,7 +85,7 @@ export default function CandidateProfile() {
             <div className="col-lg-8 col-md-7 col-12">
               <h5 className="mb-4">Introduction:</h5>
 
-              <div dangerouslySetInnerHTML={{ __html: user?.intro }} />
+              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
               <h5 className="mt-4">Skills:</h5>
 
@@ -127,136 +131,8 @@ export default function CandidateProfile() {
                 </div>
               </div>
 
-              <h5 className="mt-4">Experience:</h5>
-
-              <div className="row">
-                <div className="col-12 mt-4">
-                  <div className="d-flex">
-                    <div className="text-center">
-                      <img
-                        src={company1}
-                        className="avatar avatar-small bg-white shadow p-2 rounded"
-                        alt=""
-                      />
-                      <h6 className="text-muted mt-2 mb-0">2019-22</h6>
-                    </div>
-
-                    <div className="ms-3">
-                      <h6 className="mb-0">Full Stack Developer</h6>
-                      <p className="text-muted">Linkedin - U.S.A.</p>
-                      <p className="text-muted mb-0">
-                        It seems that only fragments of the original text remain
-                        in the Lorem Ipsum texts used today. One may speculate
-                        that over the course of time certain letters were added
-                        or deleted at various positions within the text.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-12 mt-4">
-                  <div className="d-flex">
-                    <div className="text-center">
-                      <img
-                        src={company2}
-                        className="avatar avatar-small bg-white shadow p-2 rounded"
-                        alt=""
-                      />
-                      <h6 className="text-muted mt-2 mb-0">2017-19</h6>
-                    </div>
-                    ``{" "}
-                    <div className="ms-3">
-                      <h6 className="mb-0">Back-end Developer</h6>
-                      <p className="text-muted">Lenovo - China</p>
-                      <p className="text-muted mb-0">
-                        It seems that only fragments of the original text remain
-                        in the Lorem Ipsum texts used today. One may speculate
-                        that over the course of time certain letters were added
-                        or deleted at various positions within the text.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <div className="p-4 rounded shadow mt-4">
                 <h5>Get in touch !</h5>
-                {/* <form className="mt-4">
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Your Name <span className="text-danger">*</span>
-                        </label>
-                        <input
-                          name="name"
-                          id="name"
-                          type="text"
-                          className="form-control"
-                          placeholder="Name :"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Your Email <span className="text-danger">*</span>
-                        </label>
-                        <input
-                          name="email"
-                          id="email"
-                          type="email"
-                          className="form-control"
-                          placeholder="Email :"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Subject
-                        </label>
-                        <input
-                          name="subject"
-                          id="subject"
-                          className="form-control"
-                          placeholder="Subject :"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Comments <span className="text-danger">*</span>
-                        </label>
-                        <textarea
-                          name="comments"
-                          id="comments"
-                          rows="4"
-                          className="form-control"
-                          placeholder="Message :"
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="d-grid">
-                        <button
-                          type="submit"
-                          id="submit"
-                          name="send"
-                          className="btn btn-primary"
-                        >
-                          Send Message
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form> */}
                 <ContactUs />
               </div>
             </div>

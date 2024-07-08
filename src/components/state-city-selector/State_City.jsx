@@ -37,7 +37,7 @@ function StateCitySelector({ stateName, setStateName, cityName, setCityName }) {
     <Row>
       <Col md={6} className="mb-3">
         <div>
-          <label className="form-label fw-semibold">Tỉnh/Thành Phố:</label>
+          <label className="form-label fw-semibold">State:</label>
           <Selector
             data={stateData}
             selected={stateData.find((state) => state.name === stateName) || {}}
@@ -50,7 +50,7 @@ function StateCitySelector({ stateName, setStateName, cityName, setCityName }) {
       </Col>
       <Col md={6} className="mb-3">
         <div>
-          <label className="form-label fw-semibold">Quận/Huyện:</label>
+          <label className="form-label fw-semibold">City:</label>
           <Selector
             data={cityData}
             selected={cityData.find((city) => city.name === cityName) || {}}

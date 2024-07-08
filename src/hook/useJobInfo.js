@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../api/http";
 
 const useJobInfo = () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   return useQuery({
     queryKey: ["JOB_PROFILE"],

@@ -22,7 +22,7 @@ export default function CandidateProfileSetting() {
   //   let [file, setFile] = useState(image1);
 
   const queryClient = useQueryClient();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
 
@@ -919,7 +919,7 @@ export default function CandidateProfileSetting() {
 //   //   let [file, setFile] = useState(image1);
 
 //   const queryClient = useQueryClient();
-//   const token = localStorage.getItem("token");
+//   const token = sessionStorage.getItem("token");
 //   const { data: userData } = useJobSeekerInfo();
 //   const user = userData?.data;
 
