@@ -5,6 +5,7 @@ import bg1 from '../assets/images/hero/bg.jpg';
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
+import Notification from "../components/Notification"; // Import the Notification component
 
 export default function JobPost() {
     const [formData, setFormData] = useState({
@@ -26,6 +27,7 @@ export default function JobPost() {
 
     const [jobTypes, setJobTypes] = useState([]);
     const [jobCategories, setJobCategories] = useState([]);
+    const [notification, setNotification] = useState({ message: "", type: "", visible: false });
 
     useEffect(() => {
         async function fetchData() {
@@ -57,10 +59,29 @@ export default function JobPost() {
 
         try {
             const response = await axios.post("http://localhost:8080/jobs/save", payload);
-            console.log("Job post submitted successfully:", response.data);
+            setNotification({ message: "Job post submitted successfully!", type: "success", visible: true });
+            setFormData({
+                title: "",
+                description: "",
+                jobType: "",
+                jobCategory: "",
+                salaryType: "",
+                minSalary: "",
+                maxSalary: "",
+                skills: "",
+                qualifications: "",
+                experience: "",
+                industry: "",
+                address: "",
+                country: "",
+                state: ""
+            });
         } catch (error) {
-            console.error("There was an error submitting the job post:", error);
+            setNotification({ message: "There was an error submitting the job post.", type: "error", visible: true });
         }
+
+        // Hide notification after 3 seconds
+        setTimeout(() => setNotification({ ...notification, visible: false }), 3000);
     };
 
     return (
@@ -98,6 +119,7 @@ export default function JobPost() {
                     <div className="row justify-content-center">
                         <div className="col-xl-7 col-lg-8">
                             <div className="card border-0">
+                                <Notification message={notification.message} type={notification.type} visible={notification.visible} />
                                 <form className="rounded shadow p-4" onSubmit={handleSubmit}>
                                     <div className="row">
                                         <h5 className="mb-3">Job Details:</h5>
