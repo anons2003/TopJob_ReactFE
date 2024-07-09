@@ -4,7 +4,7 @@ class Api {
   instance;
   constructor() {
     this.instance = axios.create({
-      baseURL: "https://topjobbackend-production.up.railway.app",
+      baseURL: "http://localhost:8080",
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",
@@ -42,6 +42,6 @@ class Api {
     );
   }
 }
-
+// https://topjobbackend-production.up.railway.app
 const api = new Api().instance;
 export default api;
