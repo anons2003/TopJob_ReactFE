@@ -5,7 +5,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import ExtensionIcon from '@mui/icons-material/Extension';
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useState } from "react";
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -15,11 +15,11 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import GroupIcon from '@mui/icons-material/Group';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-
 const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
   const [manageUsersOpen, setManageUsersOpen] = useState(false);
   const [manageJobPostsOpen, setManageJobPostsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleManageUsersClick = () => {
     setManageUsersOpen(!manageUsersOpen);
@@ -34,7 +34,7 @@ const Sidebar = () => {
   return (
     <div className="sidebarA">
       <div className="top">
-        <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
+        <Link to="/" style={{ textDecoration: "none" }}>
           <span className="logo">Welcome Admin</span>
         </Link>
       </div>
@@ -42,7 +42,7 @@ const Sidebar = () => {
       <div className="center">
         <ul>
           <p className="title">MAIN</p>
-          <ul class ="dashboard">
+          <ul class="dashboard">
             <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
               <DashboardIcon className="icon" />
               <span> Dashboard</span>
@@ -61,8 +61,8 @@ const Sidebar = () => {
             <ul className="sub-menu">
               <li>
                 <Link to="/users/job-seekers" style={{ textDecoration: "none" }}>
-                  <PersonSearchIcon className="icon" />  
-                    <span>  Job Seeker</span>
+                  <PersonSearchIcon className="icon" />
+                  <span>  Job Seeker</span>
                 </Link>
               </li>
 
@@ -85,7 +85,7 @@ const Sidebar = () => {
           <ul onClick={handleManageJobPostsClick}>
             <StoreIcon className="icon" />
             <span>  Manage Job Posts</span>
-            {manageJobPostsOpen ?        <ExpandLessIcon /> : <ExpandMoreIcon />}
+            {manageJobPostsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </ul>
 
           {manageJobPostsOpen && (
@@ -96,12 +96,12 @@ const Sidebar = () => {
                   <span>   List Job Posts</span>
                 </Link>
               </li>
-               <li>
+              <li>
                 <Link to="/jobs/jobPostsModerations" style={{ textDecoration: "none" }}>
                   <StoreIcon className="icon" />
                   <span>   Approval Job Posts</span>
                 </Link>
-              </li> 
+              </li>
             </ul>
           )}
 
@@ -124,15 +124,19 @@ const Sidebar = () => {
             </ul>
           </Link>
 
-          <Link to="/logout" style={{ textDecoration: "none" }}>
-            <li>
-              <ExitToAppIcon className="icon" />
-              <span>Log out</span>
-            </li>
-          </Link>
+          <li>
+            <ExitToAppIcon className="icon" />
+            <span onClick={() => {
+              sessionStorage.clear();
+              navigate("/");
+              window.location.reload();
+            }}
+            >Log out</span>
+          </li>
+
         </ul>
       </div>
-    </div>
+    </div >
   );
 };
 

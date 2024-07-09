@@ -13,18 +13,22 @@ import useJobInfo from "../hook/useJobInfo";
 import api from "../api/http";
 
 const formatDateTime = (dateArray) => {
+  if (!dateArray) return null;
   const [year, month, day, hour, minute, second, nanosecond] = dateArray;
   const millisecond = Math.floor(nanosecond / 1000000);
   return new Date(year, month - 1, day, hour, minute, second, millisecond);
 };
 
 const compareWithCurrentDate = (date) => {
+  if (!date) return null;
   const now = new Date();
   const diffTime = Math.abs(now - date);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
   return diffDays;
 };
+
 export default function JobListOne() {
+
   const { data: jobData, isLoading, error } = useJobInfo();
   const [filteredJobs, setFilteredJobs] = useState([]);
 
@@ -55,18 +59,19 @@ export default function JobListOne() {
   });
 
   useEffect(() => {
-    if (jobData?.data) {
+    if (jobData && jobData.data) {
       setFilteredJobs(jobData.data);
     }
   }, [jobData]);
 
   const handleSearch = ({ keyword, location, type }) => {
+    if (!jobData || !jobData.data) return;
     const filtered = jobData.data.filter((job) => {
       const matchesKeyword = job.title
         .toLowerCase()
         .includes(keyword.toLowerCase());
       const matchesLocation = location ? job.country === location : true;
-      const matchesType = type ? job.jobType === type : true;
+      const matchesType = type ? job.jobTypeName === type : true;
       return matchesKeyword && matchesLocation && matchesType;
     });
     setFilteredJobs(filtered);
@@ -143,7 +148,7 @@ export default function JobListOne() {
                   <div className="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
                     <div className="d-flex align-items-center w-310px">
                       <img
-                        src={item.image}
+                        src={item.avatarUrl || ''}
                         className="avatar avatar-small rounded shadow p-3 bg-white"
                         alt=""
                       />

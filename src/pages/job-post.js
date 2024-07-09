@@ -5,8 +5,14 @@ import bg1 from '../assets/images/hero/bg.jpg';
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
-
+import useEnterpriseInfo from "../hook/useEnterpriseInfo";
+import { toast } from "react-toastify";
 export default function JobPost() {
+    //get enterpirse id
+    const { data: enterpriseData } = useEnterpriseInfo();
+    const enterpriseReponse = enterpriseData?.data;
+
+    console.log(enterpriseReponse);
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -26,6 +32,7 @@ export default function JobPost() {
 
     const [jobTypes, setJobTypes] = useState([]);
     const [jobCategories, setJobCategories] = useState([]);
+    const [enterpriseId, setEnterpriseId] = useState(null);
 
     useEffect(() => {
         async function fetchData() {
@@ -34,12 +41,14 @@ export default function JobPost() {
                 const jobCategoriesResponse = await axios.get("http://localhost:8080/job-categories");
                 setJobTypes(jobTypesResponse.data);
                 setJobCategories(jobCategoriesResponse.data);
+                setEnterpriseId(enterpriseReponse?.eid);
+                console.log("Enterprise ID: ", enterpriseReponse?.eid);
             } catch (error) {
                 console.error("There was an error fetching the job types and categories:", error);
             }
         }
         fetchData();
-    }, []);
+    }, [enterpriseReponse]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -51,13 +60,15 @@ export default function JobPost() {
 
         const payload = {
             ...formData,
-            jobType: parseInt(formData.jobType, 10),
-            jobCategory: parseInt(formData.jobCategory, 10)
+            jobTypeEntity: { jobTypeId: parseInt(formData.jobType, 10) },
+            jobCategoryEntity: { jobCategoryId: parseInt(formData.jobCategory, 10) },
+            enterprise: { eid: enterpriseId } // assuming enterpriseId is available in your component's state
         };
 
         try {
             const response = await axios.post("http://localhost:8080/jobs/save", payload);
             console.log("Job post submitted successfully:", response.data);
+            toast.success(`Your Job Saved wait for approval`);
         } catch (error) {
             console.error("There was an error submitting the job post:", error);
         }

@@ -56,7 +56,7 @@ const BookmarksList = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-
+  console.log(data);
   return (
     <>
       <NavbarDark navClass="defaultscroll sticky" navLight={true} />
@@ -77,7 +77,7 @@ const BookmarksList = () => {
                   <div className="row align-items-center">
                     <div className="col-md-1">
                       <img
-                        src={bookmark.image}
+                        src={bookmark.enterprise.avatar_url} // Use bookmark.enterprise.avatar_url here
                         className="avatar avatar-small rounded shadow bg-white"
                         alt=""
                       />

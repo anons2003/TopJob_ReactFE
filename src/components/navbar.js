@@ -470,11 +470,14 @@ export default function Navbar({ navClass, navLight }) {
                 Contact Us
               </Link>
             </li>
+
+            {enterpriseRole && (
             <li className={manu === "candidatas" ? "active" : ""}>
               <Link to="/candidates" className="sub-menu-item">
                 Candidates
               </Link>
             </li>
+            )}
           </ul>
         </div>
       </div>
