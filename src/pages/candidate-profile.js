@@ -32,8 +32,10 @@ import "react-toastify/dist/ReactToastify.css";
 import api from "../api/http";
 import Loading from "../components/loading";
 import { ContactUs } from "../components/contact";
+
 export default function CandidateProfile() {
   const token = sessionStorage.getItem("token");
+  const jobseekerRole = sessionStorage.getItem("roleJobSeeker");
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
 
@@ -81,12 +83,12 @@ export default function CandidateProfile() {
                       </div>
                     </div>
                   )}
-                  <Link
+                  {jobseekerRole && (<Link
                     to="/candidate-profile-setting"
                     className="btn btn-sm btn-icon btn-pills btn-soft-primary"
                   >
                     <FiSettings className="icons" />
-                  </Link>
+                  </Link>)}
                 </div>
               </div>
             </div>

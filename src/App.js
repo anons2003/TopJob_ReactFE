@@ -53,7 +53,7 @@ import CreateResume from "./pages/create-cv/CreateResume";
 import BookmarksList from "./pages/bookmark-list";
 import CVAppliedList from "./pages/job-applied-list";
 import ReApply from "./pages/reapply-job";
-
+import EnterpriseProfileSetting from "./pages/enterprise-profile-setting";
 
 
 // admin
@@ -125,6 +125,10 @@ function App() {
         <Route
           path="/candidate-profile-setting"
           element={<ProtectedRoute element={CandidateProfileSetting} />}
+        />
+        <Route 
+        path="/enterprise-profile-setting" 
+        element={<ProtectedRoute element={EnterpriseProfileSetting} />} 
         />
 
         <Route path="/aboutus" element={<AboutUs />} />

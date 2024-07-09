@@ -130,7 +130,7 @@ export default function Index(){
                                     </div>
 
                                     <div className="mt-4">
-                                        <Link to={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
+                                        <Link to={`/job-detail-three/${item.id}`} className="text-dark title h5">{item.title}</Link>
 
                                         <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1"/>{item.country}</span>
 

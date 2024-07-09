@@ -1,4 +1,4 @@
-import "./sidebar.scss";
+import "./sidebarA.scss";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import StoreIcon from "@mui/icons-material/Store";
@@ -32,7 +32,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebarA">
       <div className="top">
         <Link to="/" style={{ textDecoration: "none" }}>
           <span className="logo">Job Nova</span>

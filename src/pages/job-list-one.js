@@ -159,7 +159,7 @@ export default function JobListOne() {
 
                     <div className="d-flex align-items-center justify-content-between d-md-block mt-3 mt-md-0 w-100px">
                       <span className="badge bg-soft-primary rounded-pill">
-                        {item.jobType}
+                        {item.jobTypeName}
                       </span>
                       <span className="text-muted d-flex align-items-center fw-medium mt-md-2">
                         <FiClock className="fea icon-sm me-1 align-middle" />
@@ -179,12 +179,11 @@ export default function JobListOne() {
 
                     <div className="mt-3 mt-md-0">
                       <button
-                        className={`btn btn-sm btn-icon btn-pills ${
-                          item.bookmarks.length > 0 &&
-                          item.bookmarks[0].isBookmarked === 1
+                        className={`btn btn-sm btn-icon btn-pills ${item.bookmarks.length > 0 &&
+                            item.bookmarks[0].isBookmarked === 1
                             ? "btn-primary"
                             : "btn-soft-primary"
-                        } bookmark`}
+                          } bookmark`}
                         onClick={() =>
                           toggleBookmark(
                             item.id,

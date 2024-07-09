@@ -142,7 +142,7 @@ export default function Navbar({ navClass, navLight }) {
           )}
           {enterpriseRole && (
             <Link
-              to="/employer-profile"
+              to="/enterprise-profile-setting"
               className="dropdown-item fw-medium fs-6"
             >
               <FiSettings className="fea icon-sm me-2 align-middle" />
@@ -468,6 +468,11 @@ export default function Navbar({ navClass, navLight }) {
             <li className={manu === "contactus" ? "active" : ""}>
               <Link to="/contactus" className="sub-menu-item">
                 Contact Us
+              </Link>
+            </li>
+            <li className={manu === "candidatas" ? "active" : ""}>
+              <Link to="/candidates" className="sub-menu-item">
+                Candidates
               </Link>
             </li>
           </ul>
