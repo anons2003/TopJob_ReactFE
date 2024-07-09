@@ -4,7 +4,7 @@ import Navbar from "../../components/navbar/Navbar";
 import { useState } from "react";
 import axios from "axios";
 
-const NewUser = ({ title }) => {
+const NewJobSeeker = ({ title }) => {
   const [formData, setFormData] = useState({
     userName: "",
     password: "",
@@ -25,14 +25,14 @@ const NewUser = ({ title }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/job-seekers/create", formData);
+      const response = await axios.post("http://localhost:8080/usertypes/job-seekers", formData);
       console.log("User saved successfully:", response.data);
       setSuccessMessage("User saved successfully!");
       setError(null);
     } catch (error) {
       console.error("There was an error saving the user!", error);
       setSuccessMessage("");
-      setError("Failed to create user oke");
+      setError("Failed to create user");
     }
   };
 
@@ -103,4 +103,4 @@ const NewUser = ({ title }) => {
   );
 };
 
-export default NewUser;
+export default NewJobSeeker;
