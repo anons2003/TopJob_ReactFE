@@ -1,11 +1,11 @@
 import "./widget.scss";
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import ExtensionIcon from '@mui/icons-material/Extension';
-import WorkIcon from '@mui/icons-material/Work';
-
+import ExtensionIcon from "@mui/icons-material/Extension";
+import WorkIcon from "@mui/icons-material/Work";
+import { Link } from "react-router-dom";
 const Widget = ({ type }) => {
   let data;
 
@@ -16,18 +16,38 @@ const Widget = ({ type }) => {
 
   useEffect(() => {
     if (type === "user") {
-      axios.get("http://localhost:8080/totalUsers")
-        .then(response => {
+      axios
+        .get("http://localhost:8080/totalUsers")
+        .then((response) => {
           setTotalUsers(response.data);
           setIsLoading(false);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("There was an error fetching the total users!", error);
           setError(error);
           setIsLoading(false);
         });
     }
   }, [type]);
+
+  //Store jobPost
+  const [jobPosts, setJobPosts] = useState([]);
+
+  useEffect(() => {
+    if (type === "postjob") {
+      axios
+        .get("http://localhost:8080/jobs/totalJob")
+        .then((res) => {
+          setJobPosts(res.data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the total users!", error);
+          setError(error);
+          setIsLoading(false);
+        });
+    }
+  });
 
   //temporary
   const amount = type === "user" ? totalUsers : 100; // Use totalUsers for user widget
@@ -38,6 +58,7 @@ const Widget = ({ type }) => {
       data = {
         title: "USERS",
         link: "See all users",
+        linkAddress: "/users/job-seekers",
         icon: (
           <PersonOutlinedIcon
             className="icon"
@@ -53,6 +74,7 @@ const Widget = ({ type }) => {
       data = {
         title: "All Job Posts",
         link: "View all job posts",
+        linkAddress: "/jobPosts",
         icon: (
           <WorkIcon
             className="icon"
@@ -68,6 +90,7 @@ const Widget = ({ type }) => {
       data = {
         title: "Package Services",
         link: "View all package service ",
+        linkAddress: "/packageServices",
         icon: (
           <ExtensionIcon
             className="icon"
@@ -88,7 +111,9 @@ const Widget = ({ type }) => {
         <span className="counter">
           {data.isMoney && "$"} {isLoading ? "Loading..." : amount}
         </span>
-        <span className="link">{data.link}</span>
+        <span className="link">
+          <Link to={`${data.linkAddress}`}>{data.link}</Link>
+        </span>
       </div>
       <div className="right">
         <div className="percentage positive">
