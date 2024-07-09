@@ -62,7 +62,6 @@ import { useContext } from "react";
 import ListJobPosts from "./pages/list/ListJobPosts";
 // page admin
 import SingleJobPosts from "./pages/single/SingleJobPosts";
-import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import SingleJobPostsModeration from "./pages/single/SingleJobPostsModeration";
 import UserDetail from "./pages/single/UserDetail";
 import Home from "./pages/home/Home";
@@ -70,8 +69,11 @@ import ListJobSeekers from "./pages/list/ListJobSeekers";
 import SingleJobSeeker from "./pages/single/SingleJobSeeker";
 import SingleEnterprise from "./pages/single/SingleEnterprise";
 import ListAdmins from "./pages/list/ListAdmin";
-
 import ListEnterprise from "./pages/list/ListEnterprise";
+import ListPackageService from "./pages/list/ListPackageService";
+import ListTransaction from "./pages/list/ListTransaction";
+import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
+import ListEditPackageService from "./pages/list/ListEditPackageService";
 
 function App() {
   return (
@@ -193,17 +195,25 @@ function App() {
           </Route>
 
           {/* job post */}
-          <Route path="jobPosts">
-            <Route index element={<ListJobPosts />} />
-            <Route path="view/:id" element={<SingleJobPosts />} />
-          </Route>
-          {/* The article requires moderation */}
-          <Route path="jobPostsModeration">
-            <Route index element={<ListJobPostsModeration />} />
-            <Route path=":productId" element={<SingleJobPostsModeration />} />
+          <Route path="jobs">
+            <Route path="jobPosts">
+              <Route index element={<ListJobPosts />} />
+              <Route path="view/:id" element={<SingleJobPosts />} />
+            </Route>
+            <Route path="jobPostsModerations">
+              <Route index element={<ListJobPostsModeration />} />
+              <Route path="view/:id" element={<SingleJobPostsModeration />} />
+            </Route>
           </Route>
           {/* package services */}
+          <Route path="packageServices">
+            <Route index element={<ListPackageService />} />
+            <Route path="edit/:id" element={<ListEditPackageService />} />
+          </Route>
 
+          <Route path="transactions">
+            <Route index element={<ListTransaction />} />
+          </Route>
           {/* profile */}
           <Route path="profileAdmin">
             <Route index element={<packageServices />} />

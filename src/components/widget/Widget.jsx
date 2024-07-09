@@ -40,7 +40,7 @@ const Widget = ({ type }) => {
           setIsLoading(false);
         });
     } else if (type === "earning") {
-      axios.get("http://localhost:8080/packages/totalPackageService")
+      axios.get("http://localhost:8080/packageServices/totalPackageService")
         .then(response => {
           setTotalPackageServices(response.data);
           setIsLoading(false);

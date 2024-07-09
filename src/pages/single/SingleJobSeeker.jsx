@@ -14,7 +14,7 @@ const SingleJobSeeker = () => {
   useEffect(() => {
     const fetchJobSeeker = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/jobseeker/view/${id}`);
+        const response = await fetch(`http://localhost:8080/job-seekers/view/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch job seeker');
         }
@@ -42,11 +42,6 @@ const SingleJobSeeker = () => {
           <div className="left">
             <h1 className="title">Job Seeker Information</h1>
             <div className="item">
-              <img
-                src={jobSeeker.avatar_url}
-                alt=""
-                className="itemImg"
-              />
               <div className="details">
                 <h1 className="itemTitle">{jobSeeker.first_name} {jobSeeker.last_name}</h1>
                 <div className="detailItem">
@@ -112,9 +107,7 @@ const SingleJobSeeker = () => {
               </div>
             </div>
           </div>
-          <div className="right">
-            <Chart aspect={2 / 1} title="User Spending (Last 6 Months)" />
-          </div>
+          
         </div>
       </div>
     </div>

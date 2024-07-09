@@ -1,8 +1,51 @@
-import "./single.scss";
-import Sidebar from "../../components/sidebar/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import Sidebar from '../../components/sidebar/Sidebar';
+import Navbar from '../../components/navbar/Navbar';
+import Button from '@mui/material/Button';
+import './singleJobPosts.scss';
 
-const SingleJobPostsModeration = () => {
+const SingleJobPosts = () => {
+  const { id } = useParams();
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchJob = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/jobs/view/${id}`);
+        setJob(response.data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
+  }, [id]);
+
+  const handleApproval = async (approve) => {
+    try {
+      const response = await axios.patch(`http://localhost:8080/jobs/approval/${id}`, { isActive: approve });
+      if (response.status === 200) {
+        setJob((prevJob) => ({ ...prevJob, isActive: approve }));
+      }
+    } catch (error) {
+      console.error('Error updating job status:', error.message);
+    }
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <div className="single">
       <Sidebar />
@@ -12,62 +55,98 @@ const SingleJobPostsModeration = () => {
           <div className="left">
             <h1 className="title">Information</h1>
             <div className="item">
-              <img
-                src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
-                alt=""
-                className="itemImg"
-              />
+              <img src={job.enterprise.avatar_url} alt="" className="itemImg" />
               <div className="details">
-                <h1 className="itemTitle"> ARM</h1>
+                <h1 className="itemTitle">{job.title}</h1>
                 <div className="detailItem">
-                  <span className="itemKey">Title : </span>
-                  <span className="itemValue">
-                    Kỹ Sư Cơ, Cấp Thoát Nước - HVAC (Điều Hòa Thông Gió)
-                  </span>
+                  <span className="itemKey">Enterprise: </span>
+                  <span className="itemValue">{job.enterprise.enterprise_name}</span>
                 </div>
                 <div className="detailItem">
-                  <span className="itemKey">Mức lương : </span>
-                  <span className="itemValue">10 - 20 triệu</span>
-                </div>
-
-                <div className="detailItem">
-                  <span className="itemKey">Địa điểm : </span>
-                  <span className="itemValue">Hà Nội & 4 nơi khác</span>
+                  <span className="itemKey">Salary: </span>
+                  <span className="itemValue">{job.minSalary} - {job.maxSalary}</span>
                 </div>
                 <div className="detailItem">
-                  <span className="itemKey">Kinh nghiệm : </span>
-                  <span className="itemValue">1 năm </span>
+                  <span className="itemKey">Location: </span>
+                  <span className="itemValue">{job.address}, {job.state}, {job.country}</span>
                 </div>
                 <div className="detailItem">
-                  <span className="itemKey">Ngày tạo : </span>
-                  <span className="itemValue">20/10/2023</span>
-                </div>
-
-                <div className="detailItem">
-                  <span className="itemKey">Hạn nộp hồ sơ: </span>
-                  <span className="itemValue">28/06/2024</span>
+                  <span className="itemKey">Experience: </span>
+                  <span className="itemValue">{job.experience}</span>
                 </div>
                 <div className="detailItem">
-                  <span className="itemKey">Chi tiết tin tuyển dụng : </span>
-                  <br></br>
-                  <span className="itemValue">
-                    - Giám sát tiến độ, tính toán khối lượng, kiểm soát chất
-                    lượng của các hạng mục cơ, cấp thoát nước, điều hòa thông
-                    gió đảm bảo đúng thiết kế<br></br>- Kiểm tra theo dõi đánh
-                    giá thi công điện nước tại hiện trường.<br></br>- Giải quyết
-                    các vấn đề phát sinh về khối lượng, kỹ thuật trong thực tế
-                    thi công.<br></br>- Phát hiện sai sót, và phản hồi ý kiến
-                    với tư vấn thiết kế, cảnh báo các nguy cơ tiềm ẩn.<br></br>-
-                    Đưa ra phương án sửa đổi, bổ sung, cải tiến (nếu có thể).
-                    <br></br>- Nghiệm thu khối lượng thi công và kiểm tra hồ sơ
-                    thanh quyết toán. - Trao đổi kỹ hơn{" "}
-                  </span>
+                  <span className="itemKey">Created At: </span>
+                  <span className="itemValue">{job.createdAt}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Skills: </span>
+                  <span className="itemValue">{job.skills}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Qualifications: </span>
+                  <span className="itemValue">{job.qualifications}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Industry: </span>
+                  <span className="itemValue">{job.industry}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Company Story: </span>
+                  <span className="itemValue">{job.enterprise.companyStory}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Founder: </span>
+                  <span className="itemValue">{job.enterprise.founder}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Web URL: </span>
+                  <span className="itemValue"><a href={job.enterprise.web_url} target="_blank" rel="noopener noreferrer">{job.enterprise.web_url}</a></span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Phone: </span>
+                  <span className="itemValue">{job.enterprise.phone}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Headquarter: </span>
+                  <span className="itemValue">{job.enterprise.headquarter}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Founded: </span>
+                  <span className="itemValue">{job.enterprise.founded}</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Resume URL: </span>
+                  <span className="itemValue"><a href={job.enterprise.resume_url} target="_blank" rel="noopener noreferrer">{job.enterprise.resume_url}</a></span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Enterprise User: </span>
+                  <span className="itemValue">{job.enterprise.user.user_name} ({job.enterprise.user.email})</span>
+                </div>
+                <div className="detailItem">
+                  <span className="itemKey">Active Status: </span>
+                  <span className="itemValue">{job.isActive ? 'Active' : 'Inactive'}</span>
                 </div>
               </div>
             </div>
             <div className="buttons">
-              <button className="approveButton">Duyệt</button>
-              <button className="rejectButton">Không duyệt</button>
+              <Button
+                variant="contained"
+                color="success"
+                className="approveButton"
+                onClick={() => handleApproval(true)}
+                disabled={job.isActive}
+              >
+                Approve
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                className="rejectButton"
+                onClick={() => handleApproval(false)}
+                disabled={!job.isActive}
+              >
+                Reject
+              </Button>
             </div>
           </div>
         </div>
@@ -76,4 +155,4 @@ const SingleJobPostsModeration = () => {
   );
 };
 
-export default SingleJobPostsModeration;
+export default SingleJobPosts;

@@ -14,25 +14,18 @@ export const jobColumns = [
   { field: 'salaryType', headerName: 'Salary Type', width: 150 },
   { field: 'minSalary', headerName: 'Min Salary', width: 150 },
   { field: 'maxSalary', headerName: 'Max Salary', width: 150 },
+  { field: 'isActive', headerName: 'Active Status', width: 150 },
   {
     field: 'action',
     headerName: 'Action',
-    width: 200,
+    width: 150,
     renderCell: (params) => (
       <div className="cellAction">
-        <Link to={`/jobPosts/view/${params.row.id}`} style={{ textDecoration: 'none' }}>
+        <Link to={`/jobs/jobPosts/view/${params.row.id}`} style={{ textDecoration: 'none' }}>
           <Button variant="contained" color="primary" className="viewButton">
             View
           </Button>
         </Link>
-        <Button
-          variant="contained"
-          color="error"
-          className="deleteButton"
-          // onClick={() => handleDelete(params.row.id)}
-        >
-          Delete
-        </Button>
       </div>
     ),
   },
@@ -47,7 +40,7 @@ const Datatablejob = () => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get('http://localhost:8080/jobs/list');
-        setJobs(response.data);
+        setJobs(transformData(response.data));
       } catch (error) {
         setError(error.message);
       } finally {
@@ -58,15 +51,17 @@ const Datatablejob = () => {
     fetchJobs();
   }, []);
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8080/jobs/delete/${id}`);
-      // Remove the deleted job from the local state
-      setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
-    } catch (error) {
-      console.error('Error deleting job:', error.message);
-      // Optionally, handle error state here
-    }
+  const transformData = (data) => {
+    return data.map((job) => ({
+      id: job.id,
+      title: job.title,
+      skills: job.skills,
+      experience: job.experience,
+      salaryType: job.salaryType,
+      minSalary: job.minSalary,
+      maxSalary: job.maxSalary,
+      isActive: job.isActive ? 'Active' : 'Inactive',
+    }));
   };
 
   return (

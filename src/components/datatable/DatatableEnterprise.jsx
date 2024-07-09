@@ -31,7 +31,8 @@ const DatatableEnterprise = () => {
 
   const transformData = (data) => {
     return data.map(item => ({
-      id: item.eid,  
+      id: item.eid,
+      enterprise_name: item.enterprise_name,
       user_name: item.user.user_name,
       email: item.user.email,
       created_at: new Date(item.created_at).toLocaleDateString(),  // Format date
@@ -47,14 +48,13 @@ const DatatableEnterprise = () => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isActive: !currentIsActive }),
+        }
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to toggle active status');
       }
-  
+
       // Update enterprise's isActive status in the local state
       setEnterprises(prevEnterprises =>
         prevEnterprises.map(enterprise =>
@@ -94,7 +94,11 @@ const DatatableEnterprise = () => {
                   <Link to={`/users/enterprises/view/${params.row.id}`} className="viewButton">
                     View
                   </Link>
-                  <button className="lockButton" onClick={() => handleToggleActive(params.row.id, params.row.is_active === "Active")}>
+                  <button 
+                    className="lockButton" 
+                    style={{ color: 'black' }} // Inline style for black text color
+                    onClick={() => handleToggleActive(params.row.id, params.row.is_active === "Active")}
+                  >
                     {params.row.is_active === "Active" ? "Lock" : "Unlock"}
                   </button>
                 </div>

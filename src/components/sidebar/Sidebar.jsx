@@ -91,17 +91,17 @@ const Sidebar = () => {
           {manageJobPostsOpen && (
             <ul className="sub-menu">
               <li>
-                <Link to="/jobPosts" style={{ textDecoration: "none" }}>
+                <Link to="/jobs/jobPosts" style={{ textDecoration: "none" }}>
                   <StoreIcon className="icon" />
                   <span>   List Job Posts</span>
                 </Link>
               </li>
-              <li>
-                <Link to="/jobPosts/jobPostsModeration" style={{ textDecoration: "none" }}>
+               <li>
+                <Link to="/jobs/jobPostsModerations" style={{ textDecoration: "none" }}>
                   <StoreIcon className="icon" />
                   <span>   Approval Job Posts</span>
                 </Link>
-              </li>
+              </li> 
             </ul>
           )}
 
@@ -111,7 +111,12 @@ const Sidebar = () => {
               <span>   Package Services</span>
             </ul>
           </Link>
-
+          <Link to="/transactions" style={{ textDecoration: "none" }}>
+            <ul>
+              <ExtensionIcon className="icon" />
+              <span>   Transactions</span>
+            </ul>
+          </Link>
           <Link to="/statistic" style={{ textDecoration: "none" }}>
             <ul>
               <AnalyticsIcon className="icon" />

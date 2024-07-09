@@ -43,12 +43,8 @@ const DatatableJobSeeker = () => {
 
   const handleToggleActive = async (id, currentIsActive) => {
     try {
-      const response = await fetch(`http://localhost:8080/jobseekers/toggle-active/${id}`, {
+      const response = await fetch(`http://localhost:8080/job-seekers/toggle-active/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isActive: !currentIsActive }),
       });
   
       if (!response.ok) {
@@ -58,7 +54,7 @@ const DatatableJobSeeker = () => {
       // Update user's isActive status in the local state
       setUsers(prevUsers =>
         prevUsers.map(user =>
-          user.id === id ? { ...user, is_active: !currentIsActive ? "Active" : "Inactive" } : user
+          user.id === id ? { ...user, is_active: currentIsActive ? "Inactive" : "Active" } : user
         )
       );
     } catch (error) {
@@ -66,7 +62,6 @@ const DatatableJobSeeker = () => {
       // Optionally, you can handle error states here, such as displaying an error message.
     }
   };
-  
 
   return (
     <div className="datatable">
@@ -95,7 +90,11 @@ const DatatableJobSeeker = () => {
                   <Link to={`/users/job-seekers/view/${params.row.id}`} className="viewButton">
                     View
                   </Link>
-                  <button className="lockButton" onClick={() => handleToggleActive(params.row.id, params.row.is_active === "Active")}>
+                  <button 
+                    className="lockButton" 
+                    style={{ color: 'black' }} // Inline style for black text color
+                    onClick={() => handleToggleActive(params.row.id, params.row.is_active === "Active")}
+                  >
                     {params.row.is_active === "Active" ? "Lock" : "Unlock"}
                   </button>
                 </div>
