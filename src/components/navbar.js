@@ -13,7 +13,7 @@ import {
   FiBook,
 } from "../assets/icons/vander";
 
-import useEnterpriseInfo from "../hook/useEnterpriseInfo";
+import useEnterpriseInfo from '../hook/useEnterpriseInfo';
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 export default function Navbar({ navClass, navLight }) {
@@ -31,7 +31,6 @@ export default function Navbar({ navClass, navLight }) {
   const { data: enterpriseData } = useEnterpriseInfo();
   const jobSeekerRole = sessionStorage.getItem("roleJobSeeker");
   const enterpriseRole = sessionStorage.getItem("roleEnterprise");
-  const adminRole = sessionStorage.getItem('roleAdmin');
   const jobseeker = jobseekerData?.data;
   const enterprise = enterpriseData?.data;
 
@@ -97,7 +96,6 @@ export default function Navbar({ navClass, navLight }) {
     } else if (enterpriseRole && enterprise?.avatar_url) {
       return enterprise.avatar_url;
     }
-    return 'https://res.cloudinary.com/dz9kynjwb/image/upload/v1717770585/OIP_bsmlku.jpg'
   };
 
   const renderUser = () => (
@@ -142,7 +140,7 @@ export default function Navbar({ navClass, navLight }) {
           )}
           {enterpriseRole && (
             <Link
-              to="/enterprise-profile-setting"
+              to="/employer-profile"
               className="dropdown-item fw-medium fs-6"
             >
               <FiSettings className="fea icon-sm me-2 align-middle" />
@@ -162,17 +160,6 @@ export default function Navbar({ navClass, navLight }) {
             >
               <FiBook className="fea icon-sm me-2 align-middle" />
               Applied List
-            </Link>
-          )}
-          <div className="dropdown-divider border-top"></div>
-
-          {adminRole && (
-            <Link
-              to="/admin/dashboard"
-              className="dropdown-item fw-medium fs-6"
-            >
-              <FiBook className="fea icon-sm me-2 align-middle" />
-              Admin Dashboard
             </Link>
           )}
           <div className="dropdown-divider border-top"></div>
@@ -274,7 +261,7 @@ export default function Navbar({ navClass, navLight }) {
           </li>
 
           <li className="list-inline-item ps-1 mb-0">
-            {jobSeekerRole || enterpriseRole || adminRole ? (
+            {jobSeekerRole || enterpriseRole ? (
               renderUser()
             ) : (
               <div className="dropdown dropdown-primary">
@@ -470,14 +457,6 @@ export default function Navbar({ navClass, navLight }) {
                 Contact Us
               </Link>
             </li>
-
-            {enterpriseRole && (
-            <li className={manu === "candidatas" ? "active" : ""}>
-              <Link to="/candidates" className="sub-menu-item">
-                Candidates
-              </Link>
-            </li>
-            )}
           </ul>
         </div>
       </div>

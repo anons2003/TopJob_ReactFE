@@ -128,9 +128,9 @@ function App() {
           path="/candidate-profile-setting"
           element={<ProtectedRoute element={CandidateProfileSetting} />}
         />
-        <Route 
-        path="/enterprise-profile-setting" 
-        element={<ProtectedRoute element={EnterpriseProfileSetting} />} 
+        <Route
+          path="/enterprise-profile-setting"
+          element={<ProtectedRoute element={EnterpriseProfileSetting} />}
         />
 
         <Route path="/aboutus" element={<AboutUs />} />
@@ -172,7 +172,7 @@ function App() {
         {/* admin route */}
 
         {/* dashboard */}
-        <Route path="/admin/dashboard" 
+        <Route path="/admin/dashboard"
           element={<ProtectedRoute element={AdminHome} />} />
 
         {/* <Route path="login" element={<Login />} /> */}

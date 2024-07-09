@@ -1,170 +1,106 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import bg1 from '../assets/images/hero/bg.jpg';
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
-import ScrollTop from "../components/scrollTop";
-import useEnterpriseInfo from "../hook/useEnterpriseInfo";
-import { toast } from "react-toastify";
-export default function JobPost() {
-    //get enterpirse id
-    const { data: enterpriseData } = useEnterpriseInfo();
-    const enterpriseReponse = enterpriseData?.data;
 
-    console.log(enterpriseReponse);
-    const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        jobType: "",
-        jobCategory: "",
-        salaryType: "",
-        minSalary: "",
-        maxSalary: "",
-        skills: "",
-        qualifications: "",
-        experience: "",
-        industry: "",
-        address: "",
-        country: "",
-        state: ""
-    });
+import bg1 from '../assets/images/hero/bg.jpg'
+import Navbar from "../componants/navbar";
+import Footer from "../componants/footer";
+import ScrollTop from "../componants/scrollTop";
 
-    const [jobTypes, setJobTypes] = useState([]);
-    const [jobCategories, setJobCategories] = useState([]);
-    const [enterpriseId, setEnterpriseId] = useState(null);
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const jobTypesResponse = await axios.get("http://localhost:8080/job-types");
-                const jobCategoriesResponse = await axios.get("http://localhost:8080/job-categories");
-                setJobTypes(jobTypesResponse.data);
-                setJobCategories(jobCategoriesResponse.data);
-                setEnterpriseId(enterpriseReponse?.eid);
-                console.log("Enterprise ID: ", enterpriseReponse?.eid);
-            } catch (error) {
-                console.error("There was an error fetching the job types and categories:", error);
-            }
-        }
-        fetchData();
-    }, [enterpriseReponse]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const payload = {
-            ...formData,
-            jobTypeEntity: { jobTypeId: parseInt(formData.jobType, 10) },
-            jobCategoryEntity: { jobCategoryId: parseInt(formData.jobCategory, 10) },
-            enterprise: { eid: enterpriseId } // assuming enterpriseId is available in your component's state
-        };
-
-        try {
-            const response = await axios.post("http://localhost:8080/jobs/save", payload);
-            console.log("Job post submitted successfully:", response.data);
-            toast.success(`Your Job Saved wait for approval`);
-        } catch (error) {
-            console.error("There was an error submitting the job post:", error);
-        }
-    };
-
-    return (
+export default function JobPost(){
+    return(
         <>
-            <Navbar navClass="defaultscroll sticky" navLight={true} />
-            <section className="bg-half-170 d-table w-100" style={{ backgroundImage: `url(${bg1})`, backgroundPosition: 'top' }}>
-                <div className="bg-overlay bg-gradient-overlay"></div>
-                <div className="container">
-                    <div className="row mt-5 justify-content-center">
-                        <div className="col-12">
-                            <div className="title-heading text-center">
-                                <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark">Create a Job Post</h5>
-                            </div>
+        <Navbar navClass="defaultscroll sticky" navLight={true}/>
+
+        <section className="bg-half-170 d-table w-100" style={{backgroundImage:`url(${bg1})`, backgroundPosition:'top'}}>
+            <div className="bg-overlay bg-gradient-overlay"></div>
+            <div className="container">
+                <div className="row mt-5 justify-content-center">
+                    <div className="col-12">
+                        <div className="title-heading text-center">
+                            <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark">Create a Job Post</h5>
                         </div>
                     </div>
-                    <div className="position-middle-bottom">
-                        <nav aria-label="breadcrumb" className="d-block">
-                            <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
-                                <li className="breadcrumb-item"><Link to="/">Jobnova</Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Job Post</li>
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
-            </section>
-            <div className="position-relative">
-                <div className="shape overflow-hidden text-white">
-                    <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-                    </svg>
+
+                <div className="position-middle-bottom">
+                    <nav aria-label="breadcrumb" className="d-block">
+                        <ul className="breadcrumb breadcrumb-muted mb-0 p-0">
+                            <li className="breadcrumb-item"><Link to="/">Jobnova</Link></li>
+                            <li className="breadcrumb-item active" aria-current="page">Job Post</li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
-            <section className="section bg-light">
-                <div className="container">
-                    <div className="row justify-content-center">
-                        <div className="col-xl-7 col-lg-8">
-                            <div className="card border-0">
-                                <form className="rounded shadow p-4" onSubmit={handleSubmit}>
-                                    <div className="row">
-                                        <h5 className="mb-3">Job Details:</h5>
-                                        <div className="col-12">
-                                            <div className="mb-3">
-                                                <label className="form-label fw-semibold">Job Title :</label>
-                                                <input name="title" className="form-control" placeholder="Title :" value={formData.title} onChange={handleChange} />
-                                            </div>
+        </section>
+        <div className="position-relative">
+            <div className="shape overflow-hidden text-white">
+                <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+                </svg>
+            </div>
+        </div>
+
+        <section className="section bg-light">
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div className="col-xl-7 col-lg-8">
+                        <div className="card border-0">
+                            <form className="rounded shadow p-4">
+                                <div className="row">
+                                    <h5 className="mb-3">Job Details:</h5>                                    
+                                    <div className="col-12">
+                                        <div className="mb-3">
+                                            <label className="form-label fw-semibold">Job Title :</label>
+                                            <input name="subject" id="subject2" className="form-control" placeholder="Title :"/>
+                                        </div>                                                                               
+                                    </div>
+                                    <div className="col-12">
+                                        <div className="mb-3">
+                                            <label className="form-label fw-semibold">Description :</label>
+                                            <textarea name="comments" id="comments2" rows="4" className="form-control" placeholder="Describe the job :"></textarea>
                                         </div>
-                                        <div className="col-12">
-                                            <div className="mb-3">
-                                                <label className="form-label fw-semibold">Description :</label>
-                                                <textarea name="description" rows="4" className="form-control" placeholder="Describe the job :" value={formData.description} onChange={handleChange}></textarea>
-                                            </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="mb-3">
+                                            <label className="form-label fw-semibold">Job Type:</label>
+                                            <select className="form-control form-select" id="Type">
+                                                <option value="WD">Web Designer</option>
+                                                <option value="WD">Web Developer</option>
+                                                <option value="UI">UI / UX Desinger</option>
+                                            </select>
                                         </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="form-label fw-semibold">Job Type:</label>
-                                                <select name="jobType" className="form-control form-select" value={formData.jobType} onChange={handleChange}>
-                                                    <option value="">Select Job Type</option>
-                                                    {jobTypes.map((type) => (
-                                                        <option key={type.jobTypeId} value={type.jobTypeId}>
-                                                            {type.jobTypeName}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
+                                    </div>
+
+                                    <div className="col-md-6">
+                                        <div className="mb-3">
+                                            <label className="form-label fw-semibold">Job Categories:</label>
+                                            <select className="form-control form-select" id="Categories">
+                                                <option>All Jobs</option>
+                                                <option>Full Time</option>
+                                                <option>Half Time</option>
+                                                <option>Remote</option>
+                                                <option>In Office</option>
+                                            </select>
                                         </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="form-label fw-semibold">Job Categories:</label>
-                                                <select name="jobCategory" className="form-control form-select" value={formData.jobCategory} onChange={handleChange}>
-                                                    <option value="">Select Job Category</option>
-                                                    {jobCategories.map((category) => (
-                                                        <option key={category.jobCategoryId} value={category.jobCategoryId}>
-                                                            {category.jobCategoryName}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
+                                    </div>
+
+                                    <div className="col-md-6">
+                                        <div className="mb-3">
+                                            <label className="form-label fw-semibold">Salary:</label>
+                                            <select className="form-control form-select" id="Salary">
+                                                <option value="HOURL">Hourly</option>
+                                                <option value="MONTH">Monthly</option>
+                                            </select>
                                         </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="form-label fw-semibold">Salary Type:</label>
-                                                <select name="salaryType" className="form-control form-select" value={formData.salaryType} onChange={handleChange}>
-                                                    <option value="">Select Salary Type</option>
-                                                    <option value="hourly">Hourly</option>
-                                                    <option value="monthly">Monthly</option>
-                                                    <option value="yearly">Yearly</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="form-label fw-semibold">Minimum Salary:</label>
-                                                <input name="minSalary" type="number" className="form-control" placeholder="Minimum Salary" value={formData.minSalary} onChange={handleChange} />
+                                    </div>
+
+                                    <div className="col-md-3">
+                                        <div className="mb-3 mt-md-4 pt-md-1">
+                                            <label className="form-label small fw-bold d-none"></label>
+                                            <div className="input-group mb-3">
+                                                <span className="input-group-text border" id="basic-addon1">$</span>
+                                                <input type="number" className="form-control" min="1" max="1000" placeholder="Min" id="MIn" aria-describedby="inputGroupPrepend" required/>
                                             </div>
                                         </div>
                                         <div className="col-md-6">
