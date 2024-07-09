@@ -123,14 +123,14 @@ const Sidebar = () => {
               <span>   Statistic</span>
             </ul>
           </Link>
-
+{/* 
           <p className="title">USER</p>
           <Link to="/profileAdmin" style={{ textDecoration: "none" }}>
             <ul>
               <AccountBoxIcon className="icon" />
               <span>   Profile</span>
             </ul>
-          </Link>
+          </Link> */}
 
           <Link to="/logout" style={{ textDecoration: "none" }}>
             <li>
