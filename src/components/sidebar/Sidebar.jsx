@@ -34,7 +34,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="top">
-        <Link to="/" style={{ textDecoration: "none" }}>
+        <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
           <span className="logo">Welcome Admin</span>
         </Link>
       </div>
@@ -43,7 +43,7 @@ const Sidebar = () => {
         <ul>
           <p className="title">MAIN</p>
           <ul class ="dashboard">
-            <Link to="/" style={{ textDecoration: "none" }}>
+            <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
               <DashboardIcon className="icon" />
               <span> Dashboard</span>
             </Link>
