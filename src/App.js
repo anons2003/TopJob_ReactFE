@@ -72,7 +72,7 @@ import ListPackageService from "./pages/list/ListPackageService";
 import ListTransaction from "./pages/list/ListTransaction";
 import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import ListEditPackageService from "./pages/list/ListEditPackageService";
-import NewUser from "./pages/newUser/NewUser";
+import NewJobSeeker from "./pages/newUser/NewJobSeeker";
 
 function App() {
   return (
@@ -183,7 +183,9 @@ function App() {
               <Route path="view/:id" element={<SingleJobSeeker />} />
               <Route
                 path="add"
-                element={<NewUser inputs={userInputs} title="Add New User" />}
+                element={
+                  <NewJobSeeker inputs={userInputs} title="Add New User" />
+                }
               />
             </Route>
             <Route path="enterprises">
