@@ -2,10 +2,12 @@ import "./new.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState } from "react";
+import axios from "axios";
 
 const NewUser = ({ inputs, title }) => {
   const [file, setFile] = useState(null);
   const [role, setRole] = useState("User");
+  const [formData, setFormData] = useState({});
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -15,9 +17,27 @@ const NewUser = ({ inputs, title }) => {
     setRole(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", file, role, inputs);
+    
+    const user = {
+      ...formData,
+      role: role,
+    };
+
+    try {
+      const response = await axios.post("http://localhost:8080/api/users/signup", user);
+      console.log("User saved successfully:", response.data);
+    } catch (error) {
+      console.error("There was an error saving the user!", error);
+    }
   };
 
   return (
@@ -37,6 +57,8 @@ const NewUser = ({ inputs, title }) => {
                   <input
                     type={input.type}
                     placeholder={input.placeholder}
+                    name={input.name}
+                    onChange={handleChange}
                     required
                   />
                 </div>
