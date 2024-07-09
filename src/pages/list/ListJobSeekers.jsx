@@ -1,15 +1,15 @@
 import "./list.scss"
 import Sidebar from "../../components/sidebar/SidebarA"
 import Navbar from "../../components/navbar/Navbar"
-import Datatable from "../../components/datatable/Datatable"
+import DatatableJobSeeker from "../../components/datatable/DatatableJobSeeker"
 
 const ListJobSeekers = () => {
   return (
     <div className="list">
-      <Sidebar/>
+      <Sidebar />
       <div className="listContainer">
-        <Navbar/>
-      <Datatable/>
+        <Navbar />
+        <DatatableJobSeeker />
       </div>
     </div>
   )

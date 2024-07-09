@@ -6,10 +6,10 @@ import Datatablejob from "../../components/datatable/Datatablejob"
 const ListJobPosts = () => {
   return (
     <div className="list">
-      <Sidebar/>
+      <Sidebar />
       <div className="listContainer">
-        <Navbar/>
-        <Datatablejob/>
+        <Navbar />
+        <Datatablejob />
       </div>
     </div>
   )

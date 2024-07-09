@@ -55,24 +55,26 @@ import CVAppliedList from "./pages/job-applied-list";
 import ReApply from "./pages/reapply-job";
 import EnterpriseProfileSetting from "./pages/enterprise-profile-setting";
 
-
 // admin
-import Single from "./pages/single/Single";
-import New from "./pages/newUser/New";
-
 import { productInputs, userInputs } from "./data/formSource";
+import { useContext } from "react";
 import ListJobPosts from "./pages/list/ListJobPosts";
 // page admin
 import SingleJobPosts from "./pages/single/SingleJobPosts";
-import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import SingleJobPostsModeration from "./pages/single/SingleJobPostsModeration";
-import SingleAdmin from "./pages/single/SingleAdmin";
 import UserDetail from "./pages/single/UserDetail";
-import Home from "./pages/admin-home/AdminHome";
 import AdminHome from "./pages/admin-home/AdminHome";
 import ListJobSeekers from "./pages/list/ListJobSeekers";
-
+import SingleJobSeeker from "./pages/single/SingleJobSeeker";
+import SingleEnterprise from "./pages/single/SingleEnterprise";
+import ListAdmins from "./pages/list/ListAdmin";
 import ListEnterprise from "./pages/list/ListEnterprise";
+import ListPackageService from "./pages/list/ListPackageService";
+import ListTransaction from "./pages/list/ListTransaction";
+import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
+import ListEditPackageService from "./pages/list/ListEditPackageService";
+import NewUser from "./pages/newUser/New";
+
 
 function App() {
   return (
@@ -179,36 +181,47 @@ function App() {
         <Route path="users">
           <Route path="job-seekers">
             <Route index element={<ListJobSeekers />} />
-            <Route path=":userId" element={<Single />} />
+            <Route path="view/:id" element={<SingleJobSeeker />} />
             <Route
               path="add"
-              element={<New inputs={userInputs} title="Add New User" />}
+              element={<NewUser inputs={userInputs} title="Add New User" />}
             />
           </Route>
-          <Route path="enterprise">
+          <Route path="enterprises">
             <Route index element={<ListEnterprise />} />
-            <Route path=":enterpriseId" element={<Single />} />
+            <Route path="view/:id" element={<SingleEnterprise />} />
+          </Route>
+          <Route path="admins">
+            <Route index element={<ListAdmins />} />
           </Route>
         </Route>
 
         {/* job post */}
-        <Route path="jobPosts">
-          <Route index element={<ListJobPosts />} />
-          <Route path=":productId" element={<SingleJobPosts />} />
+        <Route path="jobs">
+          <Route path="jobPosts">
+            <Route index element={<ListJobPosts />} />
+            <Route path="view/:id" element={<SingleJobPosts />} />
+          </Route>
+          <Route path="jobPostsModerations">
+            <Route index element={<ListJobPostsModeration />} />
+            <Route path="view/:id" element={<SingleJobPostsModeration />} />
+          </Route>
         </Route>
+
         {/* The article requires moderation */}
         <Route path="jobPostsModeration">
           <Route index element={<ListJobPostsModeration />} />
           <Route path=":productId" element={<SingleJobPostsModeration />} />
         </Route>
+
         {/* package services */}
-        <Route path="packageService">
-          <Route index element={<packageServices />} />
-          <Route path=":userId" element={<Single />} />
-          <Route
-            path="add"
-            element={<New inputs={userInputs} title="Add New User" />}
-          />
+        <Route path="packageServices">
+          <Route index element={<ListPackageService />} />
+          <Route path="edit/:id" element={<ListEditPackageService />} />
+        </Route>
+
+        <Route path="transactions">
+          <Route index element={<ListTransaction />} />
         </Route>
 
         {/* profile */}

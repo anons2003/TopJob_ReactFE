@@ -1,6 +1,7 @@
 .single {
   display: flex;
   width: 100%;
+
   .singleContainer {
     flex: 6;
 
@@ -13,8 +14,9 @@
         flex: 1;
         -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
         box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-        padding: 20px;
+        padding: 50px;
         position: relative;
+
         .item {
           display: flex;
           gap: 20px;
@@ -64,38 +66,42 @@
 
     .title {
       font-size: 16px;
-      color: lightgray;
+      color: rgb(94, 94, 94);
       margin-bottom: 20px;
     }
   }
+
   .buttons {
     display: flex;
-    justify-content: flex-end; /* Dịch sang bên phải */
+    justify-content: flex-end;
+    /* Dịch sang bên phải */
   }
-  
+
   button {
     padding: 10px 20px;
-    margin-bottom: 10px; /* Tạo khoảng cách giữa các nút */
+    margin-bottom: 10px;
+    /* Tạo khoảng cách giữa các nút */
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
   }
-  
+
   .approveButton {
     background-color: #4caf50;
     color: white;
-    margin-right: 10px; /* Tạo khoảng cách bên phải */
+    margin-right: 10px;
+    /* Tạo khoảng cách bên phải */
   }
-  
+
   .rejectButton {
     background-color: #f44336;
     color: white;
   }
-  
+
   button:hover {
     opacity: 0.8;
   }
-  
-  
+
+
 }

@@ -5,12 +5,15 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ExtensionIcon from '@mui/icons-material/Extension';
 import WorkIcon from '@mui/icons-material/Work';
+import { Link } from "react-router-dom";
 
 const Widget = ({ type }) => {
   let data;
 
-  // State to store the total number of users
+  // State to store the total number of users, jobs, and package services
   const [totalUsers, setTotalUsers] = useState(0);
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [totalPackageServices, setTotalPackageServices] = useState(0); // New state for package services
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -26,11 +29,32 @@ const Widget = ({ type }) => {
           setError(error);
           setIsLoading(false);
         });
+    } else if (type === "postjob") {
+      axios.get("http://localhost:8080/jobs/totalJob")
+        .then(response => {
+          setTotalJobs(response.data);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error("There was an error fetching the total jobs!", error);
+          setError(error);
+          setIsLoading(false);
+        });
+    } else if (type === "earning") {
+      axios.get("http://localhost:8080/packageServices/totalPackageService")
+        .then(response => {
+          setTotalPackageServices(response.data);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error("There was an error fetching the total package services!", error);
+          setError(error);
+          setIsLoading(false);
+        });
     }
   }, [type]);
 
-  //temporary
-  const amount = type === "user" ? totalUsers : 100; // Use totalUsers for user widget
+  const amount = type === "user" ? totalUsers : (type === "postjob" ? totalJobs : totalPackageServices); // Adjusted to include totalPackageServices
   const diff = 20;
 
   switch (type) {
@@ -38,6 +62,7 @@ const Widget = ({ type }) => {
       data = {
         title: "USERS",
         link: "See all users",
+        linkAddress: "/users/job-seekers",
         icon: (
           <PersonOutlinedIcon
             className="icon"
@@ -53,6 +78,7 @@ const Widget = ({ type }) => {
       data = {
         title: "All Job Posts",
         link: "View all job posts",
+        linkAddress: "/jobs/jobPosts",
         icon: (
           <WorkIcon
             className="icon"
@@ -67,7 +93,8 @@ const Widget = ({ type }) => {
     case "earning":
       data = {
         title: "Package Services",
-        link: "View all package service ",
+        link: "View all package services",
+        linkAddress: "/packageServices",
         icon: (
           <ExtensionIcon
             className="icon"
@@ -88,7 +115,9 @@ const Widget = ({ type }) => {
         <span className="counter">
           {data.isMoney && "$"} {isLoading ? "Loading..." : amount}
         </span>
-        <span className="link">{data.link}</span>
+        <span className="link">
+          <Link to={data.linkAddress}>{data.link}</Link>
+        </span>
       </div>
       <div className="right">
         <div className="percentage positive">

@@ -6,10 +6,10 @@ import Datatablejobmoderation from "../../components/datatable/Datatablejobmoder
 const ListJobPostsModeration = () => {
   return (
     <div className="list">
-      <Sidebar/>
+      <Sidebar />
       <div className="listContainer">
-        <Navbar/>
-        <Datatablejobmoderation/>
+        <Navbar />
+        <Datatablejobmoderation />
       </div>
     </div>
   )

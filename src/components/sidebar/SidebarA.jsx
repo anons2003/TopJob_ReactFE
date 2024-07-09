@@ -5,7 +5,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import ExtensionIcon from '@mui/icons-material/Extension';
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useState } from "react";
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -20,7 +20,7 @@ const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
   const [manageUsersOpen, setManageUsersOpen] = useState(false);
   const [manageJobPostsOpen, setManageJobPostsOpen] = useState(false);
-  const navigate = useNavigate();
+
   const handleManageUsersClick = () => {
     setManageUsersOpen(!manageUsersOpen);
     setManageJobPostsOpen(false); // Close Manage Job Posts menu
@@ -34,15 +34,15 @@ const Sidebar = () => {
   return (
     <div className="sidebarA">
       <div className="top">
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="logo">Job Nova</span>
+        <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
+          <span className="logo">Welcome Admin</span>
         </Link>
       </div>
       <hr />
       <div className="center">
         <ul>
           <p className="title">MAIN</p>
-          <ul className="dashboard">
+          <ul class ="dashboard">
             <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
               <DashboardIcon className="icon" />
               <span> Dashboard</span>
@@ -61,20 +61,20 @@ const Sidebar = () => {
             <ul className="sub-menu">
               <li>
                 <Link to="/users/job-seekers" style={{ textDecoration: "none" }}>
-                  <PersonSearchIcon className="icon" />
-                  <span>  Job Seeker</span>
+                  <PersonSearchIcon className="icon" />  
+                    <span>  Job Seeker</span>
                 </Link>
               </li>
 
               <li>
-                <Link to="/users/enterprise" style={{ textDecoration: "none" }}>
+                <Link to="/users/enterprises" style={{ textDecoration: "none" }}>
                   <GroupIcon className="icon" />
                   <span>   Enterprise</span>
                 </Link>
               </li>
 
               <li>
-                <Link to="/users/admin" style={{ textDecoration: "none" }}>
+                <Link to="/users/admins" style={{ textDecoration: "none" }}>
                   <AdminPanelSettingsIcon className="icon" />
                   <span>   Admin</span>
                 </Link>
@@ -85,23 +85,23 @@ const Sidebar = () => {
           <ul onClick={handleManageJobPostsClick}>
             <StoreIcon className="icon" />
             <span>  Manage Job Posts</span>
-            {manageJobPostsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            {manageJobPostsOpen ?        <ExpandLessIcon /> : <ExpandMoreIcon />}
           </ul>
 
           {manageJobPostsOpen && (
             <ul className="sub-menu">
               <li>
-                <Link to="/jobPosts" style={{ textDecoration: "none" }}>
+                <Link to="/jobs/jobPosts" style={{ textDecoration: "none" }}>
                   <StoreIcon className="icon" />
                   <span>   List Job Posts</span>
                 </Link>
               </li>
-              <li>
-                <Link to="/jobPosts/jobPostsModeration" style={{ textDecoration: "none" }}>
+               <li>
+                <Link to="/jobs/jobPostsModerations" style={{ textDecoration: "none" }}>
                   <StoreIcon className="icon" />
                   <span>   Approval Job Posts</span>
                 </Link>
-              </li>
+              </li> 
             </ul>
           )}
 
@@ -111,7 +111,12 @@ const Sidebar = () => {
               <span>   Package Services</span>
             </ul>
           </Link>
-
+          <Link to="/transactions" style={{ textDecoration: "none" }}>
+            <ul>
+              <ExtensionIcon className="icon" />
+              <span>   Transactions</span>
+            </ul>
+          </Link>
           <Link to="/statistic" style={{ textDecoration: "none" }}>
             <ul>
               <AnalyticsIcon className="icon" />
@@ -119,37 +124,13 @@ const Sidebar = () => {
             </ul>
           </Link>
 
-          <p className="title">USER</p>
-          <Link to="/profileAdmin" style={{ textDecoration: "none" }}>
-            <ul>
-              <AccountBoxIcon className="icon" />
-              <span>   Profile</span>
-            </ul>
-          </Link>
-
+          <Link to="/logout" style={{ textDecoration: "none" }}>
             <li>
               <ExitToAppIcon className="icon" />
-              <span
-                onClick={() => {
-                  sessionStorage.clear();
-                  navigate("/");
-                  window.location.reload();
-                }}
-              >Log out</span>
+              <span>Log out</span>
             </li>
-          
+          </Link>
         </ul>
-      </div>
-
-      <div className="bottom">
-        <div
-          className="colorOption"
-          onClick={() => dispatch({ type: "LIGHT" })}
-        ></div>
-        <div
-          className="colorOption"
-          onClick={() => dispatch({ type: "DARK" })}
-        ></div>
       </div>
     </div>
   );
