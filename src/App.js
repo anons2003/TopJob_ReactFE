@@ -64,7 +64,7 @@ import ListJobPosts from "./pages/list/ListJobPosts";
 import SingleJobPosts from "./pages/single/SingleJobPosts";
 import SingleJobPostsModeration from "./pages/single/SingleJobPostsModeration";
 import UserDetail from "./pages/single/UserDetail";
-import Home from "./pages/home/Home";
+import AdminHome from "./pages/home/AdminHome";
 import ListJobSeekers from "./pages/list/ListJobSeekers";
 import SingleJobSeeker from "./pages/single/SingleJobSeeker";
 import SingleEnterprise from "./pages/single/SingleEnterprise";
@@ -172,8 +172,10 @@ function App() {
 
         {/* dashboard */}
         <Route path="/">
-          <Route index element={<Home />} />
-          <Route path="login" element={<Login />} />
+          <Route
+            path="/admin/dashboard"
+            element={<ProtectedRoute element={AdminHome} />}
+          />
 
           {/* users */}
           <Route path="users">

@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState(null);
-  const [role, setRole] = useState("User"); // Default role is User
+  const [role, setRole] = useState("User");
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -17,8 +17,7 @@ const New = ({ inputs, title }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", file, role, inputs); // Example: Log file, role, and inputs
+    console.log("Form submitted:", file, role, inputs);
   };
 
   return (
@@ -32,7 +31,6 @@ const New = ({ inputs, title }) => {
         <div className="bottom">
           <div className="right">
             <form onSubmit={handleSubmit}>
-            
               {inputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
@@ -42,25 +40,21 @@ const New = ({ inputs, title }) => {
                     required
                   />
                 </div>
-                
-                
               ))}
-      
               <div className="formInput">
                 <label>Role:</label>
                 <select value={role} onChange={handleRoleChange}>
                   <option value="User">User</option>
                   <option value="Enterprise">Enterprise</option>
                 </select>
-              </div>    
-              
-              <h1>       </h1><div className="formInput">
+              </div>
+              <div className="formInput">
+                <label htmlFor="fileInput">Upload Image:</label>
                 <input
                   type="file"
                   id="fileInput"
                   onChange={handleFileChange}
                   accept="image/*"
-                  style={{ display: "none" }}
                 />
               </div>
               <button type="submit">Send</button>

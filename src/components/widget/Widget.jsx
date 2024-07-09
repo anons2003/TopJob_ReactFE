@@ -5,6 +5,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ExtensionIcon from '@mui/icons-material/Extension';
 import WorkIcon from '@mui/icons-material/Work';
+import { Link } from "react-router-dom";
 
 const Widget = ({ type }) => {
   let data;
@@ -60,6 +61,8 @@ const Widget = ({ type }) => {
     case "user":
       data = {
         title: "USERS",
+        link: "See all users",
+        linkAddress: "/users/job-seekers",
         icon: (
           <PersonOutlinedIcon
             className="icon"
@@ -74,6 +77,8 @@ const Widget = ({ type }) => {
     case "postjob":
       data = {
         title: "All Job Posts",
+        link: "View all job posts",
+        linkAddress: "/jobs/jobPosts",
         icon: (
           <WorkIcon
             className="icon"
@@ -88,6 +93,8 @@ const Widget = ({ type }) => {
     case "earning":
       data = {
         title: "Package Services",
+        link: "View all package services",
+        linkAddress: "/packageServices",
         icon: (
           <ExtensionIcon
             className="icon"
@@ -108,8 +115,15 @@ const Widget = ({ type }) => {
         <span className="counter">
           {data.isMoney && "$"} {isLoading ? "Loading..." : amount}
         </span>
+        <span className="link">
+          <Link to={data.linkAddress}>{data.link}</Link>
+        </span>
       </div>
       <div className="right">
+        <div className="percentage positive">
+          <KeyboardArrowUpIcon />
+          {diff} %
+        </div>
         {data.icon}
       </div>
       {error && <div className="error">Error: {error.message}</div>}
