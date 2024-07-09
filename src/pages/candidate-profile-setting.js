@@ -1,3 +1,5 @@
+//Part 1:
+
 import { useEffect, useState } from "react";
 
 import api from "../api/http";
@@ -11,28 +13,35 @@ import { Input, Modal, notification } from "antd";
 import Loading from "../components/loading";
 import { FiCamera } from "../assets/icons/vander";
 import NotificationSettings from "../components/notification-setting/notificationSettings";
+import RichTextEditor from "../components/richtexteditor/RichTextEditor";
+import { toast } from "react-toastify";
+import StateCitySelector from "../components/state-city-selector/State_City";
+import Selector from "../components/state-city-selector/Selector";
 
 export default function CandidateProfileSetting() {
   //   let [file, setFile] = useState(image1);
-  
+
   const queryClient = useQueryClient();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
-  
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [occupation, setOccupation] = useState("");
-  const [selectedState, setSelectedState] = useState("");
+  const [stateName, setStateName] = useState("");
+  const [cityName, setCityName] = useState("");
   const [phone, setPhone] = useState("");
   const [webUrl, setWebUrl] = useState("");
   const [intro, setIntro] = useState("");
+  const [dob, setDob] = useState(""); // Complete the definition
+  const [gender, setGender] = useState("");
   const [errors, setErrors] = useState({}); // Define errors state
 
   const updateUserInfoMutation = useMutation({
     mutationFn: (body) => {
-      return api.patch("/update-info", body, {
+      return api.patch("/jobSeeker/update-info", body, {
         headers: {
           Authorization: token,
         },
@@ -44,12 +53,15 @@ export default function CandidateProfileSetting() {
     if (user) {
       setFirstName(user.first_name);
       setLastName(user.last_name);
-      setEmail(user.email);
-      setSelectedState(user.state);
+      setEmail(user.user.email);
+      setStateName(user.state);
+      setCityName(user.city);
       setIntro(user.intro);
       setOccupation(user.occupation);
       setPhone(user.phone);
       setWebUrl(user.web_url);
+      setGender(user.gender);
+      setDob(user.dob);
     }
   }, [user]);
 
@@ -64,30 +76,31 @@ export default function CandidateProfileSetting() {
   function updateUserInfo() {
     if (validateForm()) {
       const body = {
-        state: selectedState,
+        state: stateName,
+        city: cityName,
         first_name: firstName,
         last_name: lastName,
         email: email,
         occupation: occupation,
         intro: intro,
-        resume: resume,
+        dob: dob,
+        gender: gender,
       };
 
       updateUserInfoMutation.mutate(body, {
         onSuccess: (data) => {
-          notification.success({ message: "User info updated successfully:" });
-          // Optionally, you can perform any other actions here after updating the user info
+          toast.success("User info updated successfully:");
         },
         onError: (error) => {
-          notification.error({ message: "Error updating user info:" });
-          // Optionally, handle the error or show a notification to the user
+          toast.error("Error updating user info:");
         },
       });
     }
   }
 
-  const firstNameRegex = /^[a-zA-ZÀ-ÿ\- ']+$/;
-  const lastNameRegex = /^[a-zA-ZÀ-ÿ\- ']+$/;
+  const firstNameRegex = /^[a-zA-Z\u00C0-\u017F\s]+$/u;
+
+  const lastNameRegex = /^[a-zA-Z]/u;
   function validateForm() {
     let valid = true;
     const errorsCopy = { ...errors };
@@ -96,27 +109,27 @@ export default function CandidateProfileSetting() {
     if (!firstNameRegex.test(firstName.trim())) {
       errorsCopy.firstName = "Invalid First Name";
       valid = false;
-      notification.error({ message: "Please enter a valid first name!" });
+      toast.error("Please enter a valid first name!");
     }
 
     // Validate Last Name using regex
     if (!lastNameRegex.test(lastName.trim())) {
       errorsCopy.lastName = "Invalid Last Name";
       valid = false;
-      notification.error({ message: "Please enter a valid last name!" });
+      toast.error("Please enter a valid last name!");
     }
 
     // Validate Email
     if (!email.trim()) {
       errorsCopy.email = "Email is Required";
       valid = false;
-      notification.error({ message: "Please enter email address!" });
+      toast.error("Please enter email address!");
     } else {
       const emailRegex = /^\S+@\S+\.\S+$/;
       if (!emailRegex.test(email)) {
         errorsCopy.email = "Invalid Email Format";
         valid = false;
-        notification.error({ message: "Please enter a valid email address!" });
+        toast.error("Please enter a valid email address!");
       } else {
         errorsCopy.email = "";
       }
@@ -129,7 +142,7 @@ export default function CandidateProfileSetting() {
   //Contact Info Update
   const updateContactInfo = useMutation({
     mutationFn: (body) => {
-      return api.patch("/update-contact-info", body, {
+      return api.patch("/jobSeeker/update-contact-info", body, {
         headers: {
           Authorization: token,
         },
@@ -147,14 +160,10 @@ export default function CandidateProfileSetting() {
 
       updateContactInfo.mutate(body, {
         onSuccess: (data) => {
-          notification.success({
-            message: "Contact info updated successfully:",
-          });
-          // Optionally, you can perform any other actions here after updating the contact info
+          toast.success("Contact info updated successfully:");
         },
         onError: (error) => {
-          notification.error({ message: "Error updating contact info:" });
-          // Optionally, handle the error or show a notification to the user
+          toast.error("Error updating contact info");
         },
       });
     }
@@ -171,27 +180,12 @@ export default function CandidateProfileSetting() {
       if (!phoneRegex.test(phone)) {
         errorsCopy.phone = "Invalid Phone Number Format";
         valid = false;
-        notification.error({ message: "Please enter correct phone number" });
+        toast.error("Please enter correct phone number");
       } else {
         errorsCopy.phone = "";
       }
     } else {
       errorsCopy.phone = "Phone Number is Required";
-      valid = false;
-    }
-
-    // Validate Website URL
-    if (webUrl.trim()) {
-      // Check if the website URL is in a valid format
-      const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
-      if (!urlRegex.test(webUrl)) {
-        errorsCopy.webUrl = "Invalid Website URL Format";
-        valid = false;
-      } else {
-        errorsCopy.webUrl = "";
-      }
-    } else {
-      errorsCopy.webUrl = "Website URL is Required";
       valid = false;
     }
 
@@ -222,12 +216,12 @@ export default function CandidateProfileSetting() {
       const body = { oldPassword, newPassword };
       updatePasswordMutation.mutate(body, {
         onSuccess() {
-          notification.success({ message: "Updated password successfully" });
+          toast.success("Updated password successfully");
         },
         onError(error) {
           const errorMessage =
             error.response?.data?.message || "An error occurred";
-          notification.error({ message: errorMessage });
+          toast.error(errorMessage);
         },
       });
     }
@@ -244,7 +238,7 @@ export default function CandidateProfileSetting() {
 
     if (!newPassword.trim()) {
       errorsCopy.newPassword = "New Password is Required";
-      notification.error({ message: "New Password is Required" });
+      toast.error("New Password is Required");
       valid = false;
     } else if (
       !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]).{8,}/.test(
@@ -254,20 +248,19 @@ export default function CandidateProfileSetting() {
       errorsCopy.newPassword =
         "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.";
       valid = false;
-      notification.error({
-        message:
-          "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.",
-      });
+      toast.error(
+        "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character."
+      );
     }
 
     if (!confirmPassword.trim()) {
       errorsCopy.confirmPassword = "Confirm Password is Required";
       valid = false;
-      notification.error({ message: "New Password is Required" });
+      toast.error("New Password is Required");
     } else if (newPassword !== confirmPassword) {
       errorsCopy.confirmPassword = "Passwords do not match";
       valid = false;
-      notification.error({ message: "New Passwords do not match" });
+      toast.error("New Passwords do not match");
     }
 
     // Check if new password is same as old password
@@ -275,9 +268,7 @@ export default function CandidateProfileSetting() {
       errorsCopy.newPassword =
         "New Password must be different from Old Password";
       valid = false;
-      notification.error({
-        message: "New Password must be different from Old Password",
-      });
+      toast.error("New Password must be different from Old Password");
     }
 
     setErrors(errorsCopy);
@@ -321,7 +312,7 @@ export default function CandidateProfileSetting() {
 
   const uploadAvatar = useMutation({
     mutationFn: (formData) => {
-      return api.patch("/update-avatar", formData, {
+      return api.patch("/jobSeeker/update-avatar", formData, {
         headers: {
           "content-type": "multipart/form-data",
           Authorization: token,
@@ -330,16 +321,16 @@ export default function CandidateProfileSetting() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("USER_PROFILE");
-      notification.success({ message: "Update avatar successfully" });
+      toast.success("Update avatar successfully");
     },
     onError: () => {
-      notification.error({ message: "Update avatar failed" });
+      toast.error("Update avatar failed");
     },
   });
 
   const uploadResume = useMutation({
     mutationFn: (formData) => {
-      return api.patch("/update-resume", formData, {
+      return api.patch("/jobSeeker/update-resume", formData, {
         headers: {
           "content-type": "multipart/form-data",
           Authorization: token,
@@ -348,10 +339,10 @@ export default function CandidateProfileSetting() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("USER_PROFILE");
-      notification.success({ message: "Upload resume successfully" });
+      toast.success("Upload resume successfully");
     },
     onError: () => {
-      notification.error({ message: "Upload resume failed" });
+      toast.error("Upload resume failed");
     },
   });
 
@@ -392,7 +383,7 @@ export default function CandidateProfileSetting() {
 
   const changeNameMutation = useMutation({
     mutationFn: (body) => {
-      return api.patch("/update-profile", body, {
+      return api.patch("/jobSeeker/update-profile", body, {
         headers: {
           Authorization: token,
         },
@@ -416,10 +407,10 @@ export default function CandidateProfileSetting() {
     changeNameMutation.mutate(body, {
       onSuccess() {
         queryClient.invalidateQueries("USER_PROFILE");
-        notification.success({ message: "Edit name successfully" });
+        toast.success("Edit name successfully");
       },
       onError() {
-        notification.error({ message: "Edit name failed, Try again later" });
+        toast.error("Edit name failed, Try again later");
       },
     });
     setIsModalNameOpen(false);
@@ -559,7 +550,7 @@ export default function CandidateProfileSetting() {
                       <div className="col-md-6">
                         <div className="mb-3">
                           <label className="form-label fw-semibold">
-                            Your Email:<span className="text-danger">*</span>
+                            Your Email:
                           </label>
                           <input
                             name="email"
@@ -568,13 +559,8 @@ export default function CandidateProfileSetting() {
                             className="form-control"
                             placeholder="Your email :"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            disabled={true}
                           />{" "}
-                          {errors.email && (
-                            <div className="invalid-feedback">
-                              {errors.email}
-                            </div>
-                          )}
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -609,89 +595,45 @@ export default function CandidateProfileSetting() {
                         </div>
                       </div>
 
-                      <div className="col-md-6">
-                        <div className="mb-3">
-                          <label className="form-label fw-semibold">
-                            Province:
-                          </label>
-                          <select
-                            className="form-control form-select"
-                            value={selectedState}
-                            onChange={(e) => setSelectedState(e.target.value)}
-                          >
-                            <option value="">Select Province</option>
-                            <option value="An Giang">An Giang</option>
-                            <option value="Bà Rịa-Vũng Tàu">
-                              Bà Rịa-Vũng Tàu
-                            </option>
-                            <option value="Bạc Liêu">Bạc Liêu</option>
-                            <option value="Bắc Kạn">Bắc Kạn</option>
-                            <option value="Bắc Giang">Bắc Giang</option>
-                            <option value="Bắc Ninh">Bắc Ninh</option>
-                            <option value="Bến Tre">Bến Tre</option>
-                            <option value="Bình Dương">Bình Dương</option>
-                            <option value="Bình Định">Bình Định</option>
-                            <option value="Bình Phước">Bình Phước</option>
-                            <option value="Bình Thuận">Bình Thuận</option>
-                            <option value="Cà Mau">Cà Mau</option>
-                            <option value="Cần Thơ">Cần Thơ</option>
-                            <option value="Cao Bằng">Cao Bằng</option>
-                            <option value="Đà Nẵng">Đà Nẵng</option>
-                            <option value="Đắk Lắk">Đắk Lắk</option>
-                            <option value="Đắk Nông">Đắk Nông</option>
-                            <option value="Điện Biên">Điện Biên</option>
-                            <option value="Đồng Nai">Đồng Nai</option>
-                            <option value="Đồng Tháp">Đồng Tháp</option>
-                            <option value="Gia Lai">Gia Lai</option>
-                            <option value="Hà Giang">Hà Giang</option>
-                            <option value="Hà Nam">Hà Nam</option>
-                            <option value="Hà Nội">Hà Nội</option>
-                            <option value="Hà Tĩnh">Hà Tĩnh</option>
-                            <option value="Hải Dương">Hải Dương</option>
-                            <option value="Hải Phòng">Hải Phòng</option>
-                            <option value="Hậu Giang">Hậu Giang</option>
-                            <option value="Hòa Bình">Hòa Bình</option>
-                            <option value="Hồ Chí Minh (Sài Gòn)">
-                              Hồ Chí Minh (Sài Gòn)
-                            </option>
-                            <option value="Hưng Yên">Hưng Yên</option>
-                            <option value="Khánh Hòa">Khánh Hòa</option>
-                            <option value="Kiên Giang">Kiên Giang</option>
-                            <option value="Kon Tum">Kon Tum</option>
-                            <option value="Lai Châu">Lai Châu</option>
-                            <option value="Lâm Đồng">Lâm Đồng</option>
-                            <option value="Lạng Sơn">Lạng Sơn</option>
-                            <option value="Lào Cai">Lào Cai</option>
-                            <option value="Long An">Long An</option>
-                            <option value="Nam Định">Nam Định</option>
-                            <option value="Nghệ An">Nghệ An</option>
-                            <option value="Ninh Bình">Ninh Bình</option>
-                            <option value="Ninh Thuận">Ninh Thuận</option>
-                            <option value="Phú Thọ">Phú Thọ</option>
-                            <option value="Phú Yên">Phú Yên</option>
-                            <option value="Quảng Bình">Quảng Bình</option>
-                            <option value="Quảng Nam">Quảng Nam</option>
-                            <option value="Quảng Ngãi">Quảng Ngãi</option>
-                            <option value="Quảng Ninh">Quảng Ninh</option>
-                            <option value="Quảng Trị">Quảng Trị</option>
-                            <option value="Sóc Trăng">Sóc Trăng</option>
-                            <option value="Sơn La">Sơn La</option>
-                            <option value="Tây Ninh">Tây Ninh</option>
-                            <option value="Thái Bình">Thái Bình</option>
-                            <option value="Thái Nguyên">Thái Nguyên</option>
-                            <option value="Thanh Hóa">Thanh Hóa</option>
-                            <option value="Thừa Thiên Huế">
-                              Thừa Thiên Huế
-                            </option>
-                            <option value="Tiền Giang">Tiền Giang</option>
-                            <option value="Trà Vinh">Trà Vinh</option>
-                            <option value="Tuyên Quang">Tuyên Quang</option>
-                            <option value="Vĩnh Long">Vĩnh Long</option>
-                            <option value="Vĩnh Phúc">Vĩnh Phúc</option>
-                            <option value="Yên Bái">Yên Bái</option>
-                          </select>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div className="mb-3">
+                            <label className="form-label fw-semibold">
+                              Date of Birth:
+                            </label>
+                            <input
+                              className="form-control"
+                              type="date"
+                              value={dob}
+                              onChange={(e) => setDob(e.target.value)}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-md-6">
+                          <div className="mb-3">
+                            <label className="form-label fw-semibold">
+                              Gender:
+                            </label>
+                            <select
+                              className="form-select"
+                              value={gender}
+                              onChange={(e) => setGender(e.target.value)}
+                            >
+                              <option value="">Select Gender</option>
+                              <option value="0">Male</option>
+                              <option value="1">Female</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
+
+                      <StateCitySelector
+                        stateName={stateName}
+                        setStateName={setStateName}
+                        cityName={cityName}
+                        setCityName={setCityName}
+                      />
 
                       <div className="col-md-6">
                         <div className="mb-3">
@@ -715,15 +657,7 @@ export default function CandidateProfileSetting() {
                           <label className="form-label fw-semibold">
                             Introduction :
                           </label>
-                          <textarea
-                            name="comments"
-                            id="comments2"
-                            rows="4"
-                            className="form-control"
-                            placeholder="Introduction :"
-                            value={intro}
-                            onChange={(e) => setIntro(e.target.value)}
-                          ></textarea>
+                          <RichTextEditor value={intro} onChange={setIntro} />
                         </div>
                       </div>
 
@@ -979,3 +913,4 @@ export default function CandidateProfileSetting() {
     </>
   );
 }
+

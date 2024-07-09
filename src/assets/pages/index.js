@@ -14,11 +14,11 @@ import company8 from '../images/company/snapchat.png'
 import about3 from "../images/about/ab03.jpg"
 import about4 from "../images/about/ab04.jpg"
 
-import Navbar from '../componants/navbar';
-import AboutUs from "../componants/aboutUs";
-import Categories from "../componants/categories";
-import Blog from '../componants/blog';
-import Footer from '../componants/footer';
+import Navbar from '../components/navbar';
+import AboutUs from "../components/aboutUs";
+import Categories from "../components/categories";
+import Blog from '../components/blog';
+import Footer from '../components/footer';
 
 import { jobData, servicesData } from "../data/data";
 
@@ -130,7 +130,7 @@ export default function Index(){
                                     </div>
 
                                     <div className="mt-4">
-                                        <Link to={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
+                                        <Link to={`/job-detail-three/${item.id}`} className="text-dark title h5">{item.title}</Link>
 
                                         <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1"/>{item.country}</span>
 

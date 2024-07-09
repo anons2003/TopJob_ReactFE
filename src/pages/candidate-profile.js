@@ -27,18 +27,17 @@ import { useMutation } from "@tanstack/react-query";
 
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 import api from "../api/http";
 import Loading from "../components/loading";
 import { ContactUs } from "../components/contact";
-export default function CandidateProfile() {
 
-  const token = localStorage.getItem("token");
-  const { data: jobseekerData } = useJobSeekerInfo();
-  const jobseeker = jobseekerData?.data;
-  const jobSeekerRole = localStorage.getItem("roleJobSeeker");
-  const enterpriseRole = localStorage.getItem("roleEnterprise");
+export default function CandidateProfile() {
+  const token = sessionStorage.getItem("token");
+  const jobseekerRole = sessionStorage.getItem("roleJobSeeker");
+  const { data: userData } = useJobSeekerInfo();
+  const user = userData?.data;
 
   const uploadAvatar = useMutation({
     mutationFn: (formData) => {
@@ -50,7 +49,6 @@ export default function CandidateProfile() {
       });
     },
   });
-
 
   return (
     <>
@@ -85,13 +83,12 @@ export default function CandidateProfile() {
                       </div>
                     </div>
                   )}
-                  {jobSeekerRole && <Link
+                  {jobseekerRole && (<Link
                     to="/candidate-profile-setting"
                     className="btn btn-sm btn-icon btn-pills btn-soft-primary"
                   >
                     <FiSettings className="icons" />
-                  </Link>}
-
+                  </Link>)}
                 </div>
               </div>
             </div>
@@ -103,7 +100,7 @@ export default function CandidateProfile() {
             <div className="col-lg-8 col-md-7 col-12">
               <h5 className="mb-4">Introduction:</h5>
 
-              <p className="text-muted">{jobseeker?.intro}</p>
+              <div dangerouslySetInnerHTML={{ __html: user?.intro }} />
 
               <h5 className="mt-4">Skills:</h5>
 
@@ -294,7 +291,7 @@ export default function CandidateProfile() {
                     <span className="fw-medium">
                       {jobseeker && jobseeker.user_name === "Johny Sins"
                         ? "johnysins@gmail.com"
-                        : jobseeker?.email}
+                        : user?.user.email}
                     </span>
                   </div>
 

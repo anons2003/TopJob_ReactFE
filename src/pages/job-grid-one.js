@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 import bg1 from '../assets/images/hero/bg.jpg'
 
-import Navbar from "../componants/navbar";
-import FormSelect from "../componants/formSelect";
-import Footer from "../componants/footer";
-import AboutTwo from "../componants/aboutTwo";
-import ScrollTop from "../componants/scrollTop";
+import Navbar from "../components/navbar";
+import FormSelect from "../components/formSelect";
+import Footer from "../components/footer";
+import AboutTwo from "../components/aboutTwo";
+import ScrollTop from "../components/scrollTop";
 
 import { jobData } from "../data/data";
 
@@ -70,7 +70,7 @@ export default function JobGridOne(){
                                     </div>
 
                                     <div className="mt-4">
-                                        <Link to={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
+                                        <Link to={`/job-detail-three/${item.id}`} className="text-dark title h5">{item.title}</Link>
 
                                         <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1"/>{item.country}</span>
 

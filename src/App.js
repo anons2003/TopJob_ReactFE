@@ -1,8 +1,10 @@
 import React from "react";
-import { Route, Routes } from 'react-router-dom';
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
-import "./assets/scss/style.scss"
-import "./assets/css/materialdesignicons.min.css"
+
+import { Route, Routes } from "react-router-dom";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "./assets/scss/style.scss";
+import "./assets/css/materialdesignicons.min.css";
+
 import Index from "./pages";
 import IndexTwo from "./pages/index-two";
 
@@ -40,34 +42,51 @@ import Error from "./pages/error";
 import Comingsoom from "./pages/comingsoon";
 import Maintenance from "./pages/maintenance";
 
+import LoginEn from "./pages/login/loginAsEn";
+import SignupEn from "./pages/signup/signupAsEn";
 import ResetPasswordEn from "./pages/reset-password/reset-passwordAsEn";
 import UpdatePassword from "./pages/update-password/update-password";
 import UpdatePasswordEn from "./pages/update-password/update-passwordAsEn";
 import CreatePassword from "./pages/change-password/create-password"
 import CreatePasswordEn from "./pages/change-password/create-passwordAsEn";
 import ProtectedRoute from './hook/useProtectRoute';
-import CreateTemplate from './pages/create-cv/create-template';
-import TemplateContainer from "./pages/create-cv/TemplateContainer";
+import CreateCV from './pages/create-cv/create-cv';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Index />} />
-        <Route path='/index-two' element={<IndexTwo />} />
-        <Route path='/job-categories' element={<JobCategories />} />
-        <Route path='/job-grid-two' element={<JobGridTwo />} />
-        <Route path='/job-list-one' element={<JobListOne />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/index-two" element={<IndexTwo />} />
+        <Route path="/job-categories" element={<JobCategories />} />
+        <Route path="/job-grid-two" element={<JobGridTwo />} />
+        <Route path="/job-list-one" element={<JobListOne />} />
 
-        <Route path='/job-apply' element={<ProtectedRoute element={JobApply} />} />
-        <Route path='/job-post' element={<ProtectedRoute element={JobPost} />} />
-        <Route path='/career' element={<ProtectedRoute element={Career} />} />
-        <Route path='/job-detail-three' element={<JobDetailThree />} />
-        <Route path='/job-detail-three/:id' element={<JobDetailThree />} />
+        <Route
+          path="/job-apply"
+          element={<ProtectedRoute element={JobApply} />}
+        />
+        <Route
+          path="/job-apply/:id"
+          element={<ProtectedRoute element={JobApply} />}
+        />
+        <Route
+          path="/job-post"
+          element={<ProtectedRoute element={JobPost} />}
+        />
+        <Route path="/career" element={<ProtectedRoute element={Career} />} />
+        <Route path="/job-detail-three" element={<JobDetailThree />} />
+        <Route path="/job-detail-three/:id" element={<JobDetailThree />} />
 
-        <Route path='/employers' element={<ProtectedRoute element={Employers} />} />
-        <Route path='/employer-profile' element={<EmployerProfile />} />
-        <Route path='/employer-profile/:id' element={<ProtectedRoute element={EmployerProfile} />} />
+        <Route
+          path="/employers"
+          element={<ProtectedRoute element={Employers} />}
+        />
+        <Route path="/employer-profile" element={<EmployerProfile />} />
+        <Route
+          path="/employer-profile/:id"
+          element={<ProtectedRoute element={EmployerProfile} />}
+        />
 
         <Route path='/candidates' element={<ProtectedRoute element={Candidates} />} />
         <Route path='/candidate-profile' element={<ProtectedRoute element={CandidateProfile} />} />
@@ -86,7 +105,9 @@ function App() {
         <Route path='/blog-detail' element={<BlogDetail />} />
         <Route path='/blog-detail/:id' element={<BlogDetail />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/En-login' element={<LoginEn />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path='/En-signup' element={<SignupEn />} />
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path='/En-reset-password' element={<ResetPasswordEn />} />
         <Route path='/lock-screen' element={<LockScreen />} />
@@ -102,10 +123,7 @@ function App() {
         <Route path='/En-update-password' element={<UpdatePasswordEn />} />
         <Route path='/change-password' element={<CreatePassword />} />
         <Route path='/En-change-password' element={<CreatePasswordEn />} />
-        <Route path='/create-template' element={<CreateTemplate />} />
-
-        <Route path="/template" element={<TemplateContainer />} />
-        
+        <Route path='/create-CV' element={<CreateCV />} />
       </Routes>
     </>
   );
