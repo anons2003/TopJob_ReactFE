@@ -55,8 +55,6 @@ import CVAppliedList from "./pages/job-applied-list";
 import ReApply from "./pages/reapply-job";
 
 // admin
-import New from "./pages/new/New";
-
 import { productInputs, userInputs } from "./data/formSource";
 import { useContext } from "react";
 import ListJobPosts from "./pages/list/ListJobPosts";
@@ -74,6 +72,7 @@ import ListPackageService from "./pages/list/ListPackageService";
 import ListTransaction from "./pages/list/ListTransaction";
 import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import ListEditPackageService from "./pages/list/ListEditPackageService";
+import NewUser from "./pages/newUser/NewUser";
 
 function App() {
   return (
@@ -184,7 +183,7 @@ function App() {
               <Route path="view/:id" element={<SingleJobSeeker />} />
               <Route
                 path="add"
-                element={<New inputs={userInputs} title="Add New User" />}
+                element={<NewUser inputs={userInputs} title="Add New User" />}
               />
             </Route>
             <Route path="enterprises">

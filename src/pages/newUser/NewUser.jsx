@@ -3,7 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState } from "react";
 
-const New = ({ inputs, title }) => {
+const NewUser = ({ inputs, title }) => {
   const [file, setFile] = useState(null);
   const [role, setRole] = useState("User");
 
@@ -66,4 +66,4 @@ const New = ({ inputs, title }) => {
   );
 };
 
-export default New;
+export default NewUser;
