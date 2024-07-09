@@ -185,9 +185,9 @@ export default function JobListOne() {
                     <div className="mt-3 mt-md-0">
                       <button
                         className={`btn btn-sm btn-icon btn-pills ${item.bookmarks.length > 0 &&
-                            item.bookmarks[0].isBookmarked === 1
-                            ? "btn-primary"
-                            : "btn-soft-primary"
+                          item.bookmarks[0].isBookmarked === 1
+                          ? "btn-primary"
+                          : "btn-soft-primary"
                           } bookmark`}
                         onClick={() =>
                           toggleBookmark(

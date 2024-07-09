@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useParams } from "react-router-dom";
 import bg1 from "../assets/images/hero/bg5.jpg";
 import company1 from "../assets/images/company/linkedin.png";
 import company2 from "../assets/images/company/lenovo-logo.png";
@@ -22,33 +22,23 @@ import {
   FiDownload,
   FiMessageCircle,
   FiFileText,
+  FiGift,
 } from "../assets/icons/vander";
-import { useMutation } from "@tanstack/react-query";
 
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 import "react-toastify/dist/ReactToastify.css";
 
-import api from "../api/http";
-import Loading from "../components/loading";
 import { ContactUs } from "../components/contact";
 
 export default function CandidateProfile() {
-  const token = sessionStorage.getItem("token");
-  const jobseekerRole = sessionStorage.getItem("roleJobSeeker");
-  const { data: userData } = useJobSeekerInfo();
+  const { jid } = useParams();
+  const { data: userData } = useJobSeekerInfo(jid);
   const user = userData?.data;
-
-  const uploadAvatar = useMutation({
-    mutationFn: (formData) => {
-      return api.patch("/update-avatar", formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-          Authorization: token,
-        },
-      });
-    },
-  });
+  const htmlContent = user?.intro?.replace(
+    /<img/g,
+    '<img style="max-width: 100%; height: auto;"'
+  );
 
   return (
     <>
@@ -62,33 +52,29 @@ export default function CandidateProfile() {
                   <img src={bg1} className="img-fluid rounded shadow" alt="" />
                 </div>
                 <div className="candidate-profile d-flex align-items-end justify-content-between mx-2">
-                  {uploadAvatar.isPending ? (
-                    <Loading />
-                  ) : (
-                    <div className="d-flex align-items-end">
-                      <img
-                        src={user?.avatar_url}
-                        className="rounded-pill shadow border border-3 avatar avatar-medium"
-                        alt=""
-                      />
+                  <div className="d-flex align-items-end">
+                    <img
+                      src={user?.avatar_url}
+                      className="rounded-pill shadow border border-3 avatar avatar-medium"
+                      alt=""
+                    />
 
-                      <div className="ms-2">
-                        <h5 className="mb-0">
-                          {user?.gender === 0 ? "Mr. " : "Mrs. "}{" "}
-                          {user?.firstName == null && user?.last_name == null
-                            ? user?.user_name
-                            : user?.first_name + " " + user?.last_name}
-                        </h5>
-                        <p className="text-muted mb-0">{user?.occupation}</p>
-                      </div>
+                    <div className="ms-2">
+                      <h5 className="mb-0">
+                        {user?.gender === 0 ? "Mr. " : "Mrs. "}{" "}
+                        {user?.firstName == null && user?.last_name == null
+                          ? user?.user_name
+                          : user?.first_name + " " + user?.last_name}
+                      </h5>
+                      <p className="text-muted mb-0">{user?.occupation}</p>
                     </div>
-                  )}
-                  {jobseekerRole && (<Link
+                  </div>
+                  <Link
                     to="/candidate-profile-setting"
                     className="btn btn-sm btn-icon btn-pills btn-soft-primary"
                   >
                     <FiSettings className="icons" />
-                  </Link>)}
+                  </Link>
                 </div>
               </div>
             </div>
@@ -100,7 +86,7 @@ export default function CandidateProfile() {
             <div className="col-lg-8 col-md-7 col-12">
               <h5 className="mb-4">Introduction:</h5>
 
-              <div dangerouslySetInnerHTML={{ __html: user?.intro }} />
+              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
               <h5 className="mt-4">Skills:</h5>
 
@@ -146,136 +132,8 @@ export default function CandidateProfile() {
                 </div>
               </div>
 
-              <h5 className="mt-4">Experience:</h5>
-
-              <div className="row">
-                <div className="col-12 mt-4">
-                  <div className="d-flex">
-                    <div className="text-center">
-                      <img
-                        src={company1}
-                        className="avatar avatar-small bg-white shadow p-2 rounded"
-                        alt=""
-                      />
-                      <h6 className="text-muted mt-2 mb-0">2019-22</h6>
-                    </div>
-
-                    <div className="ms-3">
-                      <h6 className="mb-0">Full Stack Developer</h6>
-                      <p className="text-muted">Linkedin - U.S.A.</p>
-                      <p className="text-muted mb-0">
-                        It seems that only fragments of the original text remain
-                        in the Lorem Ipsum texts used today. One may speculate
-                        that over the course of time certain letters were added
-                        or deleted at various positions within the text.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-12 mt-4">
-                  <div className="d-flex">
-                    <div className="text-center">
-                      <img
-                        src={company2}
-                        className="avatar avatar-small bg-white shadow p-2 rounded"
-                        alt=""
-                      />
-                      <h6 className="text-muted mt-2 mb-0">2017-19</h6>
-                    </div>
-
-                    <div className="ms-3">
-                      <h6 className="mb-0">Back-end Developer</h6>
-                      <p className="text-muted">Lenovo - China</p>
-                      <p className="text-muted mb-0">
-                        It seems that only fragments of the original text remain
-                        in the Lorem Ipsum texts used today. One may speculate
-                        that over the course of time certain letters were added
-                        or deleted at various positions within the text.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <div className="p-4 rounded shadow mt-4">
                 <h5>Get in touch !</h5>
-                {/* <form className="mt-4">
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Your Name <span className="text-danger">*</span>
-                        </label>
-                        <input
-                          name="name"
-                          id="name"
-                          type="text"
-                          className="form-control"
-                          placeholder="Name :"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Your Email <span className="text-danger">*</span>
-                        </label>
-                        <input
-                          name="email"
-                          id="email"
-                          type="email"
-                          className="form-control"
-                          placeholder="Email :"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Subject
-                        </label>
-                        <input
-                          name="subject"
-                          id="subject"
-                          className="form-control"
-                          placeholder="Subject :"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-12">
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Comments <span className="text-danger">*</span>
-                        </label>
-                        <textarea
-                          name="comments"
-                          id="comments"
-                          rows="4"
-                          className="form-control"
-                          placeholder="Message :"
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="d-grid">
-                        <button
-                          type="submit"
-                          id="submit"
-                          name="send"
-                          className="btn btn-primary"
-                        >
-                          Send Message
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form> */}
                 <ContactUs />
               </div>
             </div>
@@ -295,12 +153,12 @@ export default function CandidateProfile() {
                     </span>
                   </div>
 
-                  {/* <div className="d-flex align-items-center justify-content-between mt-3">
+                  <div className="d-flex align-items-center justify-content-between mt-3">
                     <span className="d-inline-flex align-items-center text-muted fw-medium">
                       <FiGift className="fea icon-sm me-2" /> D.O.B.:
                     </span>
-                    <span className="fw-medium">31st Dec, 1996</span>
-                  </div> */}
+                    <span className="fw-medium">{user?.dob}</span>
+                  </div>
 
                   {/* <div className="d-flex align-items-center justify-content-between mt-3">
                     <span className="d-inline-flex align-items-center text-muted fw-medium">

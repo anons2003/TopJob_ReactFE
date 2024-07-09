@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Navbar from "../components/navbar";
 import NavbarDark from "../components/navbarDark";
 import api from "../api/http";
 
@@ -56,7 +57,7 @@ const BookmarksList = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  console.log(data);
+
   return (
     <>
       <NavbarDark navClass="defaultscroll sticky" navLight={true} />
@@ -77,7 +78,7 @@ const BookmarksList = () => {
                   <div className="row align-items-center">
                     <div className="col-md-1">
                       <img
-                        src={bookmark.enterprise.avatar_url} // Use bookmark.enterprise.avatar_url here
+                        src={bookmark.image}
                         className="avatar avatar-small rounded shadow bg-white"
                         alt=""
                       />
