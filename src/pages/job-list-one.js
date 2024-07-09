@@ -1,32 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import bg1 from '../assets/images/hero/bg.jpg';
-import Navbar from "../componants/navbar";
-import AboutTwo from "../componants/aboutTwo";
-import FormSelect from "../componants/formSelect";
-import Footer from "../componants/footer";
-import ScrollTop from "../componants/scrollTop";
+import bg1 from "../assets/images/hero/bg.jpg";
+import Navbar from "../components/navbar";
+import AboutTwo from "../components/aboutTwo";
+import FormSelect from "../components/formSelect";
+import Footer from "../components/footer";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
+import ScrollTop from "../components/scrollTop";
 import { FiClock, FiMapPin, FiBookmark } from "../assets/icons/vander";
 import useJobInfo from "../hook/useJobInfo";
 import api from "../api/http";
 
 const formatDateTime = (dateArray) => {
-  if (!dateArray) return null;
   const [year, month, day, hour, minute, second, nanosecond] = dateArray;
   const millisecond = Math.floor(nanosecond / 1000000);
   return new Date(year, month - 1, day, hour, minute, second, millisecond);
 };
 
 const compareWithCurrentDate = (date) => {
-  if (!date) return null;
   const now = new Date();
   const diffTime = Math.abs(now - date);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
   return diffDays;
 };
-
 export default function JobListOne() {
-
   const { data: jobData, isLoading, error } = useJobInfo();
   const [filteredJobs, setFilteredJobs] = useState([]);
 
@@ -57,19 +55,18 @@ export default function JobListOne() {
   });
 
   useEffect(() => {
-    if (jobData && jobData.data) {
+    if (jobData?.data) {
       setFilteredJobs(jobData.data);
     }
   }, [jobData]);
 
   const handleSearch = ({ keyword, location, type }) => {
-    if (!jobData || !jobData.data) return;
     const filtered = jobData.data.filter((job) => {
       const matchesKeyword = job.title
         .toLowerCase()
         .includes(keyword.toLowerCase());
       const matchesLocation = location ? job.country === location : true;
-      const matchesType = type ? job.jobTypeName === type : true;
+      const matchesType = type ? job.jobType === type : true;
       return matchesKeyword && matchesLocation && matchesType;
     });
     setFilteredJobs(filtered);
@@ -146,7 +143,11 @@ export default function JobListOne() {
                   <div className="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
                     <div className="d-flex align-items-center w-310px">
                       <img
-                        src={item.avatarUrl || ''}
+                        src={
+                          item?.enterprise === null
+                            ? "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                            : item.enterprise.avatar_url
+                        }
                         className="avatar avatar-small rounded shadow p-3 bg-white"
                         alt=""
                       />
@@ -162,7 +163,7 @@ export default function JobListOne() {
 
                     <div className="d-flex align-items-center justify-content-between d-md-block mt-3 mt-md-0 w-100px">
                       <span className="badge bg-soft-primary rounded-pill">
-                        {item.jobTypeName}
+                        {item.jobType}
                       </span>
                       <span className="text-muted d-flex align-items-center fw-medium mt-md-2">
                         <FiClock className="fea icon-sm me-1 align-middle" />
@@ -182,11 +183,12 @@ export default function JobListOne() {
 
                     <div className="mt-3 mt-md-0">
                       <button
-                        className={`btn btn-sm btn-icon btn-pills ${item.bookmarks.length > 0 &&
-                            item.bookmarks[0].isBookmarked === 1
+                        className={`btn btn-sm btn-icon btn-pills ${
+                          item.bookmarks.length > 0 &&
+                          item.bookmarks[0].isBookmarked === 1
                             ? "btn-primary"
                             : "btn-soft-primary"
-                          } bookmark`}
+                        } bookmark`}
                         onClick={() =>
                           toggleBookmark(
                             item.id,
@@ -210,7 +212,7 @@ export default function JobListOne() {
               );
             })}
           </div>
-          {/* phan trang */}
+
           <div className="row">
             <div className="col-12 mt-4 pt-2">
               <ul className="pagination justify-content-center mb-0">
