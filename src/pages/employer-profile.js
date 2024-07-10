@@ -14,12 +14,15 @@ import { FiMapPin, FiClock, FiDollarSign, FiDribbble, FiLinkedin, FiFacebook, Fi
 import useEnterpriseInfo from "../hook/useEnterpriseInfo";
 import useEnterpriseJobs from "../hook/useEnterpriseJobs";
 
+
 export default function EmployerProfile() {
     const enterpriseRole = sessionStorage.getItem("roleEnterprise");
     const { data: enterpriseData } = useEnterpriseInfo();
     const enterprise = enterpriseData?.data;
     const { jobs, loading, error } = useEnterpriseJobs(enterprise?.eid);
+    
 
+    console.log(jobs);
     const [formData, setFormData] = useState({
         enterprise_name: '',
         city: '',
@@ -130,19 +133,21 @@ export default function EmployerProfile() {
                             <div className="row g-4">
                                 {loading && <p>Loading jobs...</p>}
                                 {error && <p>This Company dont have any job yet</p>}
+
                                 {jobs.map((item, index) => (
+
                                     <div className="col-lg-6 col-12" key={index}>
                                         <div className="job-post rounded shadow bg-white">
                                             <div className="p-4">
-                                                <Link to={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.avatarUrl}</Link>
+                                                <Link to={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
                                                 <p className="text-muted d-flex align-items-center small mt-3"><FiClock className="fea icon-sm text-primary me-1" />Posted {item.posted} Days ago</p>
                                                 <ul className="list-unstyled d-flex justify-content-between align-items-center mb-0 mt-3">
                                                     <li className="list-inline-item"><span className="badge bg-soft-primary">{item.jobTime}</span></li>
-                                                    <li className="list-inline-item"><span className="text-muted d-flex align-items-center small"><FiDollarSign className="fea icon-sm text-primary me-1" />{item.salary}/mo</span></li>
+                                                    <li className="list-inline-item"><span className="text-muted d-flex align-items-center small"><FiDollarSign className="fea icon-sm text-primary me-1" />{item.minSalary}-{item.maxSalary}/mo</span></li>
                                                 </ul>
                                             </div>
                                             <div className="d-flex align-items-center p-4 border-top">
-                                                <img src={item.image} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
+                                                <img src={item.enterprise?.avatar_url} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
                                                 <div className="ms-3">
                                                     <h6>{item.name}</h6>
                                                     <span className="text-muted d-flex align-items-center"><FiMapPin className="fea icon-sm me-1" />{item.country}</span>
