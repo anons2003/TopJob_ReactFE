@@ -131,7 +131,7 @@ export default function JobApply() {
             <div className="col-12">
               <div className="title-heading text-center">
                 <img
-                  src={jobData?.image ? jobData.image : logo1}
+                  src={jobData?.avatarUrl ? jobData.avatarUrl : logo1}
                   className="avatar avatar-small rounded-pill p-2 bg-white"
                   alt=""
                 />
@@ -149,7 +149,7 @@ export default function JobApply() {
                   <Link to="/">Jobnova</Link>
                 </li>
                 <li className="breadcrumb-item">
-                  <Link to="/job-grid-two">Job</Link>
+                  <Link to="/job-list-one">Job</Link>
                 </li>
                 <li className="breadcrumb-item active" aria-current="page">
                   Job Apply
