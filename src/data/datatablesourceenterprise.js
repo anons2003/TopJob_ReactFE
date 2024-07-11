@@ -39,4 +39,8 @@ export const enterpriseColumns = [
     headerName: "Status",
     width: 160,
   },
+<<<<<<< HEAD
 ];
+=======
+];
+>>>>>>> longVQH

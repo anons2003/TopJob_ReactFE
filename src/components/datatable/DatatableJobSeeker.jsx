@@ -12,7 +12,11 @@ const DatatableJobSeeker = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+<<<<<<< HEAD
         const response = await fetch('http://localhost:8080/job-seekers/list');
+=======
+          const response = await fetch('http://localhost:8080/jobSeeker/list');
+>>>>>>> longVQH
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
@@ -109,4 +113,8 @@ const DatatableJobSeeker = () => {
   );
 };
 
+<<<<<<< HEAD
 export default DatatableJobSeeker;
+=======
+export default DatatableJobSeeker;
+>>>>>>> longVQH

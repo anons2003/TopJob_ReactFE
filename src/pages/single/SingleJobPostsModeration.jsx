@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+<<<<<<< HEAD
 import Sidebar from '../../components/sidebar/Sidebar';
+=======
+import Sidebar from '../../components/sidebar/SidebarA';
+>>>>>>> longVQH
 import Navbar from '../../components/navbar/Navbar';
 import Button from '@mui/material/Button';
 import './singleJobPosts.scss';
@@ -155,4 +159,8 @@ const SingleJobPosts = () => {
   );
 };
 
+<<<<<<< HEAD
 export default SingleJobPosts;
+=======
+export default SingleJobPosts;
+>>>>>>> longVQH

@@ -184,7 +184,7 @@ export default function JobListTwo(){
                                                 <img src={item.image} className="avatar avatar-small rounded shadow p-3 bg-white" alt=""/>
                 
                                                 <div className="ms-3">
-                                                    <Link to={`/job-detail-one/${item.id}`} className="h5 title text-dark">{item.title}</Link>
+                                                    <Link to={`/job-detail-three/${item.id}`} className="h5 title text-dark">{item.title}</Link>
                                                 </div>
                                             </div>
                 
@@ -200,7 +200,7 @@ export default function JobListTwo(){
                 
                                             <div className="mt-3 mt-md-0">
                                                 <Link to="#" className="btn btn-sm btn-icon btn-pills btn-soft-primary bookmark"><FiBookmark className="icons"/></Link>
-                                                <Link to={`/job-detail-one/${item.id}`} className="btn btn-sm btn-primary w-full ms-md-1">Apply Now</Link>
+                                                <Link to={`/job-detail-three/${item.id}`} className="btn btn-sm btn-primary w-full ms-md-1">Apply Now</Link>
                                             </div>
                                         </div>
                                     </div>

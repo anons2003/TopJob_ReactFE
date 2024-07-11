@@ -64,10 +64,10 @@ export default function Career(){
                             <div className="col-lg-10 col-12 mt-4 pt-2" key={index}>
                                 <div className="job-post shadow rounded d-md-flex align-items-center justify-content-between p-4">
                                     <div className="mb-3 mb-md-0">
-                                        <Link to="/job-detail-one" className="h5 title text-dark">{item.title}</Link>
+                                        <Link to="/job-detail-three" className="h5 title text-dark">{item.title}</Link>
                                         <p className="text-muted mt-2 mb-0">{item.position}</p>
                                     </div>
-                                    <Link to="/job-detail-one" className="btn btn-soft-primary">Apply Now <i className="mdi mdi-arrow-right"></i></Link>
+                                    <Link to="/job-detail-three" className="btn btn-soft-primary">Apply Now <i className="mdi mdi-arrow-right"></i></Link>
                                 </div>
                             </div>
                         )

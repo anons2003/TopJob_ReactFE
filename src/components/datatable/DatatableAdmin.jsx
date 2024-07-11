@@ -54,4 +54,8 @@ const DatatableAdmin = () => {
     );
 };
 
+<<<<<<< HEAD
 export default DatatableAdmin;
+=======
+export default DatatableAdmin;
+>>>>>>> longVQH

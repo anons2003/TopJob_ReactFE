@@ -13,7 +13,7 @@ import {
   FiBook,
 } from "../assets/icons/vander";
 
-import useEnterpriseInfo from "../hook/useEnterpriseInfo";
+import useEnterpriseInfo from '../hook/useEnterpriseInfo';
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 export default function Navbar({ navClass, navLight }) {

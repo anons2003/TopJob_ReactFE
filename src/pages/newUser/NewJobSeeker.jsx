@@ -25,7 +25,7 @@ const NewJobSeeker = ({ title }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/usertypes/job-seekers", formData);
+      const response = await axios.post("http://localhost:8080/usertypes/signup", formData);
       console.log("User saved successfully:", response.data);
       setSuccessMessage("User saved successfully!");
       setError(null);

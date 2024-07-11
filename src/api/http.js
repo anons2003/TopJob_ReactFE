@@ -8,7 +8,7 @@ class Api {
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",
-      },
+      },  
     });
     this.instance.interceptors.response.use(
       (response) => {
@@ -42,6 +42,6 @@ class Api {
     );
   }
 }
-
+// https://topjobbackend-production.up.railway.app
 const api = new Api().instance;
 export default api;

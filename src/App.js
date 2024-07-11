@@ -53,6 +53,7 @@ import CreateResume from "./pages/create-cv/CreateResume";
 import BookmarksList from "./pages/bookmark-list";
 import CVAppliedList from "./pages/job-applied-list";
 import ReApply from "./pages/reapply-job";
+import EnterpriseProfileSetting from "./pages/enterprise-profile-setting";
 
 // admin
 import { productInputs, userInputs } from "./data/formSource";
@@ -62,7 +63,11 @@ import ListJobPosts from "./pages/list/ListJobPosts";
 import SingleJobPosts from "./pages/single/SingleJobPosts";
 import SingleJobPostsModeration from "./pages/single/SingleJobPostsModeration";
 import UserDetail from "./pages/single/UserDetail";
+<<<<<<< HEAD
 import AdminHome from "./pages/home/AdminHome";
+=======
+import AdminHome from "./pages/admin-home/AdminHome";
+>>>>>>> longVQH
 import ListJobSeekers from "./pages/list/ListJobSeekers";
 import SingleJobSeeker from "./pages/single/SingleJobSeeker";
 import SingleEnterprise from "./pages/single/SingleEnterprise";
@@ -72,7 +77,12 @@ import ListPackageService from "./pages/list/ListPackageService";
 import ListTransaction from "./pages/list/ListTransaction";
 import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import ListEditPackageService from "./pages/list/ListEditPackageService";
+<<<<<<< HEAD
 import NewJobSeeker from "./pages/newUser/NewJobSeeker";
+=======
+import NewUser from "./pages/newUser/New";
+
+>>>>>>> longVQH
 
 function App() {
   return (
@@ -115,17 +125,20 @@ function App() {
           element={<ProtectedRoute element={Candidates} />}
         />
         <Route
-          path="/candidate-profile/:jid"
+          path="/candidate-profile"
           element={<ProtectedRoute element={CandidateProfile} />}
         />
-
         <Route
-          path="/candidate-profile"
+          path="/candidate-profile/:id"
           element={<ProtectedRoute element={CandidateProfile} />}
         />
         <Route
           path="/candidate-profile-setting"
           element={<ProtectedRoute element={CandidateProfileSetting} />}
+        />
+        <Route
+          path="/enterprise-profile-setting"
+          element={<ProtectedRoute element={EnterpriseProfileSetting} />}
         />
 
         <Route path="/aboutus" element={<AboutUs />} />
@@ -144,6 +157,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/lock-screen" element={<LockScreen />} />
 
+
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/contactus" element={<ContactUs />} />
@@ -154,22 +168,19 @@ function App() {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/change-password" element={<CreatePassword />} />
 
-        <Route path="/create-template" element={<CreateTemplate />} />
-        <Route path="/template" element={<TemplateContainer />} />
-        <Route
-          path="/resumeDetail/:templateID"
-          element={<TemplateDesignPinDetail />}
-        />
+        <Route path='/create-template' element={<CreateTemplate />} />
+        <Route path='/template' element={<TemplateContainer />} />
+        <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
         <Route path="/resume/*" element={<CreateResume />} />
         {/* new */}
         <Route path="bookmark-list" element={<BookmarksList />} />
         <Route path="cv-applied-list" element={<CVAppliedList />} />
         <Route path="reapply-job" element={<ReApply />} />
         <Route path="reapply-job/:id" element={<ReApply />} />
-
         {/* admin route */}
 
         {/* dashboard */}
+<<<<<<< HEAD
         <Route path="/">
           <Route
             path="/admin/dashboard"
@@ -220,22 +231,79 @@ function App() {
           {/* profile */}
           <Route path="profileAdmin">
             <Route index element={<packageServices />} />
-          </Route>
+=======
+        <Route path="/admin/dashboard"
+          element={<ProtectedRoute element={AdminHome} />} />
 
-          <Route>
-            <Route>
-              <Route path="/users">
-                <Route index element={<users />} />
-                <Route path="view/:id" element={<UserDetail />} />
-              </Route>
-            </Route>
-          </Route>
+        {/* <Route path="login" element={<Login />} /> */}
 
-          {/* logout */}
-          <Route path="/logout">
-            <Route index element={<logout />} />
+        {/* users */}
+        <Route path="users">
+          <Route path="job-seekers">
+            <Route index element={<ListJobSeekers />} />
+            <Route path="view/:id" element={<SingleJobSeeker />} />
+            <Route
+              path="add"
+              element={<NewUser inputs={userInputs} title="Add New User" />}
+            />
+          </Route>
+          <Route path="enterprises">
+            <Route index element={<ListEnterprise />} />
+            <Route path="view/:id" element={<SingleEnterprise />} />
+>>>>>>> longVQH
+          </Route>
+          <Route path="admins">
+            <Route index element={<ListAdmins />} />
           </Route>
         </Route>
+
+        {/* job post */}
+        <Route path="jobs">
+          <Route path="jobPosts">
+            <Route index element={<ListJobPosts />} />
+            <Route path="view/:id" element={<SingleJobPosts />} />
+          </Route>
+          <Route path="jobPostsModerations">
+            <Route index element={<ListJobPostsModeration />} />
+            <Route path="view/:id" element={<SingleJobPostsModeration />} />
+          </Route>
+        </Route>
+
+        {/* The article requires moderation */}
+        <Route path="jobPostsModeration">
+          <Route index element={<ListJobPostsModeration />} />
+          <Route path=":productId" element={<SingleJobPostsModeration />} />
+        </Route>
+
+        {/* package services */}
+        <Route path="packageServices">
+          <Route index element={<ListPackageService />} />
+          <Route path="edit/:id" element={<ListEditPackageService />} />
+        </Route>
+
+        <Route path="transactions">
+          <Route index element={<ListTransaction />} />
+        </Route>
+
+        {/* profile */}
+        <Route path="profileAdmin">
+          <Route index element={<packageServices />} />
+        </Route>
+
+        <Route>
+          <Route>
+            <Route path="/users">
+              <Route index element={<users />} />
+              <Route path="view/:jid" element={<UserDetail />} />
+            </Route>
+          </Route>
+        </Route>
+
+        {/* logout */}
+        <Route path="/logout">
+          <Route index element={<logout />} />
+        </Route>
+
       </Routes>
     </>
   );

@@ -30,6 +30,7 @@ import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 import "react-toastify/dist/ReactToastify.css";
 
 import { ContactUs } from "../components/contact";
+
 export default function CandidateProfile() {
   const { jid } = useParams();
   const { data: userData } = useJobSeekerInfo(jid);
