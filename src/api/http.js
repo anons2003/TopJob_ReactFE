@@ -8,7 +8,7 @@ class Api {
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",
-      },  
+      },
     });
     this.instance.interceptors.response.use(
       (response) => {

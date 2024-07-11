@@ -91,7 +91,7 @@ function App() {
           element={<ProtectedRoute element={JobApply} />}
         />
         <Route
-          path="/job-apply/:id"
+          path="/job-apply/:jobId"
           element={<ProtectedRoute element={JobApply} />}
         />
         <Route
@@ -168,7 +168,7 @@ function App() {
         <Route path="bookmark-list" element={<BookmarksList />} />
         <Route path="cv-applied-list" element={<CVAppliedList />} />
         <Route path="reapply-job" element={<ReApply />} />
-        <Route path="reapply-job/:id" element={<ReApply />} />
+        <Route path="reapply-job/:jobId" element={<ReApply />} />
         {/* admin route */}
 
         {/* dashboard */}

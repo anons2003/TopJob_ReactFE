@@ -10,16 +10,17 @@ const useTemplate = () => {
     queryFn: async () => {
       try {
         const response = await api.get("/templates");
+        console.log(response.data);
         return response.data;
       } catch (err) {
         console.log(err);
-        throw err; // cần ném lỗi ra để quản lý lỗi chính xác
+        throw err;
       }
     },
     retry: 1,
     retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 30000),
     onError: (error) => {
-      console.error("Lỗi khi lấy thông tin:", error);
+      console.error("Error fetching templates:", error);
       if (error.response && error.response.status === 400) {
         window.location.replace("login");
       }
@@ -74,3 +75,4 @@ const useTemplate = () => {
 };
 
 export default useTemplate;
+

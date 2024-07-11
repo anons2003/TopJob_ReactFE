@@ -28,7 +28,6 @@ const compareWithCurrentDate = (date) => {
 };
 
 export default function JobListOne() {
-
   const { data: jobData, isLoading, error } = useJobInfo();
   const [filteredJobs, setFilteredJobs] = useState([]);
 
@@ -40,7 +39,7 @@ export default function JobListOne() {
         {},
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -52,14 +51,14 @@ export default function JobListOne() {
       const token = sessionStorage.getItem("token");
       return api.delete(`/jobSeeker/job/${jobId}`, {
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       });
     },
   });
 
   useEffect(() => {
-    if (jobData && jobData.data) {
+    if (jobData && Array.isArray(jobData.data)) {
       setFilteredJobs(jobData.data);
     }
   }, [jobData]);
@@ -148,7 +147,7 @@ export default function JobListOne() {
                   <div className="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
                     <div className="d-flex align-items-center w-310px">
                       <img
-                        src={item.avatarUrl || ''}
+                        src={item.avatarUrl || ""}
                         className="avatar avatar-small rounded shadow p-3 bg-white"
                         alt=""
                       />
@@ -185,9 +184,9 @@ export default function JobListOne() {
                     <div className="mt-3 mt-md-0">
                       <button
                         className={`btn btn-sm btn-icon btn-pills ${item.bookmarks.length > 0 &&
-                          item.bookmarks[0].isBookmarked === 1
-                          ? "btn-primary"
-                          : "btn-soft-primary"
+                            item.bookmarks[0].isBookmarked === 1
+                            ? "btn-primary"
+                            : "btn-soft-primary"
                           } bookmark`}
                         onClick={() =>
                           toggleBookmark(

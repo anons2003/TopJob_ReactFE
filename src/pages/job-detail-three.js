@@ -148,7 +148,7 @@ export default function JobDetailThree() {
                                 </ul>
 
                                 <div className="mt-4">
-                                    <Link to="/job-apply" className="btn btn-outline-primary" state={{ job: data }}>Apply Now <i className="mdi mdi-send"></i></Link>
+                                    <Link to={`/job-apply/${id}`} className="btn btn-outline-primary" state={{ job: data }}>Apply Now <i className="mdi mdi-send"></i></Link>
                                 </div>
                             </div>
                         </div>
