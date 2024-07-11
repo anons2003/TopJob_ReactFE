@@ -34,7 +34,7 @@ const Sidebar = () => {
   return (
     <div className="sidebarA">
       <div className="top">
-        <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
+        <Link to="/" style={{ textDecoration: "none" }}>
           <span className="logo">Welcome Admin</span>
         </Link>
       </div>
@@ -42,11 +42,7 @@ const Sidebar = () => {
       <div className="center">
         <ul>
           <p className="title">MAIN</p>
-<<<<<<< HEAD:src/components/sidebar/Sidebar.jsx
-          <ul class ="dashboard">
-=======
           <ul class="dashboard">
->>>>>>> longVQH:src/components/sidebar/SidebarA.jsx
             <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
               <DashboardIcon className="icon" />
               <span> Dashboard</span>
@@ -100,16 +96,12 @@ const Sidebar = () => {
                   <span>   List Job Posts</span>
                 </Link>
               </li>
-<<<<<<< HEAD:src/components/sidebar/Sidebar.jsx
-               <li>
-=======
               <li>
->>>>>>> longVQH:src/components/sidebar/SidebarA.jsx
                 <Link to="/jobs/jobPostsModerations" style={{ textDecoration: "none" }}>
                   <StoreIcon className="icon" />
                   <span>   Approval Job Posts</span>
                 </Link>
-              </li> 
+              </li>
             </ul>
           )}
 
@@ -131,16 +123,6 @@ const Sidebar = () => {
               <span>   Statistic</span>
             </ul>
           </Link>
-<<<<<<< HEAD:src/components/sidebar/Sidebar.jsx
-{/* 
-          <p className="title">USER</p>
-          <Link to="/profileAdmin" style={{ textDecoration: "none" }}>
-            <ul>
-              <AccountBoxIcon className="icon" />
-              <span>   Profile</span>
-            </ul>
-          </Link> */}
-=======
 
           <li>
             <ExitToAppIcon className="icon" />
@@ -151,15 +133,10 @@ const Sidebar = () => {
             }}
             >Log out</span>
           </li>
->>>>>>> longVQH:src/components/sidebar/SidebarA.jsx
 
         </ul>
       </div>
-<<<<<<< HEAD:src/components/sidebar/Sidebar.jsx
-    </div>
-=======
     </div >
->>>>>>> longVQH:src/components/sidebar/SidebarA.jsx
   );
 };
 

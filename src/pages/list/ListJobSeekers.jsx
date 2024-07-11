@@ -8,13 +8,8 @@ const ListJobSeekers = () => {
     <div className="list">
       <Sidebar />
       <div className="listContainer">
-<<<<<<< HEAD
-        <Navbar/>
-      <DatatableJobSeeker/>
-=======
         <Navbar />
         <DatatableJobSeeker />
->>>>>>> longVQH
       </div>
     </div>
   )

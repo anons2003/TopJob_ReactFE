@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-<<<<<<< HEAD
-import Sidebar from '../../components/sidebar/Sidebar';
-=======
 import Sidebar from '../../components/sidebar/SidebarA';
->>>>>>> longVQH
 import Navbar from '../../components/navbar/Navbar';
 import './singleJobPosts.scss';
 
@@ -73,11 +69,7 @@ const SingleJobPosts = () => {
                 <div className="detailItem">
                   <span className="itemKey">Created At: </span>
                   <span className="itemValue">{job.createdAt}</span>
-<<<<<<< HEAD
-                </div>              
-=======
                 </div>
->>>>>>> longVQH
                 <div className="detailItem">
                   <span className="itemKey">Skills: </span>
                   <span className="itemValue">{job.skills}</span>

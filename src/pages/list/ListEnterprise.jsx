@@ -8,13 +8,8 @@ const ListUsers = () => {
     <div className="list">
       <Sidebar />
       <div className="listContainer">
-<<<<<<< HEAD
-        <Navbar/>
-        <DatatableEnterprise/>
-=======
         <Navbar />
         <DatatableEnterprise />
->>>>>>> longVQH
       </div>
     </div>
   )

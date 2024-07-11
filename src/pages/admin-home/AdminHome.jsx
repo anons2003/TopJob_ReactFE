@@ -30,8 +30,4 @@ const AdminHome = () => {
   );
 };
 
-<<<<<<< HEAD:src/pages/home/AdminHome.jsx
 export default AdminHome;
-=======
-export default AdminHome;
->>>>>>> longVQH:src/pages/admin-home/AdminHome.jsx

@@ -63,11 +63,7 @@ import ListJobPosts from "./pages/list/ListJobPosts";
 import SingleJobPosts from "./pages/single/SingleJobPosts";
 import SingleJobPostsModeration from "./pages/single/SingleJobPostsModeration";
 import UserDetail from "./pages/single/UserDetail";
-<<<<<<< HEAD
-import AdminHome from "./pages/home/AdminHome";
-=======
 import AdminHome from "./pages/admin-home/AdminHome";
->>>>>>> longVQH
 import ListJobSeekers from "./pages/list/ListJobSeekers";
 import SingleJobSeeker from "./pages/single/SingleJobSeeker";
 import SingleEnterprise from "./pages/single/SingleEnterprise";
@@ -77,12 +73,10 @@ import ListPackageService from "./pages/list/ListPackageService";
 import ListTransaction from "./pages/list/ListTransaction";
 import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import ListEditPackageService from "./pages/list/ListEditPackageService";
-<<<<<<< HEAD
-import NewJobSeeker from "./pages/newUser/NewJobSeeker";
-=======
+
 import NewUser from "./pages/newUser/New";
 
->>>>>>> longVQH
+
 
 function App() {
   return (
@@ -180,58 +174,7 @@ function App() {
         {/* admin route */}
 
         {/* dashboard */}
-<<<<<<< HEAD
-        <Route path="/">
-          <Route
-            path="/admin/dashboard"
-            element={<ProtectedRoute element={AdminHome} />}
-          />
 
-          {/* users */}
-          <Route path="users">
-            <Route path="job-seekers">
-              <Route index element={<ListJobSeekers />} />
-              <Route path="view/:id" element={<SingleJobSeeker />} />
-              <Route
-                path="add"
-                element={
-                  <NewJobSeeker inputs={userInputs} title="Add New User" />
-                }
-              />
-            </Route>
-            <Route path="enterprises">
-              <Route index element={<ListEnterprise />} />
-              <Route path="view/:id" element={<SingleEnterprise />} />
-            </Route>
-            <Route path="admins">
-              <Route index element={<ListAdmins />} />
-            </Route>
-          </Route>
-
-          {/* job post */}
-          <Route path="jobs">
-            <Route path="jobPosts">
-              <Route index element={<ListJobPosts />} />
-              <Route path="view/:id" element={<SingleJobPosts />} />
-            </Route>
-            <Route path="jobPostsModerations">
-              <Route index element={<ListJobPostsModeration />} />
-              <Route path="view/:id" element={<SingleJobPostsModeration />} />
-            </Route>
-          </Route>
-          {/* package services */}
-          <Route path="packageServices">
-            <Route index element={<ListPackageService />} />
-            <Route path="edit/:id" element={<ListEditPackageService />} />
-          </Route>
-
-          <Route path="transactions">
-            <Route index element={<ListTransaction />} />
-          </Route>
-          {/* profile */}
-          <Route path="profileAdmin">
-            <Route index element={<packageServices />} />
-=======
         <Route path="/admin/dashboard"
           element={<ProtectedRoute element={AdminHome} />} />
 
@@ -250,7 +193,7 @@ function App() {
           <Route path="enterprises">
             <Route index element={<ListEnterprise />} />
             <Route path="view/:id" element={<SingleEnterprise />} />
->>>>>>> longVQH
+
           </Route>
           <Route path="admins">
             <Route index element={<ListAdmins />} />

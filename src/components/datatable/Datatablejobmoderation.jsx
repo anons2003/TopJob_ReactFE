@@ -83,8 +83,4 @@ const Datatablejob = () => {
   );
 };
 
-<<<<<<< HEAD
 export default Datatablejob;
-=======
-export default Datatablejob;
->>>>>>> longVQH
