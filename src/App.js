@@ -73,10 +73,8 @@ import ListPackageService from "./pages/list/ListPackageService";
 import ListTransaction from "./pages/list/ListTransaction";
 import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import ListEditPackageService from "./pages/list/ListEditPackageService";
-
-import NewUser from "./pages/newUser/New";
-
-
+import NewJobSeeker from "./pages/newUser/NewJobSeeker";
+import NewPackage from "./pages/newUser/NewPackage";
 
 function App() {
   return (
@@ -151,7 +149,6 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/lock-screen" element={<LockScreen />} />
 
-
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/contactus" element={<ContactUs />} />
@@ -162,9 +159,12 @@ function App() {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/change-password" element={<CreatePassword />} />
 
-        <Route path='/create-template' element={<CreateTemplate />} />
-        <Route path='/template' element={<TemplateContainer />} />
-        <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
+        <Route path="/create-template" element={<CreateTemplate />} />
+        <Route path="/template" element={<TemplateContainer />} />
+        <Route
+          path="/resumeDetail/:templateID"
+          element={<TemplateDesignPinDetail />}
+        />
         <Route path="/resume/*" element={<CreateResume />} />
         {/* new */}
         <Route path="bookmark-list" element={<BookmarksList />} />
@@ -175,8 +175,10 @@ function App() {
 
         {/* dashboard */}
 
-        <Route path="/admin/dashboard"
-          element={<ProtectedRoute element={AdminHome} />} />
+        <Route
+          path="/admin/dashboard"
+          element={<ProtectedRoute element={AdminHome} />}
+        />
 
         {/* <Route path="login" element={<Login />} /> */}
 
@@ -187,13 +189,20 @@ function App() {
             <Route path="view/:id" element={<SingleJobSeeker />} />
             <Route
               path="add"
-              element={<NewUser inputs={userInputs} title="Add New User" />}
+              element={
+                <NewJobSeeker inputs={userInputs} title="Add New User" />
+              }
             />
           </Route>
           <Route path="enterprises">
             <Route index element={<ListEnterprise />} />
             <Route path="view/:id" element={<SingleEnterprise />} />
-
+            <Route
+              path="add"
+              element={
+                <NewJobSeeker inputs={userInputs} title="Add New User" />
+              }
+            />
           </Route>
           <Route path="admins">
             <Route index element={<ListAdmins />} />
@@ -222,6 +231,10 @@ function App() {
         <Route path="packageServices">
           <Route index element={<ListPackageService />} />
           <Route path="edit/:id" element={<ListEditPackageService />} />
+          <Route
+            path="add"
+            element={<NewPackage inputs={userInputs} title="Add New Package" />}
+          />
         </Route>
 
         <Route path="transactions">
@@ -246,7 +259,6 @@ function App() {
         <Route path="/logout">
           <Route index element={<logout />} />
         </Route>
-
       </Routes>
     </>
   );

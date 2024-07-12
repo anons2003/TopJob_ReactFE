@@ -4,12 +4,12 @@ import Navbar from "../../components/navbar/Navbar";
 import { useState } from "react";
 import axios from "axios";
 
-const NewJobSeeker = ({ title }) => {
+const NewPackage = ({ title }) => {
   const [formData, setFormData] = useState({
-    user_name: "",
-    email: "",
-    password: "",
-    userTypeId: 1, // Giá trị mặc định cho Job Seeker
+    packageName: "",
+    description: "",
+    price: "",
+    duration: "",
   });
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState(null);
@@ -23,21 +23,20 @@ const NewJobSeeker = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // In ra formData để kiểm tra
 
     try {
-      const response = await axios.post("http://localhost:8080/signup", formData, {
+      const response = await axios.post("http://localhost:8080/packageServices", formData, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      console.log("User saved successfully:", response.data);
-      setSuccessMessage("User saved successfully!");
+      console.log("Package saved successfully:", response.data);
+      setSuccessMessage("Package saved successfully!");
       setError(null);
     } catch (error) {
-      console.error("There was an error saving the user!", error);
+      console.error("There was an error saving the package!", error);
       setSuccessMessage("");
-      setError("Failed to create user");
+      setError("Failed to create package");
     }
   };
 
@@ -53,48 +52,47 @@ const NewJobSeeker = ({ title }) => {
           <div className="right">
             <form onSubmit={handleSubmit}>
               <div className="formInput">
-                <label>Username</label>
+                <label>Package Name</label>
                 <input
                   type="text"
-                  placeholder="Enter username"
-                  name="user_name"
-                  value={formData.user_name}
+                  placeholder="Enter package name"
+                  name="packageName"
+                  value={formData.packageName}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="formInput">
-                <label>Email</label>
+                <label>Description</label>
+                <textarea
+                  placeholder="Enter description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="formInput">
+                <label>Price</label>
                 <input
-                  type="email"
-                  placeholder="Enter email"
-                  name="email"
-                  value={formData.email}
+                  type="number"
+                  placeholder="Enter price"
+                  name="price"
+                  value={formData.price}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="formInput">
-                <label>Password</label>
+                <label>Duration (days)</label>
                 <input
-                  type="password"
-                  placeholder="Enter password"
-                  name="password"
-                  value={formData.password}
+                  type="number"
+                  placeholder="Enter duration"
+                  name="duration"
+                  value={formData.duration}
                   onChange={handleChange}
                   required
                 />
-              </div>
-              <div className="formInput">
-                <label>User Role</label>
-                <select
-                  name="userTypeId"
-                  value={formData.userTypeId}
-                  onChange={handleChange}
-                >
-                  <option value={1}>Job Seeker</option>
-                  <option value={2}>Enterprise</option>
-                </select>
               </div>
               <button type="submit">Send</button>
             </form>
@@ -107,4 +105,4 @@ const NewJobSeeker = ({ title }) => {
   );
 };
 
-export default NewJobSeeker;
+export default NewPackage;

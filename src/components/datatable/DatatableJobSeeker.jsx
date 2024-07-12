@@ -6,19 +6,22 @@ import "./datatable.scss";
 
 const DatatableJobSeeker = () => {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-          const response = await fetch('http://localhost:8080/jobSeeker/list');
+        const response = await fetch('http://localhost:8080/job-seekers/list');
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
         const data = await response.json();
         const transformedData = transformData(data);
         setUsers(transformedData);
+        setFilteredUsers(transformedData); // Cập nhật danh sách người dùng đã lọc
       } catch (error) {
         setError(error.message);
       } finally {
@@ -31,14 +34,24 @@ const DatatableJobSeeker = () => {
 
   const transformData = (data) => {
     return data.map(item => ({
-      id: item.jid,  // Assuming 'jid' is the job seeker ID
+      id: item.jid,
       user_name: item.user.user_name,
       email: item.user.email,
-      created_at: new Date(item.user.created_at).toLocaleDateString(),  // Format date
+      created_at: new Date(item.user.created_at).toLocaleDateString(),
       role: item.user.roleType ? item.user.roleType.roleTypeName : 'Unknown Role',
-      is_active: item.user.isActive === 1 ? "Active" : "Inactive", // Check if isActive is 1 or 0
+      is_active: item.user.isActive === 1 ? "Active" : "Inactive",
       avatarUrl: `https://avatars.dicebear.com/api/initials/${item.user.user_name}.svg`
     }));
+  };
+
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+    
+    const filtered = users.filter(user =>
+      user.user_name.toLowerCase().includes(value)
+    );
+    setFilteredUsers(filtered);
   };
 
   const handleToggleActive = async (id, currentIsActive) => {
@@ -46,20 +59,23 @@ const DatatableJobSeeker = () => {
       const response = await fetch(`http://localhost:8080/job-seekers/toggle-active/${id}`, {
         method: 'PATCH',
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to toggle active status');
       }
-  
-      // Update user's isActive status in the local state
+
       setUsers(prevUsers =>
+        prevUsers.map(user =>
+          user.id === id ? { ...user, is_active: currentIsActive ? "Inactive" : "Active" } : user
+        )
+      );
+      setFilteredUsers(prevUsers => 
         prevUsers.map(user =>
           user.id === id ? { ...user, is_active: currentIsActive ? "Inactive" : "Active" } : user
         )
       );
     } catch (error) {
       console.error('Error toggling active status:', error.message);
-      // Optionally, you can handle error states here, such as displaying an error message.
     }
   };
 
@@ -71,6 +87,15 @@ const DatatableJobSeeker = () => {
           Add New
         </Link>
       </div>
+      <div className="searchContainer">
+        <input
+          type="text"
+          placeholder="Search by username..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="searchInput"
+        />
+      </div>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -78,7 +103,7 @@ const DatatableJobSeeker = () => {
       ) : (
         <DataGrid
           className="datagrid"
-          rows={users}
+          rows={filteredUsers} // Sử dụng danh sách đã lọc
           columns={[
             ...userColumns,
             {
@@ -92,7 +117,7 @@ const DatatableJobSeeker = () => {
                   </Link>
                   <button 
                     className="lockButton" 
-                    style={{ color: 'black' }} // Inline style for black text color
+                    style={{ color: 'black' }}
                     onClick={() => handleToggleActive(params.row.id, params.row.is_active === "Active")}
                   >
                     {params.row.is_active === "Active" ? "Lock" : "Unlock"}
