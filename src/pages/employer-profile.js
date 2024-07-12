@@ -14,13 +14,27 @@ import { FiMapPin, FiClock, FiDollarSign, FiDribbble, FiLinkedin, FiFacebook, Fi
 import useEnterpriseInfo from "../hook/useEnterpriseInfo";
 import useEnterpriseJobs from "../hook/useEnterpriseJobs";
 
+const formatDateTime = (dateArray) => {
+    if (!dateArray) return null;
+    const [year, month, day, hour, minute, second, nanosecond] = dateArray;
+    const millisecond = Math.floor(nanosecond / 1000000);
+    return new Date(year, month - 1, day, hour, minute, second, millisecond);
+};
+
+const compareWithCurrentDate = (date) => {
+    if (!date) return null;
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+    return diffDays;
+};
 
 export default function EmployerProfile() {
     const enterpriseRole = sessionStorage.getItem("roleEnterprise");
     const { data: enterpriseData } = useEnterpriseInfo();
     const enterprise = enterpriseData?.data;
     const { jobs, loading, error } = useEnterpriseJobs(enterprise?.eid);
-    
+
 
     console.log(jobs);
     const [formData, setFormData] = useState({
@@ -63,6 +77,7 @@ export default function EmployerProfile() {
             }));
         }
     }, [enterpriseData]);
+
 
 
 
@@ -134,28 +149,35 @@ export default function EmployerProfile() {
                                 {loading && <p>Loading jobs...</p>}
                                 {error && <p>This Company dont have any job yet</p>}
 
-                                {jobs.map((item, index) => (
+                                {jobs.slice(0, 4).map((item, index) => {
+                                    const createdAtDate = formatDateTime(item.createdAt);
+                                    const daysAgo = compareWithCurrentDate(createdAtDate);
+                                    return (
+                                        <div className="col-lg-6 col-12" key={index} >
+                                            <div className="job-post rounded shadow bg-white">
+                                                <div className="p-4">
+                                                    <Link to={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
+                                                    <p className="text-muted d-flex align-items-center small mt-3">
+                                                        <FiClock className="fea icon-sm text-primary me-1" />
+                                                        Posted {daysAgo} days ago
+                                                    </p>
 
-                                    <div className="col-lg-6 col-12" key={index}>
-                                        <div className="job-post rounded shadow bg-white">
-                                            <div className="p-4">
-                                                <Link to={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
-                                                <p className="text-muted d-flex align-items-center small mt-3"><FiClock className="fea icon-sm text-primary me-1" />Posted {item.posted} Days ago</p>
-                                                <ul className="list-unstyled d-flex justify-content-between align-items-center mb-0 mt-3">
-                                                    <li className="list-inline-item"><span className="badge bg-soft-primary">{item.jobTime}</span></li>
-                                                    <li className="list-inline-item"><span className="text-muted d-flex align-items-center small"><FiDollarSign className="fea icon-sm text-primary me-1" />{item.minSalary}-{item.maxSalary}/mo</span></li>
-                                                </ul>
-                                            </div>
-                                            <div className="d-flex align-items-center p-4 border-top">
-                                                <img src={item.enterprise?.avatar_url} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
-                                                <div className="ms-3">
-                                                    <h6>{item.name}</h6>
-                                                    <span className="text-muted d-flex align-items-center"><FiMapPin className="fea icon-sm me-1" />{item.country}</span>
+                                                    <ul className="list-unstyled d-flex justify-content-between align-items-center mb-0 mt-3">
+                                                        <li className="list-inline-item"><span className="badge bg-soft-primary">{item.jobTime}</span></li>
+                                                        <li className="list-inline-item"><span className="text-muted d-flex align-items-center small"><FiDollarSign className="fea icon-sm text-primary me-1" />{item.minSalary}-{item.maxSalary}/mo</span></li>
+                                                    </ul>
+                                                </div>
+                                                <div className="d-flex align-items-center p-4 border-top">
+                                                    <img src={item.enterprise?.avatar_url} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
+                                                    <div className="ms-3">
+                                                        <h6>{item.name}</h6>
+                                                        <span className="text-muted d-flex align-items-center"><FiMapPin className="fea icon-sm me-1" />{item.country}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -285,7 +307,7 @@ export default function EmployerProfile() {
                         })}
                     </div>
                 </div>
-            </section>
+            </section >
             <Footer top={true} />
             <ScrollTop />
         </>

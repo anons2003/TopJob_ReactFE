@@ -5,8 +5,8 @@ import Navbar from "../components/navbar";
 import AboutTwo from "../components/aboutTwo";
 import FormSelect from "../components/formSelect";
 import Footer from "../components/footer";
-import { useMutation, useQuery } from "@tanstack/react-query";
-
+import { useMutation } from "@tanstack/react-query";
+import {toast} from "react-toastify";
 import ScrollTop from "../components/scrollTop";
 import { FiClock, FiMapPin, FiBookmark } from "../assets/icons/vander";
 import useJobInfo from "../hook/useJobInfo";
@@ -30,6 +30,7 @@ const compareWithCurrentDate = (date) => {
 export default function JobListOne() {
   const { data: jobData, isLoading, error } = useJobInfo();
   const [filteredJobs, setFilteredJobs] = useState([]);
+
 
   const bookmarkMutation = useMutation({
     mutationFn: (jobId) => {
@@ -77,6 +78,12 @@ export default function JobListOne() {
   };
 
   const toggleBookmark = (jobId, isBookmarked) => {
+    const userType = sessionStorage.getItem("roleJobSeeker"); // Assuming you store user type in sessionStorage
+    if (userType !== "roleJobSeeker") {
+      toast.error("You need to log in as a job seeker to bookmark jobs.");
+       // Redirect to login page if not jobSeeker
+      return;
+    }
     if (isBookmarked === 0) {
       bookmarkMutation.mutate(jobId);
     } else {

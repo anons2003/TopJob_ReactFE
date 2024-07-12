@@ -362,9 +362,9 @@ export default function EnterpriseProfileSetting() {
   });
 
   // Function to handle file selection
-  const handleFileChange = (e) => {
-    setResume(e.target.files[0]); // Update state with the selected resume file
-  };
+  // const handleFileChange = (e) => {
+  //   setResume(e.target.files[0]); // Update state with the selected resume file
+  // };
 
   // Function to handle form submission or other action to upload resume
   const handleUploadResume = () => {
@@ -406,9 +406,7 @@ export default function EnterpriseProfileSetting() {
     },
   });
 
-  const showModalName = () => {
-    setIsModalNameOpen(true);
-  };
+
   const [isModalNameOpen, setIsModalNameOpen] = useState(false);
   const [name, setName] = useState(user?.enterprise_name);
 

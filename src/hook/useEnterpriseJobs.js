@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../api/http';
 
 const useEnterpriseJobs = (eid) => {
-    const [jobs, setJobs] = useState([]);
+    const [jobData, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -23,7 +23,7 @@ const useEnterpriseJobs = (eid) => {
         fetchJobs();
     }, [eid]);
 
-    return { jobs, loading, error };
+    return { jobData, loading, error };
 };
 
 export default useEnterpriseJobs;

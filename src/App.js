@@ -54,7 +54,7 @@ import BookmarksList from "./pages/bookmark-list";
 import CVAppliedList from "./pages/job-applied-list";
 import ReApply from "./pages/reapply-job";
 import EnterpriseProfileSetting from "./pages/enterprise-profile-setting";
-
+import JobListTwo from './pages/job-list-two'
 // admin
 import { productInputs, userInputs } from "./data/formSource";
 import { useContext } from "react";
@@ -85,7 +85,7 @@ function App() {
         <Route path="/job-categories" element={<JobCategories />} />
         <Route path="/job-grid-two" element={<JobGridTwo />} />
         <Route path="/job-list-one" element={<JobListOne />} />
-
+        <Route path='/job-list-by-enterprise' element={<JobListTwo />} />
         <Route
           path="/job-apply"
           element={<ProtectedRoute element={JobApply} />}

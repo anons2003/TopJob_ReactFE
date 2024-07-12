@@ -283,8 +283,7 @@ export default function Navbar({ navClass, navLight }) {
             </li>
 
             <li
-              className={`${
-                [
+              className={`${[
                   "job-categories",
                   "job-grid-two",
                   "job-list-one",
@@ -295,7 +294,7 @@ export default function Navbar({ navClass, navLight }) {
                 ].includes(manu)
                   ? "active"
                   : ""
-              } has-submenu parent-menu-item`}
+                } has-submenu parent-menu-item`}
             >
               <Link to="#"> Jobs </Link>
               <span className="menu-arrow"></span>
@@ -328,10 +327,15 @@ export default function Navbar({ navClass, navLight }) {
                 </Link>
               </li>
             )}
-
+            {enterpriseRole && (
+              <li className={manu === "job-list-by-enterprise" ? "active" : ""}>
+                <Link to="/job-list-by-enterprise" className="sub-menu-item">
+                  Your Job
+                </Link>
+              </li>
+            )}
             <li
-              className={`${
-                [
+              className={`${[
                   "aboutus",
                   "services",
                   "pricing",
@@ -351,7 +355,7 @@ export default function Navbar({ navClass, navLight }) {
                 ].includes(manu)
                   ? "active"
                   : ""
-              } has-submenu parent-menu-item`}
+                } has-submenu parent-menu-item`}
             >
               <Link to="#">Support</Link>
               <span className="menu-arrow"></span>
@@ -373,8 +377,7 @@ export default function Navbar({ navClass, navLight }) {
                 </li>
 
                 <li
-                  className={`${
-                    [
+                  className={`${[
                       "helpcenter-overview",
                       "helpcenter-faqs",
                       "helpcenter-guides",
@@ -382,7 +385,7 @@ export default function Navbar({ navClass, navLight }) {
                     ].includes(manu)
                       ? "active"
                       : ""
-                  } has-submenu parent-menu-item`}
+                    } has-submenu parent-menu-item`}
                 >
                   <Link to="#"> Helpcenter </Link>
                   <span className="submenu-arrow"></span>
@@ -417,34 +420,36 @@ export default function Navbar({ navClass, navLight }) {
                 </li>
               </ul>
             </li>
-
-            <li
-              className={`${
-                ["blogs", "blog-sidebar", "blog-detail"].includes(manu)
+            {jobSeekerRole && (
+              <li
+                className={`${["blogs", "blog-sidebar", "blog-detail"].includes(manu)
                   ? "active"
                   : ""
-              } has-submenu parent-menu-item`}
-            >
-              <Link to="#"> Blog </Link>
-              <span className="submenu-arrow"></span>
-              <ul className="submenu">
-                <li className={manu === "blogs" ? "active" : ""}>
-                  <Link to="/blogs" className="sub-menu-item">
-                    Blogs
-                  </Link>
-                </li>
-                <li className={manu === "blog-sidebar" ? "active" : ""}>
-                  <Link to="/blog-sidebar" className="sub-menu-item">
-                    Blog Sidebar
-                  </Link>
-                </li>
-                <li className={manu === "blog-detail" ? "active" : ""}>
-                  <Link to="/blog-detail" className="sub-menu-item">
-                    Blog Detail
-                  </Link>
-                </li>
-              </ul>
-            </li>
+                  } has-submenu parent-menu-item`}
+              >
+                <Link to="#"> Blog </Link>
+                <span className="submenu-arrow"></span>
+                <ul className="submenu">
+                  <li className={manu === "blogs" ? "active" : ""}>
+                    <Link to="/blogs" className="sub-menu-item">
+                      Blogs
+                    </Link>
+                  </li>
+                  <li className={manu === "blog-sidebar" ? "active" : ""}>
+                    <Link to="/blog-sidebar" className="sub-menu-item">
+                      Blog Sidebar
+                    </Link>
+                  </li>
+                  <li className={manu === "blog-detail" ? "active" : ""}>
+                    <Link to="/blog-detail" className="sub-menu-item">
+                      Blog Detail
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+            )}
+
+
             {jobSeekerRole && (
               <li className={manu === "createCV" ? "active" : ""}>
                 <Link to="/template" className="sub-menu-item">
