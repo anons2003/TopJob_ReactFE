@@ -9,7 +9,7 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 
-import { jobData } from "../data/data";
+// import { jobData } from "../data/data";
 import { FiMapPin, FiClock, FiDollarSign, FiDribbble, FiLinkedin, FiFacebook, FiInstagram, FiTwitter, } from "../assets/icons/vander"
 import useEnterpriseInfo from "../hook/useEnterpriseInfo";
 import useEnterpriseJobs from "../hook/useEnterpriseJobs";
@@ -33,10 +33,11 @@ export default function EmployerProfile() {
     const enterpriseRole = sessionStorage.getItem("roleEnterprise");
     const { data: enterpriseData } = useEnterpriseInfo();
     const enterprise = enterpriseData?.data;
-    const { jobs, loading, error } = useEnterpriseJobs(enterprise?.eid);
+    const { jobData: jobs} = useEnterpriseJobs(enterprise?.eid);
 
+    console.log("jobs",jobs);
+    console.log("eid",enterprise?.eid);
 
-    console.log(jobs);
     const [formData, setFormData] = useState({
         enterprise_name: '',
         city: '',
@@ -77,7 +78,6 @@ export default function EmployerProfile() {
             }));
         }
     }, [enterpriseData]);
-
 
 
 
@@ -143,13 +143,10 @@ export default function EmployerProfile() {
                                 <div className="col-6"><img src={image3} className="rounded shadow img-fluid" alt="" /></div>
                             </div>
 
-                            <h4 className="my-4">Vacancies:</h4>
+                            <h4 className="my-4"><Link to="/job-list-by-enterprise">Vacancies</Link></h4>
 
                             <div className="row g-4">
-                                {loading && <p>Loading jobs...</p>}
-                                {error && <p>This Company dont have any job yet</p>}
-
-                                {jobs.slice(0, 4).map((item, index) => {
+                                {jobs?.slice(0,4).map((item, index) => {
                                     const createdAtDate = formatDateTime(item.createdAt);
                                     const daysAgo = compareWithCurrentDate(createdAtDate);
                                     return (
@@ -282,7 +279,7 @@ export default function EmployerProfile() {
                         </div>
                     </div>
 
-                    <div className="row">
+                    {/* <div className="row">
                         {jobData.slice(4, 8).map((item, index) => {
                             return (
                                 <div className="col-lg-3 col-md-4 col-sm-6 col-12 mt-5" key={index}>
@@ -305,7 +302,7 @@ export default function EmployerProfile() {
                                 </div>
                             )
                         })}
-                    </div>
+                    </div> */}
                 </div>
             </section >
             <Footer top={true} />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { State } from "country-state-city";
 
 import bg1 from '../assets/images/hero/bg.jpg'
 
@@ -9,7 +10,7 @@ import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 
 
-import { FiClock, FiMapPin, FiBookmark } from "../assets/icons/vander"
+import { FiClock, FiMapPin, FiBookmark, FiDollarSign } from "../assets/icons/vander"
 import useEnterpriseInfo from "../hook/useEnterpriseInfo";
 import useEnterpriseJobs from "../hook/useEnterpriseJobs";
 import api from '../api/http'
@@ -39,8 +40,13 @@ export default function JobListTwo() {
     const [jobTypes, setJobTypes] = useState([]);
     const [jobCategories, setJobCategories] = useState([]);
     const { jobData } = useEnterpriseJobs(enterpriseReponse?.eid);
-    //set search keywords
-    const [keyword, setKeyword] = useState('');
+    const [states, setStates] = useState([]);
+    // States for search and filters
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedLocation, setSelectedLocation] = useState("");
+    const [selectedJobTypes, setSelectedJobTypes] = useState([]);
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -54,21 +60,44 @@ export default function JobListTwo() {
         }
         fetchData();
     }, [enterpriseReponse]);
-    
-    //event search
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     onSearch({
-    //         keyword,
-    //         // location: selectedLocation ? selectedLocation.value : null,
-    //         // type: selectedType ? selectedType.value : null
-    //     });
-    // };
-    //console.log
-    // console.log(jobs);
-    // console.log("Enterprise ID: ", enterpriseReponse?.eid);
 
+    // Event search
+    const handleSearchChange = (e) => setSearchKeyword(e.target.value);
+    // const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
+    const handleCategoryChange = (e) => {
+        setSelectedCategory(Number(e.target.value));
+    };
+    //dung thu vien de chon state
+    useEffect(() => {
+        const vietnamStates = State.getStatesOfCountry("VN");
+        setStates(vietnamStates);
+    }, []);
+
+
+    const handleJobTypeChange = (event) => {
+        const jobTypeId = event.target.value;
+        setSelectedJobTypes((prevSelected) =>
+            prevSelected.includes(jobTypeId)
+                ? prevSelected.filter((id) => id !== jobTypeId)
+                : [...prevSelected, jobTypeId]
+        );
+    };
+
+    // Apply filters to jobData
+    const filteredJobs = jobData.filter((job) => {
+        const matchesKeyword = job.title.toLowerCase().includes(searchKeyword.toLowerCase());
+        const matchesCategory = selectedCategory ? job.jobCategoryEntity.jobCategoryId === selectedCategory : true;
+        const matchesLocation = selectedLocation ? job.states === selectedLocation : true;
+        const matchesJobTypes = selectedJobTypes.length > 0 ? selectedJobTypes.includes(job.jobTypeEntity.jobTypeId) : true;
+        return matchesKeyword && matchesCategory && matchesLocation && matchesJobTypes;
+    });
+    console.log('Job Data:', filteredJobs);
+    console.log('Job Categories:', jobCategories);
+    console.log('Selected Category:', selectedCategory);
+    console.log('Job Types:', jobTypes);
+    console.log('Selected Job Types:', selectedJobTypes);
     return (
+
         <>
             <Navbar navClass="defaultscroll sticky" navLight={true} />
             <section className="bg-half-170 d-table w-100" style={{ backgroundImage: `url(${bg1})`, backgroundPosition: 'top' }}>
@@ -111,85 +140,71 @@ export default function JobListTwo() {
                                     <div className="search-bar mt-2">
                                         <div id="itemSearch2" className="menu-search mb-0">
                                             <form role="search" method="get" id="searchItemform2" className="searchform">
-                                                <input type="text" className="form-control rounded border" name="s" id="searchItem2" placeholder="Search..." />
-                                                <input type="submit" id="searchItemsubmit2" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+                                                <input
+                                                    type="text"
+                                                    className="form-control rounded border"
+                                                    name="s"
+                                                    id="searchItem2"
+                                                    placeholder="Search..."
+                                                    value={searchKeyword}
+                                                    onChange={handleSearchChange}
+                                                />
+                                                <input type="submit" id="searchItemsubmit2" value="Search" />
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="mt-4">
                                     <h6 className="mb-0">Categories</h6>
-                                    <select className="form-select form-control border mt-2" aria-label="Default select example">
-                                        <option value="WD">Web Designer</option>
-                                        <option value="WD">Web Developer</option>
-                                        <option value="UI">UI / UX Desinger</option>
+                                    <select
+                                        className="form-select form-control border mt-2"
+                                        aria-label="Default select example"
+                                        value={selectedCategory}
+                                        onChange={handleCategoryChange}
+                                    >
+                                        <option value="">Select Job Category</option>
+                                        {jobCategories.map((category) => (
+                                            <option key={category.jobCategoryId} value={category.jobCategoryId}>
+                                                {category.jobCategoryName}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div className="mt-4">
                                     <h6 className="mb-0">Location</h6>
 
                                     <select className="form-select form-control border mt-2" aria-label="Default select example">
-                                        <option value="NY">New York</option>
-                                        <option value="MC">North Carolina</option>
-                                        <option value="SC">South Carolina</option>
+                                        <option value="">Select State</option>
+                                        {states.map((state) => (
+                                            <option key={state.isoCode} value={state.isoCode}>
+                                                {state.name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div className="mt-4">
                                     <h6>Job Types</h6>
-
-                                    <div className="d-flex justify-content-between mt-2">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="Full" />
-                                            <label className="form-check-label" htmlFor="Full">Full Time</label>
-                                        </div>
-
-                                        <span className="badge bg-soft-primary rounded-pill">3</span>
-                                    </div>
-
-                                    <div className="d-flex justify-content-between mt-2">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="Part" />
-                                            <label className="form-check-label" htmlFor="Part">Part Time</label>
-                                        </div>
-
-                                        <span className="badge bg-soft-primary rounded-pill">7</span>
-                                    </div>
-
-                                    <div className="d-flex justify-content-between mt-2">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="Freelancer" />
-                                            <label className="form-check-label" htmlFor="Freelancer">Freelancing</label>
-                                        </div>
-
-                                        <span className="badge bg-soft-primary rounded-pill">4</span>
-                                    </div>
-
-                                    <div className="d-flex justify-content-between mt-2">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="Fixed" />
-                                            <label className="form-check-label" htmlFor="Fixed">Fixed Price</label>
-                                        </div>
-
-                                        <span className="badge bg-soft-primary rounded-pill">6</span>
-                                    </div>
-
-                                    <div className="d-flex justify-content-between mt-2">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="Remote" />
-                                            <label className="form-check-label" htmlFor="Remote">Remote</label>
-                                        </div>
-
-                                        <span className="badge bg-soft-primary rounded-pill">7</span>
-                                    </div>
-
-                                    <div className="d-flex justify-content-between mt-2">
-                                        <div className="form-check">
-                                            <input className="form-check-input" type="checkbox" value="" id="Hourly" />
-                                            <label className="form-check-label" htmlFor="Hourly">Hourly Basis</label>
-                                        </div>
-
-                                        <span className="badge bg-soft-primary rounded-pill">44</span>
-                                    </div>
+                                    {jobTypes.map((jobType) => {
+                                        return (
+                                            <div className="d-flex justify-content-between mt-2" key={jobType.jobTypeId}>
+                                                <div className="form-check">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        value={jobType.jobTypeId}
+                                                        id={jobType.jobTypeId}
+                                                        onChange={handleJobTypeChange}
+                                                        checked={selectedJobTypes.includes(jobType.jobTypeId)}
+                                                    />
+                                                    <label
+                                                        className="form-check-label"
+                                                        htmlFor={jobType.jobTypeId}>
+                                                        {jobType.jobTypeName}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
                                 </div>
                                 <div className="mt-4">
                                     <h6 className="mb-0">Salary</h6>
@@ -223,18 +238,18 @@ export default function JobListTwo() {
                                         </li>
                                     </ul>
                                 </div>
-
                                 <div className="mt-4">
-                                    <Link to="" className="btn btn-primary w-100">Apply Filter</Link>
+                                    <button className="btn btn-primary w-100">Apply Filter</button>
                                 </div>
                             </div>
                         </div>
 
                         <div className="col-lg-8 col-md-6 col-12">
                             <div className="row g-4">
-                                {jobData.map((item, index) => {
+                                {filteredJobs.map((item, index) => {
                                     const createdAtDate = formatDateTime(item.createdAt);
                                     const daysAgo = compareWithCurrentDate(createdAtDate);
+
                                     return (
                                         <div className="col-12" key={index}>
                                             <div className="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
@@ -252,12 +267,11 @@ export default function JobListTwo() {
                                                 </div>
 
                                                 <div className="d-flex align-items-center justify-content-between d-md-block mt-2 mt-md-0 w-130px">
-                                                    <span className="text-muted d-flex align-items-center"><FiMapPin className="fea icon-sm me-1 align-middle" />{item.country}</span>
-                                                    <span className="d-flex fw-medium mt-md-2">$950 - $1100/mo</span>
+                                                    <span className="text-muted d-flex align-items-center"><FiMapPin className="fea icon-sm me-1 align-middle" />{item.state}</span>
+                                                    <span className="d-flex fw-medium mt-md-2"><FiDollarSign className="fea icon-sm text-primary me-1" />{item.minSalary} - {item.maxSalary}/mo</span>
                                                 </div>
 
                                                 <div className="mt-3 mt-md-0">
-                                                    <Link to="#" className="btn btn-sm btn-icon btn-pills btn-soft-primary bookmark"><FiBookmark className="icons" /></Link>
                                                     <Link to={`/job-detail-three/${item.id}`} className="btn btn-sm btn-primary w-full ms-md-1">Apply Now</Link>
                                                 </div>
                                             </div>
@@ -274,8 +288,8 @@ export default function JobListTwo() {
                                                 <span aria-hidden="true"><i className="mdi mdi-chevron-left fs-6"></i></span>
                                             </Link>
                                         </li>
-                                        <li className="page-item"><Link className="page-link" to="#">1</Link></li>
-                                        <li className="page-item active"><Link className="page-link" to="#">2</Link></li>
+                                        <li className="page-item active"><Link className="page-link" to="#">1</Link></li>
+                                        <li className="page-item"><Link className="page-link" to="#">2</Link></li>
                                         <li className="page-item"><Link className="page-link" to="#">3</Link></li>
                                         <li className="page-item">
                                             <Link className="page-link" to="#" aria-label="Next">
