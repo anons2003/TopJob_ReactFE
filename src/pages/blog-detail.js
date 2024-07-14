@@ -55,8 +55,7 @@ export default function BlogDetail() {
                   {blog?.tag || "Jobnova"}
                 </span>
                 <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark mt-4">
-                  {blog?.title ||
-                    "Sử Dụng Banner Stands Để Tăng Lưu Lượng Truy Cập Tại Triển Lãm Thương Mại"}
+                  {blog?.title}
                 </h5>
 
                 <ul className="list-inline text-center mb-0">
@@ -108,6 +107,7 @@ export default function BlogDetail() {
           <div className="row g-4">
             <div className="col-lg-8 col-md-7">
               <div className="card border-0 shadow rounded overflow-hidden">
+                <h2>{blog.title}</h2>
                 <img
                   src={blog?.imageUrl || "../assets/images/blog/01.jpg"}
                   className="img-fluid"

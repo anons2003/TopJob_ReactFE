@@ -74,6 +74,9 @@ import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import ListEditPackageService from "./pages/list/ListEditPackageService";
 import NewJobSeeker from "./pages/newUser/NewJobSeeker";
 import NewPackage from "./pages/newUser/NewPackage";
+import ListBlog from "./pages/list/ListBlog";
+import ListEditBlog from "./pages/list/ListEditBlog";
+import NewBlog from "./pages/newUser/NewBlog";
 
 function App() {
   return (
@@ -238,6 +241,16 @@ function App() {
 
         <Route path="transactions">
           <Route index element={<ListTransaction />} />
+        </Route>
+        {/* blog */}
+
+        <Route path="blogs">
+          <Route index element={<ListBlog />} />
+          <Route path="edit/:id" element={<ListEditBlog />} />
+          <Route
+            path="add"
+            element={<NewBlog inputs={userInputs} title="Add New Blog" />}
+          />
         </Route>
 
         {/* profile */}

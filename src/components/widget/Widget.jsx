@@ -54,8 +54,7 @@ const Widget = ({ type }) => {
     }
   }, [type]);
 
-  const amount = type === "user" ? totalUsers : (type === "postjob" ? totalJobs : totalPackageServices); // Adjusted to include totalPackageServices
-  const diff = 20;
+  const amount = type === "user" ? totalUsers : (type === "postjob" ? totalJobs : totalPackageServices); 
 
   switch (type) {
     case "user":
@@ -63,15 +62,7 @@ const Widget = ({ type }) => {
         title: "USERS",
         link: "See all users",
         linkAddress: "/users/job-seekers",
-        icon: (
-          <PersonOutlinedIcon
-            className="icon"
-            style={{
-              color: "crimson",
-              backgroundColor: "rgba(255, 0, 0, 0.2)",
-            }}
-          />
-        ),
+
       };
       break;
     case "postjob":
@@ -79,15 +70,7 @@ const Widget = ({ type }) => {
         title: "All Job Posts",
         link: "View all job posts",
         linkAddress: "/jobs/jobPosts",
-        icon: (
-          <WorkIcon
-            className="icon"
-            style={{
-              backgroundColor: "rgba(218, 165, 32, 0.2)",
-              color: "goldenrod",
-            }}
-          />
-        ),
+
       };
       break;
     case "earning":
@@ -95,12 +78,7 @@ const Widget = ({ type }) => {
         title: "Package Services",
         link: "View all package services",
         linkAddress: "/packageServices",
-        icon: (
-          <ExtensionIcon
-            className="icon"
-            style={{ backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green" }}
-          />
-        ),
+
       };
       break;
 
@@ -118,13 +96,6 @@ const Widget = ({ type }) => {
         <span className="link">
           <Link to={data.linkAddress}>{data.link}</Link>
         </span>
-      </div>
-      <div className="right">
-        <div className="percentage positive">
-          <KeyboardArrowUpIcon />
-          {diff} %
-        </div>
-        {data.icon}
       </div>
       {error && <div className="error">Error: {error.message}</div>}
     </div>

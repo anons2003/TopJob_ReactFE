@@ -117,10 +117,16 @@ const Sidebar = () => {
               <span>   Transactions</span>
             </ul>
           </Link>
-          <Link to="/statistic" style={{ textDecoration: "none" }}>
+          {/* <Link to="/statistic" style={{ textDecoration: "none" }}>
             <ul>
               <AnalyticsIcon className="icon" />
               <span>   Statistic</span>
+            </ul>
+          </Link> */}
+           <Link to="/blogs" style={{ textDecoration: "none" }}>
+            <ul>
+              <ExtensionIcon className="icon" />
+              <span>   Blog</span>
             </ul>
           </Link>
 
