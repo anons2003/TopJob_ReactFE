@@ -13,7 +13,7 @@ import {
   FiBook,
 } from "../assets/icons/vander";
 
-import useEnterpriseInfo from '../hook/useEnterpriseInfo';
+import useEnterpriseInfo from "../hook/useEnterpriseInfo";
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 export default function Navbar({ navClass, navLight }) {
@@ -446,11 +446,11 @@ export default function Navbar({ navClass, navLight }) {
                     Blogs
                   </Link>
                 </li>
-                <li className={manu === "blog-sidebar" ? "active" : ""}>
+                {/* <li className={manu === "blog-sidebar" ? "active" : ""}>
                   <Link to="/blog-sidebar" className="sub-menu-item">
                     Blog Sidebar
                   </Link>
-                </li>
+                </li> */}
                 <li className={manu === "blog-detail" ? "active" : ""}>
                   <Link to="/blog-detail" className="sub-menu-item">
                     Blog Detail

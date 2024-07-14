@@ -29,7 +29,6 @@ import HelpcenterFaq from "./pages/helpcenter-faqs";
 import HelpcenterGuides from "./pages/helpcenter-guides";
 import HelpcenterSupport from "./pages/helpcenter-support";
 import Blogs from "./pages/blogs";
-import BlogSidebar from "./pages/blog-sidebar";
 import BlogDetail from "./pages/blog-detail";
 import Login from "./pages/login/login";
 import Signup from "./pages/signup/signup";
@@ -141,7 +140,6 @@ function App() {
         <Route path="/helpcenter-guides" element={<HelpcenterGuides />} />
         <Route path="/helpcenter-support" element={<HelpcenterSupport />} />
         <Route path="/blogs" element={<Blogs />} />
-        <Route path="/blog-sidebar" element={<BlogSidebar />} />
         <Route path="/blog-detail" element={<BlogDetail />} />
         <Route path="/blog-detail/:id" element={<BlogDetail />} />
         <Route path="/login" element={<Login />} />
