@@ -1,20 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-import bg1 from "../assets/images/hero/bg.jpg";
-
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
-
-import { blogData } from "../data/data";
-
 import { FiClock, FiCalendar } from "../assets/icons/vander";
+import bg1 from "../assets/images/hero/bg.jpg";
+import "./blogs.css";
 
 export default function Blogs() {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const blogsPerPage = 6;
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/blogs/getAllActiveBlogsSortedByCreatedAt"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch blogs");
+        }
+        const data = await response.json();
+        setBlogs(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const indexOfLastBlog = currentPage * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
+
   return (
     <>
-      <Navbar navClass="defaultscroll sticky" navLight={true} />
       <section
         className="bg-half-170 d-table w-100"
         style={{ backgroundImage: `url(${bg1})`, backgroundPosition: "top" }}
@@ -66,91 +94,118 @@ export default function Blogs() {
       <section className="section">
         <div className="container">
           <div className="row g-4">
-            {blogData.map((item, index) => (
-              <div className="col-lg-4 col-md-6" key={index}>
-                <div className="card blog blog-primary shadow rounded overflow-hidden border-0">
-                  <div className="card-img blog-image position-relative overflow-hidden rounded-0">
-                    <div className="position-relative overflow-hidden">
-                      <img src={item.image} className="img-fluid" alt="" />
-                      <div className="card-overlay"></div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
+              currentBlogs.map((item, index) => (
+                <div className="col-lg-4 col-md-6" key={index}>
+                  <div className="card blog blog-primary shadow rounded overflow-hidden border-0">
+                    <div className="card-img blog-image position-relative overflow-hidden rounded-0">
+                      <div className="position-relative overflow-hidden">
+                        <img src={item.imageUrl} className="img-fluid" alt="" />
+                        <div className="card-overlay"></div>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="card-body blog-content position-relative p-0">
-                    <div className="blog-tag px-4">
-                      <Link to="" className="badge bg-primary rounded-pill">
-                        {item.tag}
-                      </Link>
-                    </div>
-                    <div className="p-4">
-                      <ul className="list-unstyled text-muted small mb-2">
-                        <li className="d-inline-flex align-items-center me-2">
-                          <FiCalendar className="fea icon-ex-sm me-1 text-dark" />
-                          {item.date}
-                        </li>
-                        <li className="d-inline-flex align-items-center">
-                          <FiClock className="fea icon-ex-sm me-1 text-dark" />
-                          {item.time}
-                        </li>
-                      </ul>
+                    <div className="card-body blog-content position-relative p-0">
+                      <div className="p-4">
+                        <ul className="list-unstyled text-muted small mb-2">
+                          <li className="d-inline-flex align-items-center me-2">
+                            <FiCalendar className="fea icon-ex-sm me-1 text-dark" />
+                            {item.createdAt}
+                          </li>
+                        </ul>
 
-                      <Link
-                        to={`/blog-detail/${item.id}`}
-                        className="title fw-semibold fs-5 text-dark"
-                      >
-                        {item.title}
-                      </Link>
+                        <Link
+                          to={`/blog-detail/${item.id}`}
+                          className="title fw-semibold fs-5 text-dark"
+                        >
+                          {item.title}
+                        </Link>
 
-                      <ul className="list-unstyled d-flex justify-content-between align-items-center text-muted mb-0 mt-3">
-                        <li className="list-inline-item me-2">
-                          <Link
-                            to={`/blog-detail/${item.id}`}
-                            className="btn btn-link primary text-dark"
-                          >
-                            Đọc Ngay <i className="mdi mdi-arrow-right"></i>
-                          </Link>
-                        </li>
-                        <li className="list-inline-item">
-                          <span className="text-dark">By</span>{" "}
-                          <Link to="" className="text-muted link-title">
-                            {item.company}
-                          </Link>
-                        </li>
-                      </ul>
+                        <ul className="list-unstyled d-flex justify-content-between align-items-center text-muted mb-0 mt-3">
+                          <li className="list-inline-item me-2">
+                            <Link
+                              to={`/blog-detail/${item.id}`}
+                              className="btn btn-link primary text-dark"
+                            >
+                              Đọc Ngay <i className="mdi mdi-arrow-right"></i>
+                            </Link>
+                          </li>
+                          <li className="list-inline-item">
+                            <span className="text-dark">By</span>{" "}
+                            <Link to="" className="text-muted link-title">
+                              {item.author}
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
 
           <div className="row">
             <div className="col-12 mt-4 pt-2">
               <ul className="pagination justify-content-center mb-0">
-                <li className="page-item">
-                  <Link className="page-link" to="#" aria-label="Previous">
+                <li
+                  className={`page-item ${currentPage === 1 ? "disabled" : ""}`}
+                >
+                  <Link
+                    className="page-link"
+                    to="#"
+                    aria-label="Previous"
+                    onClick={() => paginate(currentPage - 1)}
+                  >
                     <span aria-hidden="true">
                       <i className="mdi mdi-chevron-left fs-6"></i>
                     </span>
                   </Link>
                 </li>
                 <li className="page-item">
-                  <Link className="page-link" to="#">
+                  <Link
+                    className={`page-link ${currentPage === 1 ? "active" : ""}`}
+                    to="#"
+                    onClick={() => paginate(1)}
+                  >
                     1
                   </Link>
                 </li>
-                <li className="page-item active">
-                  <Link className="page-link" to="#">
+                <li className="page-item">
+                  <Link
+                    className={`page-link ${currentPage === 2 ? "active" : ""}`}
+                    to="#"
+                    onClick={() => paginate(2)}
+                  >
                     2
                   </Link>
                 </li>
                 <li className="page-item">
-                  <Link className="page-link" to="#">
+                  <Link
+                    className={`page-link ${currentPage === 3 ? "active" : ""}`}
+                    to="#"
+                    onClick={() => paginate(3)}
+                  >
                     3
                   </Link>
                 </li>
-                <li className="page-item">
-                  <Link className="page-link" to="#" aria-label="Next">
+                <li
+                  className={`page-item ${
+                    currentPage === Math.ceil(blogs.length / blogsPerPage)
+                      ? "disabled"
+                      : ""
+                  }`}
+                >
+                  <Link
+                    className="page-link"
+                    to="#"
+                    aria-label="Next"
+                    onClick={() => paginate(currentPage + 1)}
+                  >
                     <span aria-hidden="true">
                       <i className="mdi mdi-chevron-right fs-6"></i>
                     </span>

@@ -1,21 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-
 import bg1 from "../assets/images/hero/bg.jpg";
-import image1 from "../assets/images/blog/01.jpg";
-
 import Navbar from "../components/navbar";
 import BlogsSidebars from "../components/blogsSidebars";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 
-import { blogData, commentsData } from "../data/data";
-
 export default function BlogDetail() {
-  let params = useParams();
-  let id = params.id;
+  const { id } = useParams();
+  const [blog, setBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  let data = blogData.find((blog) => blog.id === parseInt(id));
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/blogs/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch blog");
+        }
+        const data = await response.json();
+        setBlog(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
+  }, [id]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <>
       <Navbar navClass="defaultscroll sticky" navLight={true} />
@@ -29,33 +52,32 @@ export default function BlogDetail() {
             <div className="col-12">
               <div className="title-heading text-center">
                 <span className="badge bg-primary">
-                  {data?.tag ? data.tag : "Jobnova"}
+                  {blog?.tag || "Jobnova"}
                 </span>
                 <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark mt-4">
-                  {data?.title
-                    ? data.title
-                    : "Sử Dụng Banner Stands Để Tăng Lưu Lượng Truy Cập Tại Triển Lãm Thương Mại"}
+                  {blog?.title ||
+                    "Sử Dụng Banner Stands Để Tăng Lưu Lượng Truy Cập Tại Triển Lãm Thương Mại"}
                 </h5>
 
                 <ul className="list-inline text-center mb-0">
                   <li className="list-inline-item mx-4 mt-4">
                     <span className="text-white-50 d-block">Tác giả</span>
                     <Link to="#" className="text-white title-dark">
-                      {data?.company ? data.company : "Facebook"}
+                      {blog?.author || "Facebook"}
                     </Link>
                   </li>
 
                   <li className="list-inline-item mx-4 mt-4">
                     <span className="text-white-50 d-block">Ngày</span>
                     <span className="text-white title-dark">
-                      {data?.date ? data.date : "19 tháng 6, 2023"}
+                      {blog?.createdAt || "19 tháng 6, 2023"}
                     </span>
                   </li>
 
                   <li className="list-inline-item mx-4 mt-4">
                     <span className="text-white-50 d-block">Thời gian đọc</span>
                     <span className="text-white title-dark">
-                      {data?.time ? data.time : "8 phút đọc"}
+                      {blog?.readingTime || "8 phút đọc"}
                     </span>
                   </li>
                 </ul>
@@ -80,20 +102,6 @@ export default function BlogDetail() {
           </div>
         </div>
       </section>
-      <div className="position-relative">
-        <div className="shape overflow-hidden text-white">
-          <svg
-            viewBox="0 0 2880 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z"
-              fill="currentColor"
-            ></path>
-          </svg>
-        </div>
-      </div>
 
       <section className="section">
         <div className="container">
@@ -101,57 +109,13 @@ export default function BlogDetail() {
             <div className="col-lg-8 col-md-7">
               <div className="card border-0 shadow rounded overflow-hidden">
                 <img
-                  src={data?.image ? data?.image : image1}
+                  src={blog?.imageUrl || "../assets/images/blog/01.jpg"}
                   className="img-fluid"
                   alt=""
                 />
 
                 <div className="card-body">
-                  <p className="text-muted">
-                    Văn bản giả nổi tiếng nhất là 'Lorem Ipsum', được cho là
-                    xuất hiện vào thế kỷ 16. Lorem Ipsum được viết bằng ngôn ngữ
-                    giả Latinh mà phần lớn tương ứng với tiếng Latinh 'đúng'. Nó
-                    chứa một loạt các từ Latinh thực sự. Văn bản giả cổ đại này
-                    cũng không thể hiểu được, nhưng nó bắt chước nhịp điệu của
-                    hầu hết các ngôn ngữ châu Âu trong chữ Latinh. Ưu điểm của
-                    nguồn gốc Latinh và tính chất vô nghĩa tương đối của Lorem
-                    Ipsum là văn bản không thu hút sự chú ý vào chính nó hoặc
-                    làm người xem mất tập trung khỏi bố cục.
-                  </p>
-                  <p className="text-muted">
-                    Vì vậy, Lorem Ipsum chỉ phù hợp có hạn như một chất làm đầy
-                    hình ảnh cho các văn bản tiếng Đức. Nếu văn bản điền được dự
-                    định minh họa các đặc điểm của các kiểu chữ khác nhau, đôi
-                    khi có ý nghĩa để chọn các văn bản chứa các chữ cái và ký
-                    hiệu khác nhau đặc trưng cho ngôn ngữ đầu ra.
-                  </p>
-
-                  <blockquote className="text-center mx-auto blockquote">
-                    <i className="mdi mdi-format-quote-open mdi-48px text-muted opacity-2 d-block"></i>{" "}
-                    Người đàn ông trở về qua cánh cửa trên tường sẽ không bao
-                    giờ giống như người đàn ông đã đi ra ngoài.{" "}
-                    <small className="d-block text-muted mt-2">
-                      - Mẫu Jobnova
-                    </small>
-                  </blockquote>
-
-                  <p className="text-muted">
-                    Hiện tại có rất nhiều văn bản giả có thể đọc được. Chúng
-                    thường được sử dụng khi một văn bản cần thiết chỉ để lấp đầy
-                    không gian. Các lựa chọn thay thế cho các văn bản Lorem
-                    Ipsum cổ điển thường hài hước và kể những câu chuyện ngắn,
-                    hài hước hoặc vô nghĩa.
-                  </p>
-
-                  <Link to="#" className="badge badge-link bg-primary">
-                    Tối Giản
-                  </Link>
-                  <Link to="#" className="badge badge-link bg-primary">
-                    Nội Thất
-                  </Link>
-                  <Link to="#" className="badge badge-link bg-primary">
-                    Nội Thất
-                  </Link>
+                  <p className="text-muted">{blog?.content}</p>
                 </div>
               </div>
             </div>
