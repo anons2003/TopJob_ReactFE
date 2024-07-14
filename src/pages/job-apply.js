@@ -11,11 +11,8 @@ import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 import api from "../api/http";
 import useJobInfo from "../hook/useJobInfo";
-
 export default function JobApply() {
   const { jobId } = useParams();
-  const location = useLocation();
-  const jobData = location.state?.job;
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
   const { data: jobDat } = useJobInfo(jobId);
@@ -37,11 +34,15 @@ export default function JobApply() {
 
   const applyResumeMutation = useMutation({
     mutationFn: (formData) => {
-      return api.post(`jobSeeker/apply-cv/${job.enterprise.eid}`, formData, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      return api.post(
+        `jobSeeker/apply-cv/${job.enterprise.eid}/job/${job.id}`,
+        formData,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
     },
   });
 
@@ -52,12 +53,8 @@ export default function JobApply() {
       setEmail(user.user.email || "");
       setPhone(user.phone || "");
       setFullName(`${user.first_name} ${user.last_name}` || "");
-      setResume(user.resume_url || "");
+      // setResume(user.resume_url || "");
     }
-
-    // console.log(job);
-    // console.log(job.title);
-    // console.log(job.jobType.jobTypeName);
 
     if (job) {
       setOccupation(job?.title || "Game over");
@@ -65,27 +62,33 @@ export default function JobApply() {
     }
   }, [user, job]);
 
-  const getImage = (file) => {
-    if (typeof file === "string") {
-      // If the file is already a URL string, return it as is
-      return Promise.resolve(file);
-    }
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && isAllowed(file)) {
+      const reader = new FileReader();
 
-    return new Promise((resolve, reject) => {
-      if (file instanceof Blob) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          resolve(reader.result);
-        };
-        reader.onerror = (error) => {
-          console.error("Oops, something went wrong!", error);
-          reject(error);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        reject(new Error("Invalid file type"));
-      }
-    });
+      reader.onload = function (event) {
+        console.log("event nested: ", event);
+        console.log("event nested-1: ", event.target);
+        console.log("event nested-2: ", event.target.result);
+
+        const dataURL = event.target.result;
+        console.log("Data URL:", dataURL);
+
+        // You can now use the dataURL as needed, e.g., to display an image.
+        setResume(dataURL);
+      };
+
+      // Read the file as a Data URL
+      reader.readAsDataURL(file);
+    } else {
+      toast.error("Invalid File Format");
+    }
+  };
+
+  const isAllowed = (file) => {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    return allowedTypes.includes(file.type);
   };
 
   const handleApplySubmit = async (e) => {
@@ -104,8 +107,8 @@ export default function JobApply() {
 
       if (resume) {
         try {
-          const imageUrl = await getImage(resume);
-          formData.append("resume_url", imageUrl);
+          console.log("resume: ", resume);
+          formData.append("resume_url", resume);
         } catch (error) {
           console.error("Error reading file", error);
         }
@@ -298,7 +301,7 @@ export default function JobApply() {
                         <input
                           type="file"
                           className="form-control"
-                          onChange={(e) => setResume(e.target.files[0])}
+                          onChange={handleFileChange}
                         />
                       </div>
                     </div>

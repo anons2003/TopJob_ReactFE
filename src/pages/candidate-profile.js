@@ -24,6 +24,7 @@ import {
   FiFileText,
   FiGift,
 } from "../assets/icons/vander";
+import jsPDF from "jspdf";
 
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
@@ -39,6 +40,12 @@ export default function CandidateProfile() {
     /<img/g,
     '<img style="max-width: 100%; height: auto;"'
   );
+
+  const handleDownload = () => {
+    const pdf = new jsPDF();
+    pdf.addImage(user.resume_url, "JPEG", 10, 10, 180, 160);
+    pdf.save("resume.pdf");
+  };
 
   return (
     <>
@@ -246,14 +253,12 @@ export default function CandidateProfile() {
                       <h6 className="mb-0 ms-2">user?.resume_url</h6>
                     </div>
 
-                    <Link
-                      to={user?.resume_url}
-                      download="pdf"
-                      target="_blank"
+                    <button
                       className="btn btn-primary w-100"
+                      onClick={handleDownload}
                     >
                       <FiDownload className="fea icon-sm me-1" /> Download CV
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>

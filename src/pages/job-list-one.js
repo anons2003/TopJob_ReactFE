@@ -6,11 +6,12 @@ import AboutTwo from "../components/aboutTwo";
 import FormSelect from "../components/formSelect";
 import Footer from "../components/footer";
 import { useMutation } from "@tanstack/react-query";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import ScrollTop from "../components/scrollTop";
 import { FiClock, FiMapPin, FiBookmark } from "../assets/icons/vander";
 import useJobInfo from "../hook/useJobInfo";
 import api from "../api/http";
+import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 const formatDateTime = (dateArray) => {
   if (!dateArray) return null;
@@ -30,7 +31,8 @@ const compareWithCurrentDate = (date) => {
 export default function JobListOne() {
   const { data: jobData, isLoading, error } = useJobInfo();
   const [filteredJobs, setFilteredJobs] = useState([]);
-
+  const { data: userData } = useJobSeekerInfo();
+  const jobSeeker = userData?.data;
 
   const bookmarkMutation = useMutation({
     mutationFn: (jobId) => {
@@ -40,7 +42,7 @@ export default function JobListOne() {
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
           },
         }
       );
@@ -52,7 +54,7 @@ export default function JobListOne() {
       const token = sessionStorage.getItem("token");
       return api.delete(`/jobSeeker/job/${jobId}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       });
     },
@@ -78,10 +80,11 @@ export default function JobListOne() {
   };
 
   const toggleBookmark = (jobId, isBookmarked) => {
-    const userType = sessionStorage.getItem("roleJobSeeker"); // Assuming you store user type in sessionStorage
-    if (userType !== "roleJobSeeker") {
+    const userType = sessionStorage.getItem("roleJobSeeker");
+    console.log(userType); // Assuming you store user type in sessionStorage
+    if (userType !== "Job-seeker") {
       toast.error("You need to log in as a job seeker to bookmark jobs.");
-       // Redirect to login page if not jobSeeker
+      // Redirect to login page if not jobSeeker
       return;
     }
     if (isBookmarked === 0) {
@@ -93,7 +96,7 @@ export default function JobListOne() {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading jobs</div>;
-
+  console.log(jobData);
   return (
     <>
       <Navbar navClass="defaultscroll sticky" />
@@ -160,7 +163,7 @@ export default function JobListOne() {
                       />
                       <div className="ms-3">
                         <Link
-                          to={`/job-detail-three/${item.id}`}
+                          to={`/job-detail-one/${item.id}`}
                           className="h5 title text-dark"
                         >
                           {item.title}
@@ -187,18 +190,32 @@ export default function JobListOne() {
                         {item.minSalary} - {item.maxSalary}/mo
                       </span>
                     </div>
-
+                    {/* {console.log(
+                      "bookmark",
+                      item.bookmarks.some(
+                        (bookmark) => bookmark.jobSeekers.jid === jobSeeker.jid
+                      )
+                    )} */}
                     <div className="mt-3 mt-md-0">
                       <button
-                        className={`btn btn-sm btn-icon btn-pills ${item.bookmarks.length > 0 &&
-                            item.bookmarks[0].isBookmarked === 1
-                            ? "btn-primary"
+                        className={`btn btn-sm btn-icon btn-pills ${jobSeeker &&
+                            item.bookmarks.some(
+                              (bookmark) =>
+                                bookmark.jobSeekers.jid === jobSeeker.jid
+                            )
+                            ? item.bookmarks.length > 0 &&
+                              item.bookmarks[0].isBookmarked === 1
+                              ? "btn-primary"
+                              : "btn-soft-primary"
                             : "btn-soft-primary"
                           } bookmark`}
                         onClick={() =>
                           toggleBookmark(
                             item.id,
-                            item.bookmarks.length > 0
+                            item.bookmarks.some(
+                              (bookmark) =>
+                                bookmark.jobSeekers.jid === jobSeeker.jid
+                            )
                               ? item.bookmarks[0].isBookmarked
                               : 0
                           )
@@ -229,12 +246,12 @@ export default function JobListOne() {
                     </span>
                   </Link>
                 </li>
-                <li className="page-item active">
+                <li className="page-item">
                   <Link className="page-link" to="#">
                     1
                   </Link>
                 </li>
-                <li className="page-item ">
+                <li className="page-item active">
                   <Link className="page-link" to="#">
                     2
                   </Link>

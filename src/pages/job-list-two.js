@@ -32,7 +32,9 @@ const compareWithCurrentDate = (date) => {
 
 
 export default function JobListTwo() {
-
+    //get user role
+    const jobseekerRole = sessionStorage.getItem("roleJobSeeker");
+    const enterpriseRole = sessionStorage.getItem("roleEnterprise");
     //get enterpirse id
     const { data: enterpriseData } = useEnterpriseInfo();
     const enterpriseReponse = enterpriseData?.data;
@@ -271,9 +273,16 @@ export default function JobListTwo() {
                                                     <span className="d-flex fw-medium mt-md-2"><FiDollarSign className="fea icon-sm text-primary me-1" />{item.minSalary} - {item.maxSalary}/mo</span>
                                                 </div>
 
-                                                <div className="mt-3 mt-md-0">
-                                                    <Link to={`/job-detail-three/${item.id}`} className="btn btn-sm btn-primary w-full ms-md-1">Apply Now</Link>
-                                                </div>
+                                                {(jobseekerRole && (
+                                                    <div className="mt-3 mt-md-0">
+                                                        <Link to="/candidate-applied-list" className="btn btn-sm btn-primary w-full ms-md-1">See CV</Link>
+                                                    </div>
+                                                )) || (enterpriseRole && (
+                                                    <div className="mt-3 mt-md-0">
+                                                        <Link to="/candidate-applied-list" className="btn btn-sm btn-primary w-full ms-md-1">See CV</Link>
+                                                    </div>
+                                                ))}
+
                                             </div>
                                         </div>
                                     )

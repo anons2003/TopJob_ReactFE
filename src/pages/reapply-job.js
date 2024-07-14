@@ -10,16 +10,16 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 import api from "../api/http";
-
-export default function ReApply() {
-  const { id: eidFromUrl } = useParams(); // Extract eid from URL
-  const location = useLocation();
-  const jobData = location.state?.job;
+import useJobInfo from "../hook/useJobInfo";
+export default function JobApply() {
+  const { jobId } = useParams();
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
+  const { data: jobDat } = useJobInfo(jobId);
+  const job = jobDat?.data; // Extract job data from URL
+
   const token = sessionStorage.getItem("token");
 
-  const [eid, setEid] = useState("2"); // Default eid to 9 if not in URL
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -29,10 +29,12 @@ export default function ReApply() {
   const [jobType, setJobType] = useState("All Jobs");
   const [description, setDescription] = useState("");
   const [resume, setResume] = useState(null);
+  const [isAccepted, setIsAccepted] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const applyResumeMutation = useMutation({
     mutationFn: (formData) => {
-      return api.patch(`jobSeeker/reapply-cv/${eid}`, formData, {
+      return api.patch(`jobSeeker/reapply-cv/${job.enterprise.eid}`, formData, {
         headers: {
           Authorization: token,
         },
@@ -41,27 +43,55 @@ export default function ReApply() {
   });
 
   useEffect(() => {
-    if (eidFromUrl) {
-      setEid(eidFromUrl);
-    }
-
     if (user) {
-      setFirstName(user.first_name);
-      setLastName(user.last_name);
-      setEmail(user.user.email);
-      setPhone(user.phone);
-      setOccupation(user.occupation);
-      setFullName(firstName + " " + lastName);
-      setResume(user.resume_url);
+      setFirstName(user.first_name || "");
+      setLastName(user.last_name || "");
+      setEmail(user.user.email || "");
+      setPhone(user.phone || "");
+      setFullName(`${user.first_name} ${user.last_name}` || "");
+      // setResume(user.resume_url || "");
     }
-  }, [user, firstName, lastName, eidFromUrl]);
 
-  const handleApplySubmit = (e) => {
+    if (job) {
+      setOccupation(job?.title || "Game over");
+      setJobType(job?.jobType?.jobTypeName || "Go Home"); // Check if job.jobType is defined
+    }
+  }, [user, job]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && isAllowed(file)) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        console.log("event nested: ", event);
+        console.log("event nested-1: ", event.target);
+        console.log("event nested-2: ", event.target.result);
+
+        const dataURL = event.target.result;
+        console.log("Data URL:", dataURL);
+
+        // You can now use the dataURL as needed, e.g., to display an image.
+        setResume(dataURL);
+      };
+
+      // Read the file as a Data URL
+      reader.readAsDataURL(file);
+    } else {
+      toast.error("Invalid File Format");
+    }
+  };
+
+  const isAllowed = (file) => {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    return allowedTypes.includes(file.type);
+  };
+
+  const handleApplySubmit = async (e) => {
     e.preventDefault();
     if (!isAccepted) {
       setShowWarning(true);
     } else {
-      // Proceed with form submission logic
       setShowWarning(false);
       const formData = new FormData();
       formData.append("full_name", fullName);
@@ -70,22 +100,26 @@ export default function ReApply() {
       formData.append("job", occupation);
       formData.append("jobType", jobType);
       formData.append("description", `<p>${description}</p>`);
-      // Add other form data as necessary
+
+      if (resume) {
+        try {
+          console.log("resume: ", resume);
+          formData.append("resume_url", resume);
+        } catch (error) {
+          console.error("Error reading file", error);
+        }
+      }
+
       applyResumeMutation.mutate(formData, {
         onSuccess: () => {
           toast.success("Applying successfully");
         },
         onError: (error) => {
-          // Handle error (e.g., display an error message)
-          toast.error("Error applying:" + error.message);
+          toast.error("Error applying: " + error.message);
         },
       });
     }
   };
-
-  //Handle Checkbox
-  const [isAccepted, setIsAccepted] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
 
   const handleCheckboxChange = (event) => {
     setIsAccepted(event.target.checked);
@@ -105,12 +139,16 @@ export default function ReApply() {
             <div className="col-12">
               <div className="title-heading text-center">
                 <img
-                  src={jobData?.image ? jobData.image : logo1}
+                  src={
+                    job?.enterprise?.avatar_url
+                      ? job.enterprise.avatar_url
+                      : logo1
+                  }
                   className="avatar avatar-small rounded-pill p-2 bg-white"
                   alt=""
                 />
                 <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark mt-3">
-                  {jobData?.title ? jobData.title : "Back-End Developer"}
+                  {job?.title ? job.title : "Back-End Developer"}
                 </h5>
               </div>
             </div>
@@ -186,7 +224,7 @@ export default function ReApply() {
                           className="form-control"
                           placeholder="Your email :"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          disabled={true}
                         />
                       </div>
                     </div>
@@ -217,7 +255,7 @@ export default function ReApply() {
                           className="form-control"
                           placeholder="Title :"
                           value={occupation}
-                          onChange={(e) => setOccupation(e.target.value)}
+                          disabled={true}
                         />
                       </div>
                     </div>
@@ -226,18 +264,13 @@ export default function ReApply() {
                         <label className="form-label fw-semibold">
                           Types of jobs :
                         </label>
-                        <select
-                          className="form-control form-select"
-                          id="Sortbylist-Shop"
+                        <input
+                          className="form-control "
+                          name="jobType"
+                          id="jobType"
                           value={jobType}
-                          onChange={(e) => setJobType(e.target.value)}
-                        >
-                          <option value="All Jobs">All Jobs</option>
-                          <option value="Full Time">Full Time</option>
-                          <option value="Half Time">Half Time</option>
-                          <option value="Remote">Remote</option>
-                          <option value="In Office">In Office</option>
-                        </select>
+                          disabled={true}
+                        ></input>
                       </div>
                     </div>
                     <div className="col-12">
@@ -247,10 +280,10 @@ export default function ReApply() {
                         </label>
                         <textarea
                           name="comments"
-                          id="comments2"
+                          id="comments"
                           rows="4"
                           className="form-control"
-                          placeholder="Describe the job :"
+                          placeholder="Describe yourself..."
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
@@ -258,17 +291,13 @@ export default function ReApply() {
                     </div>
                     <div className="col-12">
                       <div className="mb-3">
-                        <label
-                          htmlFor="formFile"
-                          className="form-label fw-semibold"
-                        >
-                          Upload Your Cv / Resume :
+                        <label className="form-label fw-semibold">
+                          Upload Your CV :<span className="text-danger">*</span>
                         </label>
                         <input
-                          className="form-control"
                           type="file"
-                          id="formFile"
-                          onChange={(e) => setResume(e.target.files[0])}
+                          className="form-control"
+                          onChange={handleFileChange}
                         />
                       </div>
                     </div>
@@ -289,7 +318,7 @@ export default function ReApply() {
                           >
                             I Accept{" "}
                             <Link to="#" className="text-primary">
-                              Terms And Condition
+                              Terms And Conditions
                             </Link>
                           </label>
                         </div>
@@ -302,7 +331,7 @@ export default function ReApply() {
                           id="submit2"
                           name="send"
                           className="submitBtn btn btn-primary"
-                          value="Re Apply"
+                          value="ReApply"
                           style={{
                             opacity: isAccepted ? 1 : 0.5,
                           }}
@@ -316,7 +345,7 @@ export default function ReApply() {
           </div>
         </div>
       </section>
-      <Footer top={true} />
+      <Footer />
       <ScrollTop />
     </>
   );

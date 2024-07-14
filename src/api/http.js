@@ -21,7 +21,7 @@ class Api {
 
           // Check the role and store accordingly
           if (response.data.role === "Job-seeker") {
-            console.log("Setting roleJobSeeker");
+            
             sessionStorage.setItem("roleJobSeeker", response.data.role);
           } else if (response.data.role === "Enterprise") {
             sessionStorage.setItem("roleEnterprise", response.data.role);

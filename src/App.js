@@ -74,7 +74,7 @@ import ListTransaction from "./pages/list/ListTransaction";
 import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import ListEditPackageService from "./pages/list/ListEditPackageService";
 import NewUser from "./pages/newUser/New";
-
+import JobSeekersTable from "./pages/candidate-applied-list";
 
 function App() {
   return (
@@ -148,7 +148,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/lock-screen" element={<LockScreen />} />
-
+        <Route path="/candidate-applied-list" element={<JobSeekersTable />} />
+"
 
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />

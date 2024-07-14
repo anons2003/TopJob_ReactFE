@@ -65,12 +65,37 @@ export default function CandidateProfileSetting() {
     }
   }, [user]);
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && isAllowed(file)) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        console.log("event nested: ", event);
+        console.log("event nested-1: ", event.target);
+        console.log("event nested-2: ", event.target.result);
+
+        const dataURL = event.target.result;
+        console.log("Data URL:", dataURL);
+
+        // You can now use the dataURL as needed, e.g., to display an image.
+        setResume(dataURL);
+      };
+
+      // Read the file as a Data URL
+      reader.readAsDataURL(file);
+    } else {
+      toast.error("Invalid File Format");
+    }
+  };
+  const isAllowed = (file) => {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    return allowedTypes.includes(file.type);
+  };
+
   const handleInfoSubmit = (e) => {
     e.preventDefault();
     updateUserInfo(); // Trigger user info update
-    if (resume) {
-      handleUploadResume();
-    }
   };
 
   function updateUserInfo() {
@@ -85,6 +110,7 @@ export default function CandidateProfileSetting() {
         intro: intro,
         dob: dob,
         gender: gender,
+        resume_url: resume,
       };
 
       updateUserInfoMutation.mutate(body, {
@@ -118,20 +144,29 @@ export default function CandidateProfileSetting() {
       valid = false;
       toast.error("Please enter a valid last name!");
     }
+    const today = new Date();
+    const dobDate = new Date(dob);
 
-    // Validate Email
-    if (!email.trim()) {
-      errorsCopy.email = "Email is Required";
+    if (dobDate > today) {
+      errorsCopy.dob = "Date of Birth cannot be in the future";
       valid = false;
-      toast.error("Please enter email address!");
+      toast.error("Date of Birth cannot be in the future!");
     } else {
-      const emailRegex = /^\S+@\S+\.\S+$/;
-      if (!emailRegex.test(email)) {
-        errorsCopy.email = "Invalid Email Format";
+      // Optional: Check minimum age requirement
+      const minAge = 18; // Example minimum age
+      const maxAge = 75;
+      let age = today.getFullYear() - dobDate.getFullYear();
+      const m = today.getMonth() - dobDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+        age--;
+      }
+      if (age < minAge) {
         valid = false;
-        toast.error("Please enter a valid email address!");
-      } else {
-        errorsCopy.email = "";
+        toast.error(`You must be at least ${minAge} years old!`);
+      }
+      if (age > maxAge) {
+        valid = false;
+        toast.error(`You must be no older than ${maxAge} years old!`);
       }
     }
 
@@ -328,36 +363,9 @@ export default function CandidateProfileSetting() {
     },
   });
 
-  const uploadResume = useMutation({
-    mutationFn: (formData) => {
-      return api.patch("/jobSeeker/update-resume", formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-          Authorization: token,
-        },
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries("USER_PROFILE");
-      toast.success("Upload resume successfully");
-    },
-    onError: () => {
-      toast.error("Upload resume failed");
-    },
-  });
-
   // Function to handle file selection
-  const handleFileChange = (e) => {
-    setResume(e.target.files[0]); // Update state with the selected resume file
-  };
 
   // Function to handle form submission or other action to upload resume
-  const handleUploadResume = () => {
-    const formData = new FormData();
-    formData.append("resume", resume);
-    console.log("FormData:", formData);
-    uploadResume.mutate(formData);
-  };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -913,4 +921,3 @@ export default function CandidateProfileSetting() {
     </>
   );
 }
-

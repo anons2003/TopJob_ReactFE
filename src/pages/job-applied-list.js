@@ -1,9 +1,9 @@
 import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Navbar from "../components/navbar";
+import { Modal, Button } from "react-bootstrap";
 import NavbarDark from "../components/navbarDark";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import api from "../api/http";
 
@@ -19,11 +19,13 @@ const fetchAppliedCVs = async () => {
 
 const CVList = () => {
   const queryClient = useQueryClient();
+  const [showModal, setShowModal] = React.useState(false);
+  const [resumeContent, setResumeContent] = React.useState("");
 
   const deleteCVMutation = useMutation({
-    mutationFn: (eid) => {
+    mutationFn: (cvId) => {
       const token = sessionStorage.getItem("token");
-      return api.delete(`/jobSeeker/delete-cv/${eid}`, {
+      return api.delete(`/jobSeeker/delete-cv/${cvId}`, {
         headers: {
           Authorization: token,
         },
@@ -42,56 +44,120 @@ const CVList = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
+  const handleResumeClick = (resumeUrl) => {
+    setResumeContent(resumeUrl);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setResumeContent("");
+  };
+
+  // Map `isApplied` field to status text and color
+  const getStatusProps = (isApplied) => {
+    switch (isApplied) {
+      case 1:
+        return { text: "Accepted", color: "green" };
+      case -1:
+        return { text: "Rejected", color: "red" };
+      default:
+        return { text: "Pending", color: "black" };
+    }
+  };
+
   return (
     <>
       <NavbarDark navClass="defaultscroll sticky" navLight={true} />
-      <section className="section">
-        <div className="container">
-          <h2 className="my-4">CV Applied List</h2>
-          <div className="list-group">
-            {data.map((cv) => (
-              <div
-                key={cv.cvId}
-                className="list-group-item list-group-item-action flex-column align-items-start"
-              >
-                <div className="row align-items-center">
-                  <div className="col-md-1">
+      <section className="section container mt-4">
+        <h2 className="my-4">CV Applied List</h2>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Enterprise</th>
+              <th>Full Name</th>
+              <th>Job Type</th>
+              <th>Description</th>
+              <th>Status</th> {/* Added Status Column */}
+              <th>Resume</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((cv) => {
+              const { text, color } = getStatusProps(cv.isApllied);
+              return (
+                <tr key={cv.cvId}>
+                  <td>
                     <img
                       src={cv.enterprise.avatar_url}
+                      alt="Enterprise"
                       className="avatar avatar-small rounded shadow bg-white"
-                      alt=""
+                      style={{ width: "50px", height: "50px" }}
                     />
-                  </div>
-                  <div className="col-md-11">
-                    <div className="d-flex w-100 justify-content-between">
-                      <h5 className="mb-1">{cv.full_name}</h5>
-                      <div>
+                  </td>
+                  <td>{cv.full_name}</td>
+                  <td>{cv.jobType}</td>
+                  <td dangerouslySetInnerHTML={{ __html: cv.description }}></td>
+                  <td style={{ color }}>{text}</td> {/* Styled Status Text */}
+                  <td>
+                    {cv.resume_url ? (
+                      cv.resume_url.startsWith("data:image/") ? (
                         <button
-                          className="btn btn-danger btn-sm me-2"
-                          onClick={() =>
-                            deleteCVMutation.mutate(cv.enterprise.eid)
-                          }
+                          onClick={() => handleResumeClick(cv.resume_url)}
+                          style={{ borderStyle: "none" }}
                         >
-                          Delete
+                          View Resume
                         </button>
-                        <Link
-                          to={`/reapply-job/${cv.enterprise.eid}`}
-                          className="btn btn-primary btn-sm"
-                        >
-                          Update
-                        </Link>
-                      </div>
-                    </div>
-                    <small>Job: {cv.job}</small>
-                    <div className="d-flex w-100 justify-content-between mt-2">
-                      <small>{cv.jobType}</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                      ) : (
+                        <p>Invalid Resume URL</p>
+                      )
+                    ) : (
+                      "No Resume"
+                    )}
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger btn-sm me-2"
+                      onClick={() => deleteCVMutation.mutate(cv.enterprise.eid)}
+                    >
+                      Delete
+                    </button>
+
+                    <Link
+                      to={`/reapply-job/${cv.enterprise.eid}`}
+                      className="btn btn-primary btn-sm"
+                    >
+                      Update
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+
+        <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Resume</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {resumeContent.startsWith("data:image/") ? (
+              <img src={resumeContent} alt="Resume" style={{ width: "100%" }} />
+            ) : (
+              <iframe
+                src={resumeContent}
+                title="Resume"
+                style={{ width: "100%", height: "500px" }}
+              ></iframe>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </section>
     </>
   );
