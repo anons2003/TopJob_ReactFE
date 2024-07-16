@@ -142,7 +142,7 @@ function App() {
         <Route path="/helpcenter-faqs" element={<HelpcenterFaq />} />
         <Route path="/helpcenter-guides" element={<HelpcenterGuides />} />
         <Route path="/helpcenter-support" element={<HelpcenterSupport />} />
-        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogss" element={<Blogs />} />
         <Route path="/blog-detail" element={<BlogDetail />} />
         <Route path="/blog-detail/:id" element={<BlogDetail />} />
 

@@ -438,25 +438,25 @@ export default function Navbar({ navClass, navLight }) {
                   : ""
               } has-submenu parent-menu-item`}
             >
-              <Link to="#"> Blog </Link>
-              <span className="submenu-arrow"></span>
+              <Link to="/blogss"> Blog </Link>
+              {/* <span className="submenu-arrow"></span>
               <ul className="submenu">
                 <li className={manu === "blogs" ? "active" : ""}>
-                  <Link to="/blogs" className="sub-menu-item">
+                  <Link to="/blogss" className="sub-menu-item">
                     Blogs
                   </Link>
-                </li>
-                {/* <li className={manu === "blog-sidebar" ? "active" : ""}>
+                </li> */}
+              {/* <li className={manu === "blog-sidebar" ? "active" : ""}>
                   <Link to="/blog-sidebar" className="sub-menu-item">
                     Blog Sidebar
                   </Link>
                 </li> */}
-                <li className={manu === "blog-detail" ? "active" : ""}>
+              {/* <li className={manu === "blog-detail" ? "active" : ""}>
                   <Link to="/blog-detail" className="sub-menu-item">
                     Blog Detail
                   </Link>
-                </li>
-              </ul>
+                </li> */}
+              {/* </ul> */}
             </li>
             {jobSeekerRole && (
               <li className={manu === "createCV" ? "active" : ""}>

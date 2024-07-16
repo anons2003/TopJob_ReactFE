@@ -45,25 +45,32 @@ const DatatableBlog = () => {
 
   const handleToggleActive = async (id, currentIsActive) => {
     try {
-      const newIsActive = !currentIsActive;
-      const response = await axios.put(`http://localhost:8080/blogs/toggle-active/${id}`, { isActive: newIsActive });
-      if (response.status === 200) {
-        const updatedBlogs = blogs.map(blog => {
-          if (blog.id === id) {
-            return { ...blog, isActive: newIsActive };
-          }
-          return blog;
-        });
-        setBlogs(updatedBlogs);
-        setFilteredBlogs(updatedBlogs); // Update filteredBlogs if needed
-      } else {
+      const response = await fetch(`http://localhost:8080/blogs/toggle-active/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
         throw new Error('Failed to toggle active status');
       }
+  
+      setBlogs(prevBlogs =>
+        prevBlogs.map(blog =>
+          blog.id === id ? { ...blog, isActive: !currentIsActive } : blog
+        )
+      );
+      setFilteredBlogs(prevFilteredBlogs =>
+        prevFilteredBlogs.map(blog =>
+          blog.id === id ? { ...blog, isActive: !currentIsActive } : blog
+        )
+      );
     } catch (error) {
-      console.error('Error toggling active status:', error);
-      
+      console.error('Error toggling active status:', error.message);
     }
   };
+  
 
   return (
     <div className="datatable">
