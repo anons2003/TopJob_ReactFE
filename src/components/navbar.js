@@ -107,7 +107,12 @@ export default function Navbar({ navClass, navLight }) {
         onClick={() => setCartitem(!cartitem)}
         className="dropdown-toggle btn btn-sm btn-icon btn-pills btn-primary"
       >
-        <img src={getAvatarUrl()} className="img-fluid rounded-pill" alt="" />
+        <img
+          src={getAvatarUrl()}
+          name="avatar"
+          className="img-fluid rounded-pill"
+          alt=""
+        />
       </button>
       <div style={{ display: cartitem === true ? "block" : "none" }}>
         <div
@@ -170,6 +175,7 @@ export default function Navbar({ navClass, navLight }) {
             <Link
               to="/admin/dashboard"
               className="dropdown-item fw-medium fs-6"
+              name="adminDashboard"
             >
               <FiBook className="fea icon-sm me-2 align-middle" />
               Admin Dashboard
@@ -438,7 +444,10 @@ export default function Navbar({ navClass, navLight }) {
                   : ""
               } has-submenu parent-menu-item`}
             >
-              <Link to="/blogss"> Blog </Link>
+              <Link name="blog" to="/blogss">
+                {" "}
+                Blog{" "}
+              </Link>
               {/* <span className="submenu-arrow"></span>
               <ul className="submenu">
                 <li className={manu === "blogs" ? "active" : ""}>
