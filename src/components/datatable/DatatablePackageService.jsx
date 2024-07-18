@@ -60,7 +60,7 @@ const DatatablePackageService = () => {
         <div className="datatable">
             <div className="datatableTitle">
                 Add New Package
-                <Link to="/packageServices/add" className="link">
+                <Link to="/packages/add" className="link">
                     Add New
                 </Link>
             </div>
@@ -87,7 +87,9 @@ const DatatablePackageService = () => {
                                     <Link to={`/packageServices/edit/${params.row.id}`} className="viewButton">
                                         Edit
                                     </Link>
-                                 
+                                    {/* <button className="deleteButton" onClick={() => handleDeletePackage(params.row.id)}>
+                                        Delete
+                                    </button> */}
                                 </div>
                             ),
                         },

@@ -28,6 +28,7 @@ const TemplateDesignPin = ({ data, index }) => {
             <div className='tw-w-full tw-h-[450px] 2xl:tw-h-[640px] tw-rounded-md tw-bg-gray-300 tw-overflow-hidden tw-relative'
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
+                name="template1" 
             >
                 <img
                     src={data?.imageURL}
@@ -62,6 +63,7 @@ const InnerBoxCard = ({ label, Icon, onHandle }) => {
             className='tw-w-10 tw-h-10 tw-rounded-md tw-bg-gray-200 tw-flex tw-items-center tw-justify-center hover:tw-shadow-md tw-relative'
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+             
         >
             <Icon className='tw-text-base tw-text-txtPrimary tw-cursor-pointer' />
             <AnimatePresence>
@@ -71,6 +73,7 @@ const InnerBoxCard = ({ label, Icon, onHandle }) => {
                         animate={{ opacity: 1, scale: 1, x: 50 }}
                         exit={{ opacity: 0, scale: .6, x: 50 }}
                         className='tw-px-3 tw-py-2 tw-rounded-md tw-bg-gray-200 tw-absolute tw--left-44 after:tw-w-2 after:tw-h-2 after:tw-absolute after:tw--right-1 after:tw-bg-gray-200 after:tw-top-[14px] after:tw-rotate-45'
+                        name="template1" 
                     >
                         <p>{label}</p>
                     </motion.div>

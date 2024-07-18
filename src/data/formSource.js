@@ -28,6 +28,18 @@ export const userInputs = [
     type: "email",
     placeholder: "example@gmail.com",
   },
+  {
+    id: 6,
+    label: "Date of birth",
+    type: "text",
+    placeholder: "2000-02-02",
+  },
+  {
+    id: 7,
+    label: "Role",
+    type: "text",
+    placeholder: "User or Enterprise",
+  },
 ];
 
 export const productInputs = [

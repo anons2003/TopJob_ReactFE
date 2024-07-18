@@ -16,11 +16,11 @@ import JobPost from "./pages/job-post";
 import Career from "./pages/career";
 import JobDetailThree from "./pages/job-detail-three";
 
-import Employers from "./pages/employers";
-import EmployerProfile from "./pages/employer-profile";
-import Candidates from "./pages/candidates";
-import CandidateProfile from "./pages/candidate-profile";
-import CandidateProfileSetting from "./pages/candidate-profile-setting";
+import Employers from "./pages/enterprise/employers";
+import EmployerProfile from "./pages/enterprise/employer-profile";
+import Candidates from "./pages/jobseeker/candidates";
+import CandidateProfile from "./pages/jobseeker/candidate-profile";
+import CandidateProfileSetting from "./pages/jobseeker/candidate-profile-setting";
 import AboutUs from "./pages/aboutus";
 import Services from "./pages/services";
 import Pricing from "./pages/pricing";
@@ -29,6 +29,7 @@ import HelpcenterFaq from "./pages/helpcenter-faqs";
 import HelpcenterGuides from "./pages/helpcenter-guides";
 import HelpcenterSupport from "./pages/helpcenter-support";
 import Blogs from "./pages/blogs";
+import BlogSidebar from "./pages/blog-sidebar";
 import BlogDetail from "./pages/blog-detail";
 import Login from "./pages/login/login";
 import Signup from "./pages/signup/signup";
@@ -52,8 +53,8 @@ import CreateResume from "./pages/create-cv/CreateResume";
 import BookmarksList from "./pages/bookmark-list";
 import CVAppliedList from "./pages/job-applied-list";
 import ReApply from "./pages/reapply-job";
-import EnterpriseProfileSetting from "./pages/enterprise-profile-setting";
-
+import EnterpriseProfileSetting from "./pages/enterprise/enterprise-profile-setting";
+import JobListTwo from './pages/job-list-two'
 // admin
 import { productInputs, userInputs } from "./data/formSource";
 import { useContext } from "react";
@@ -72,6 +73,8 @@ import ListPackageService from "./pages/list/ListPackageService";
 import ListTransaction from "./pages/list/ListTransaction";
 import ListJobPostsModeration from "./pages/list/ListJobPostsModeration";
 import ListEditPackageService from "./pages/list/ListEditPackageService";
+import NewUser from "./pages/newUser/New";
+import JobSeekersTable from "./pages/jobseeker/candidate-applied-list";
 import NewJobSeeker from "./pages/newUser/NewJobSeeker";
 import NewPackage from "./pages/newUser/NewPackage";
 import ListBlog from "./pages/list/ListBlog";
@@ -82,18 +85,19 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/index-two" element={<IndexTwo />} />
+        <Route path="/Ehome" element={<Index />} />
+        <Route path="/" element={<IndexTwo />} />
         <Route path="/job-categories" element={<JobCategories />} />
         <Route path="/job-grid-two" element={<JobGridTwo />} />
         <Route path="/job-list-one" element={<JobListOne />} />
-
+        <Route path='/job-list-by-enterprise' element={<JobListTwo />} />
+        <Route path='/job-list-by-enterprise/:eid' element={<JobListTwo />} />
         <Route
           path="/job-apply"
           element={<ProtectedRoute element={JobApply} />}
         />
         <Route
-          path="/job-apply/:id"
+          path="/job-apply/:jobId"
           element={<ProtectedRoute element={JobApply} />}
         />
         <Route
@@ -108,10 +112,13 @@ function App() {
           path="/employers"
           element={<ProtectedRoute element={Employers} />}
         />
-        <Route path="/employer-profile" element={<EmployerProfile />} />
+        <Route path="/employer-profile"
+          element={<EmployerProfile />}
+
+        />
         <Route
-          path="/employer-profile/:id"
-          element={<ProtectedRoute element={EmployerProfile} />}
+          path="/employer-profile/:eid"
+          element={<EmployerProfile />}
         />
 
         <Route
@@ -120,11 +127,11 @@ function App() {
         />
         <Route
           path="/candidate-profile"
-          element={<ProtectedRoute element={CandidateProfile} />}
+          element={<CandidateProfile />}
         />
         <Route
           path="/candidate-profile/:id"
-          element={<ProtectedRoute element={CandidateProfile} />}
+          element={<CandidateProfile />}
         />
         <Route
           path="/candidate-profile-setting"
@@ -143,13 +150,15 @@ function App() {
         <Route path="/helpcenter-guides" element={<HelpcenterGuides />} />
         <Route path="/helpcenter-support" element={<HelpcenterSupport />} />
         <Route path="/blogss" element={<Blogs />} />
+        <Route path="/blog-sidebar" element={<BlogSidebar />} />
         <Route path="/blog-detail" element={<BlogDetail />} />
         <Route path="/blog-detail/:id" element={<BlogDetail />} />
-
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/lock-screen" element={<LockScreen />} />
+        <Route path="/candidate-applied-list" element={<JobSeekersTable />} />
+        "
 
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
@@ -161,26 +170,20 @@ function App() {
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/change-password" element={<CreatePassword />} />
 
-        <Route path="/create-template" element={<CreateTemplate />} />
-        <Route path="/template" element={<TemplateContainer />} />
-        <Route
-          path="/resumeDetail/:templateID"
-          element={<TemplateDesignPinDetail />}
-        />
+        <Route path='/create-template' element={<CreateTemplate />} />
+        <Route path='/template' element={<TemplateContainer />} />
+        <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
         <Route path="/resume/*" element={<CreateResume />} />
         {/* new */}
         <Route path="bookmark-list" element={<BookmarksList />} />
         <Route path="cv-applied-list" element={<CVAppliedList />} />
         <Route path="reapply-job" element={<ReApply />} />
-        <Route path="reapply-job/:id" element={<ReApply />} />
+        <Route path="reapply-job/:jobId" element={<ReApply />} />
         {/* admin route */}
 
         {/* dashboard */}
-
-        <Route
-          path="/admin/dashboard"
-          element={<ProtectedRoute element={AdminHome} />}
-        />
+        <Route path="/admin/dashboard"
+          element={<ProtectedRoute element={AdminHome} />} />
 
         {/* <Route path="login" element={<Login />} /> */}
 
@@ -210,7 +213,6 @@ function App() {
             <Route index element={<ListAdmins />} />
           </Route>
         </Route>
-
         {/* job post */}
         <Route path="jobs">
           <Route path="jobPosts">
@@ -242,16 +244,6 @@ function App() {
         <Route path="transactions">
           <Route index element={<ListTransaction />} />
         </Route>
-        {/* blog */}
-
-        <Route path="blogs">
-          <Route index element={<ListBlog />} />
-          <Route path="edit/:id" element={<ListEditBlog />} />
-          <Route
-            path="add"
-            element={<NewBlog inputs={userInputs} title="Add New Blog" />}
-          />
-        </Route>
 
         {/* profile */}
         <Route path="profileAdmin">
@@ -267,10 +259,21 @@ function App() {
           </Route>
         </Route>
 
+        {/* blog */}
+
+        <Route path="blogs">
+          <Route index element={<ListBlog />} />
+          <Route path="edit/:id" element={<ListEditBlog />} />
+          <Route
+            path="add"
+            element={<NewBlog inputs={userInputs} title="Add New Blog" />}
+          />
+        </Route>
         {/* logout */}
         <Route path="/logout">
           <Route index element={<logout />} />
         </Route>
+
       </Routes>
     </>
   );

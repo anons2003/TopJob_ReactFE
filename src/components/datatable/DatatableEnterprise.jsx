@@ -8,7 +8,6 @@ const DatatableEnterprise = () => {
     const [enterprises, setEnterprises] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const fetchEnterprises = async () => {
@@ -36,9 +35,9 @@ const DatatableEnterprise = () => {
             enterprise_name: item.enterprise_name,
             user_name: item.user.user_name,
             email: item.user.email,
-            created_at: new Date(item.created_at).toLocaleDateString(),
+            created_at: new Date(item.created_at).toLocaleDateString(),  // Format date
             role: item.user.roleType ? item.user.roleType.roleTypeName : 'Unknown Role',
-            is_active: item.user.isActive === 1 ? "Active" : "Inactive",
+            is_active: item.user.isActive === 1 ? "Active" : "Inactive", // Check if isActive is 1 or 0
             avatarUrl: `https://avatars.dicebear.com/api/initials/${item.enterprise_name}.svg`
         }));
     };
@@ -56,6 +55,7 @@ const DatatableEnterprise = () => {
                 throw new Error('Failed to toggle active status');
             }
 
+            // Update enterprise's isActive status in the local state
             setEnterprises(prevEnterprises =>
                 prevEnterprises.map(enterprise =>
                     enterprise.id === id ? { ...enterprise, is_active: !currentIsActive ? "Active" : "Inactive" } : enterprise
@@ -63,12 +63,9 @@ const DatatableEnterprise = () => {
             );
         } catch (error) {
             console.error('Error toggling active status:', error.message);
+            // Optionally, you can handle error states here, such as displaying an error message.
         }
     };
-
-    const filteredEnterprises = enterprises.filter(enterprise =>
-        enterprise.user_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     return (
         <div className="datatable">
@@ -78,15 +75,6 @@ const DatatableEnterprise = () => {
                     Add New
                 </Link>
             </div>
-            <div className="searchContainer">
-                <input
-                    type="text"
-                    placeholder="Search by username"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="searchInput"
-                />
-            </div>
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -94,7 +82,7 @@ const DatatableEnterprise = () => {
             ) : (
                 <DataGrid
                     className="datagrid"
-                    rows={filteredEnterprises}
+                    rows={enterprises}
                     columns={[
                         ...enterpriseColumns,
                         {
@@ -108,7 +96,7 @@ const DatatableEnterprise = () => {
                                     </Link>
                                     <button
                                         className="lockButton"
-                                        style={{ color: 'black' }}
+                                        style={{ color: 'black' }} // Inline style for black text color
                                         onClick={() => handleToggleActive(params.row.id, params.row.is_active === "Active")}
                                     >
                                         {params.row.is_active === "Active" ? "Lock" : "Unlock"}

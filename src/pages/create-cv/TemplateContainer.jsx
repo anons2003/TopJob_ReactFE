@@ -33,7 +33,7 @@ const TemplateContainer = () => {
         <>
             <NavbarDark navClass="defaultscroll sticky" navLight={true} />
             <section >
-                <div className="tw-container" style={{ margin: '0 auto', marginTop: '100px', marginBottom: '50px' }}>
+                <div className="tw-container" style={{ margin: '0 auto', marginTop: '100px', marginBottom: '50px' }} name="templateContainer">
                     {temp_isError ? (
                         <p className='tw-text-lg tw-text-txtDark'>Something went wrong... Please try again later</p>
                     ) : (

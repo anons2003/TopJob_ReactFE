@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import bg1 from "../assets/images/hero/bg.jpg";
 import logo1 from "../assets/images/company/lenovo-logo.png";
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
@@ -10,17 +10,16 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
 import api from "../api/http";
-
+import useJobInfo from "../hook/useJobInfo";
 export default function JobApply() {
-  const { id: eidFromUrl } = useParams(); // Extract eid from URL
-  const location = useLocation();
-  const jobData = location.state?.job;
+  const { jobId } = useParams();
   const { data: userData } = useJobSeekerInfo();
   const user = userData?.data;
-  const token = sessionStorage.getItem("token");
-  const queryClient = useQueryClient();
+  const { data: jobDat } = useJobInfo(jobId);
+  const job = jobDat?.data; // Extract job data from URL
 
-  const [eid, setEid] = useState("1"); // Default eid to 1 if not in URL
+  const token = sessionStorage.getItem("token");
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,31 +34,64 @@ export default function JobApply() {
 
   const applyResumeMutation = useMutation({
     mutationFn: (formData) => {
-      return api.post(`jobSeeker/apply-cv/${eid}`, formData, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      return api.post(
+        `jobSeeker/apply-cv/${job.enterprise.eid}/job/${job.id}`,
+        formData,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
     },
   });
 
   useEffect(() => {
-    if (eidFromUrl) {
-      setEid(eidFromUrl);
-    }
-
     if (user) {
-      setFirstName(user.first_name);
-      setLastName(user.last_name);
-      setEmail(user.user.email);
-      setPhone(user.phone);
-      setOccupation(user.occupation);
-      setFullName(user.first_name + " " + user.last_name);
-      setResume(user.resume_url);
+      setFirstName(user.first_name || "");
+      setLastName(user.last_name || "");
+      setEmail(user.user.email || "");
+      setPhone(user.phone || "");
+      setFullName(`${user.first_name} ${user.last_name}` || "");
+      // setResume(user.resume_url || "");
     }
-  }, [user, eidFromUrl]);
 
-  const handleApplySubmit = (e) => {
+    if (job) {
+      setOccupation(job?.title || "Game over");
+      setJobType(job?.jobType?.jobTypeName || "Go Home"); // Check if job.jobType is defined
+    }
+  }, [user, job]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && isAllowed(file)) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        console.log("event nested: ", event);
+        console.log("event nested-1: ", event.target);
+        console.log("event nested-2: ", event.target.result);
+
+        const dataURL = event.target.result;
+        console.log("Data URL:", dataURL);
+
+        // You can now use the dataURL as needed, e.g., to display an image.
+        setResume(dataURL);
+      };
+
+      // Read the file as a Data URL
+      reader.readAsDataURL(file);
+    } else {
+      toast.error("Invalid File Format");
+    }
+  };
+
+  const isAllowed = (file) => {
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    return allowedTypes.includes(file.type);
+  };
+
+  const handleApplySubmit = async (e) => {
     e.preventDefault();
     if (!isAccepted) {
       setShowWarning(true);
@@ -72,50 +104,30 @@ export default function JobApply() {
       formData.append("job", occupation);
       formData.append("jobType", jobType);
       formData.append("description", `<p>${description}</p>`);
+
+      if (resume) {
+        try {
+          console.log("resume: ", resume);
+          formData.append("resume_url", resume);
+        } catch (error) {
+          console.error("Error reading file", error);
+        }
+      }
+
       applyResumeMutation.mutate(formData, {
         onSuccess: () => {
           toast.success("Applying successfully");
         },
         onError: (error) => {
-          toast.error("Already Applied!");
+          toast.error("Error applying: " + error.message);
         },
       });
-      if (resume) {
-        handleUploadResume();
-      }
     }
   };
 
   const handleCheckboxChange = (event) => {
     setIsAccepted(event.target.checked);
     setShowWarning(false); // Reset warning when checkbox state changes
-  };
-
-  const uploadResume = useMutation({
-    mutationFn: (formData) => {
-      return api.patch(`/jobSeeker/upload-resume/${eid}`, formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-          Authorization: token,
-        },
-      });
-    },
-    onSuccess: () => {
-      toast.success("Upload resume successfully");
-    },
-    onError: () => {
-      toast.error("Upload resume failed");
-    },
-  });
-
-  const handleFileChange = (e) => {
-    setResume(e.target.files[0]); // Update state with the selected resume file
-  };
-
-  const handleUploadResume = () => {
-    const formData = new FormData();
-    formData.append("resume", resume);
-    uploadResume.mutate(formData);
   };
 
   return (
@@ -131,12 +143,16 @@ export default function JobApply() {
             <div className="col-12">
               <div className="title-heading text-center">
                 <img
-                  src={jobData?.avatarUrl ? jobData.avatarUrl : logo1}
+                  src={
+                    job?.enterprise?.avatar_url
+                      ? job.enterprise.avatar_url
+                      : logo1
+                  }
                   className="avatar avatar-small rounded-pill p-2 bg-white"
                   alt=""
                 />
                 <h5 className="heading fw-semibold mb-0 sub-heading text-white title-dark mt-3">
-                  {jobData?.title ? jobData.title : "Back-End Developer"}
+                  {job?.title ? job.title : "Back-End Developer"}
                 </h5>
               </div>
             </div>
@@ -201,7 +217,7 @@ export default function JobApply() {
                       </div>
                     </div>
                     <div className="col-12">
-                      <div className="mb-3">
+                      <div className="mb3">
                         <label className="form-label fw-semibold">
                           Your Email :<span className="text-danger">*</span>
                         </label>
@@ -212,7 +228,7 @@ export default function JobApply() {
                           className="form-control"
                           placeholder="Your email :"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          disabled={true}
                         />
                       </div>
                     </div>
@@ -243,7 +259,7 @@ export default function JobApply() {
                           className="form-control"
                           placeholder="Title :"
                           value={occupation}
-                          onChange={(e) => setOccupation(e.target.value)}
+                          disabled={true}
                         />
                       </div>
                     </div>
@@ -252,18 +268,13 @@ export default function JobApply() {
                         <label className="form-label fw-semibold">
                           Types of jobs :
                         </label>
-                        <select
-                          className="form-control form-select"
-                          id="Sortbylist-Shop"
+                        <input
+                          className="form-control "
+                          name="jobType"
+                          id="jobType"
                           value={jobType}
-                          onChange={(e) => setJobType(e.target.value)}
-                        >
-                          <option value="All Jobs">All Jobs</option>
-                          <option value="Full Time">Full Time</option>
-                          <option value="Half Time">Half Time</option>
-                          <option value="Remote">Remote</option>
-                          <option value="In Office">In Office</option>
-                        </select>
+                          disabled={true}
+                        ></input>
                       </div>
                     </div>
                     <div className="col-12">
@@ -273,10 +284,10 @@ export default function JobApply() {
                         </label>
                         <textarea
                           name="comments"
-                          id="comments2"
+                          id="comments"
                           rows="4"
                           className="form-control"
-                          placeholder="Describe the job :"
+                          placeholder="Describe yourself..."
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
@@ -284,16 +295,12 @@ export default function JobApply() {
                     </div>
                     <div className="col-12">
                       <div className="mb-3">
-                        <label
-                          htmlFor="formFile"
-                          className="form-label fw-semibold"
-                        >
-                          Upload Your CV / Resume :
+                        <label className="form-label fw-semibold">
+                          Upload Your CV :<span className="text-danger">*</span>
                         </label>
                         <input
-                          className="form-control"
                           type="file"
-                          id="formFile"
+                          className="form-control"
                           onChange={handleFileChange}
                         />
                       </div>
@@ -335,16 +342,6 @@ export default function JobApply() {
                         />
                       </div>
                     </div>
-                    {showWarning && (
-                      <div className="row">
-                        <div className="col-12">
-                          <p className="text-danger">
-                            You need to accept the terms and conditions before
-                            applying.
-                          </p>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </form>
               </div>
@@ -352,7 +349,7 @@ export default function JobApply() {
           </div>
         </div>
       </section>
-      <Footer top={true} />
+      <Footer />
       <ScrollTop />
     </>
   );

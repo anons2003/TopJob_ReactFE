@@ -2,9 +2,9 @@ import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navbar from "../components/navbar";
 import NavbarDark from "../components/navbarDark";
 import api from "../api/http";
+import { Link } from "react-router-dom";
 
 const fetchBookmarkedJobs = async () => {
   const token = sessionStorage.getItem("token");
@@ -58,6 +58,9 @@ const BookmarksList = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
+  // Ensure data is not undefined
+  const bookmarks = data || [];
+
   return (
     <>
       <NavbarDark navClass="defaultscroll sticky" navLight={true} />
@@ -66,7 +69,7 @@ const BookmarksList = () => {
         <div className="container">
           <h2 className="my-4">Bookmarked Jobs</h2>
           <div className="list-group">
-            {data.map((bookmark) => {
+            {bookmarks.map((bookmark) => {
               const createdAtDate = formatDateTime(bookmark.createdAt);
               const daysAgo = compareWithCurrentDate(createdAtDate);
 
@@ -77,15 +80,22 @@ const BookmarksList = () => {
                 >
                   <div className="row align-items-center">
                     <div className="col-md-1">
-                      <img
-                        src={bookmark.image}
-                        className="avatar avatar-small rounded shadow bg-white"
-                        alt=""
-                      />
+                      <Link to={`/employer-profile/${bookmark.enterprise.eid}`}>
+                        <img
+                          src={bookmark.enterprise.avatar_url}
+                          className="avatar avatar-small rounded shadow bg-white"
+                          alt=""
+                        />
+                      </Link>
                     </div>
                     <div className="col-md-10">
                       <div className="d-flex w-100 justify-content-between">
-                        <h5 className="mb-1">{bookmark.title}</h5>
+                        <Link
+                          to={`/job-detail-three/${bookmark.id}`}
+                          className="text text-dark"
+                        >
+                          <h5 className="mb-1">{bookmark.title}</h5>
+                        </Link>
                         <small>Posted: {daysAgo} days ago</small>
                       </div>
                       <p className="mb-1">{bookmark.description}</p>
