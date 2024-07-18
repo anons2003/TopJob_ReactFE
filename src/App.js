@@ -54,7 +54,7 @@ import BookmarksList from "./pages/bookmark-list";
 import CVAppliedList from "./pages/job-applied-list";
 import ReApply from "./pages/reapply-job";
 import EnterpriseProfileSetting from "./pages/enterprise/enterprise-profile-setting";
-import JobListTwo from './pages/job-list-two'
+import JobListTwo from "./pages/job-list-two";
 // admin
 import { productInputs, userInputs } from "./data/formSource";
 import { useContext } from "react";
@@ -90,8 +90,8 @@ function App() {
         <Route path="/job-categories" element={<JobCategories />} />
         <Route path="/job-grid-two" element={<JobGridTwo />} />
         <Route path="/job-list-one" element={<JobListOne />} />
-        <Route path='/job-list-by-enterprise' element={<JobListTwo />} />
-        <Route path='/job-list-by-enterprise/:eid' element={<JobListTwo />} />
+        <Route path="/job-list-by-enterprise" element={<JobListTwo />} />
+        <Route path="/job-list-by-enterprise/:eid" element={<JobListTwo />} />
         <Route
           path="/job-apply"
           element={<ProtectedRoute element={JobApply} />}
@@ -107,32 +107,18 @@ function App() {
         <Route path="/career" element={<ProtectedRoute element={Career} />} />
         <Route path="/job-detail-three" element={<JobDetailThree />} />
         <Route path="/job-detail-three/:id" element={<JobDetailThree />} />
-
         <Route
           path="/employers"
           element={<ProtectedRoute element={Employers} />}
         />
-        <Route path="/employer-profile"
-          element={<EmployerProfile />}
-
-        />
-        <Route
-          path="/employer-profile/:eid"
-          element={<EmployerProfile />}
-        />
-
+        <Route path="/employer-profile" element={<EmployerProfile />} />
+        <Route path="/employer-profile/:eid" element={<EmployerProfile />} />
         <Route
           path="/candidates"
           element={<ProtectedRoute element={Candidates} />}
         />
-        <Route
-          path="/candidate-profile"
-          element={<CandidateProfile />}
-        />
-        <Route
-          path="/candidate-profile/:id"
-          element={<CandidateProfile />}
-        />
+        <Route path="/candidate-profile" element={<CandidateProfile />} />
+        <Route path="/candidate-profile/:id" element={<CandidateProfile />} />
         <Route
           path="/candidate-profile-setting"
           element={<ProtectedRoute element={CandidateProfileSetting} />}
@@ -141,7 +127,6 @@ function App() {
           path="/enterprise-profile-setting"
           element={<ProtectedRoute element={EnterpriseProfileSetting} />}
         />
-
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/services" element={<Services />} />
         <Route path="/pricing" element={<Pricing />} />
@@ -159,7 +144,6 @@ function App() {
         <Route path="/lock-screen" element={<LockScreen />} />
         <Route path="/candidate-applied-list" element={<JobSeekersTable />} />
         "
-
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/contactus" element={<ContactUs />} />
@@ -169,10 +153,12 @@ function App() {
         <Route path="/maintenance" element={<Maintenance />} />
         <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/change-password" element={<CreatePassword />} />
-
-        <Route path='/create-template' element={<CreateTemplate />} />
-        <Route path='/template' element={<TemplateContainer />} />
-        <Route path="/resumeDetail/:templateID" element={<TemplateDesignPinDetail />} />
+        <Route path="/create-template" element={<CreateTemplate />} />
+        <Route path="/template" element={<TemplateContainer />} />
+        <Route
+          path="/resumeDetail/:templateID"
+          element={<TemplateDesignPinDetail />}
+        />
         <Route path="/resume/*" element={<CreateResume />} />
         {/* new */}
         <Route path="bookmark-list" element={<BookmarksList />} />
@@ -180,13 +166,12 @@ function App() {
         <Route path="reapply-job" element={<ReApply />} />
         <Route path="reapply-job/:jobId" element={<ReApply />} />
         {/* admin route */}
-
         {/* dashboard */}
-        <Route path="/admin/dashboard"
-          element={<ProtectedRoute element={AdminHome} />} />
-
+        <Route
+          path="/admin/dashboard"
+          element={<ProtectedRoute element={AdminHome} />}
+        />
         {/* <Route path="login" element={<Login />} /> */}
-
         {/* users */}
         <Route path="users">
           <Route path="job-seekers">
@@ -224,13 +209,11 @@ function App() {
             <Route path="view/:id" element={<SingleJobPostsModeration />} />
           </Route>
         </Route>
-
         {/* The article requires moderation */}
         <Route path="jobPostsModeration">
           <Route index element={<ListJobPostsModeration />} />
           <Route path=":productId" element={<SingleJobPostsModeration />} />
         </Route>
-
         {/* package services */}
         <Route path="packageServices">
           <Route index element={<ListPackageService />} />
@@ -240,16 +223,13 @@ function App() {
             element={<NewPackage inputs={userInputs} title="Add New Package" />}
           />
         </Route>
-
         <Route path="transactions">
           <Route index element={<ListTransaction />} />
         </Route>
-
         {/* profile */}
         <Route path="profileAdmin">
           <Route index element={<packageServices />} />
         </Route>
-
         <Route>
           <Route>
             <Route path="/users">
@@ -258,9 +238,7 @@ function App() {
             </Route>
           </Route>
         </Route>
-
         {/* blog */}
-
         <Route path="blogs">
           <Route index element={<ListBlog />} />
           <Route path="edit/:id" element={<ListEditBlog />} />
@@ -273,7 +251,6 @@ function App() {
         <Route path="/logout">
           <Route index element={<logout />} />
         </Route>
-
       </Routes>
     </>
   );

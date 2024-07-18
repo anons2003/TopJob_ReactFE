@@ -4,13 +4,21 @@ import { useParams } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/SidebarA';
 import Navbar from '../../components/navbar/Navbar';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
 import './singleJobPosts.scss';
 
-const SingleJobPosts = () => {
+const SingleJobPostsModeration = () => {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [disableButtons, setDisableButtons] = useState(false);
+  const [selectedRejectReasons, setSelectedRejectReasons] = useState([]);
+  const [otherReason, setOtherReason] = useState('');
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -28,6 +36,7 @@ const SingleJobPosts = () => {
   }, [id]);
 
   const handleApproval = async (approve) => {
+    setDisableButtons(true);
     try {
       const response = await axios.patch(`http://localhost:8080/jobs/approval/${id}`, { isActive: approve });
       if (response.status === 200) {
@@ -35,6 +44,37 @@ const SingleJobPosts = () => {
       }
     } catch (error) {
       console.error('Error updating job status:', error.message);
+    }
+  };
+
+  const handleCheckboxChange = (event) => {
+    const { value } = event.target;
+    if (selectedRejectReasons.includes(value)) {
+      setSelectedRejectReasons(selectedRejectReasons.filter((reason) => reason !== value));
+    } else {
+      setSelectedRejectReasons([...selectedRejectReasons, value]);
+    }
+  };
+
+  const handleReject = async () => {
+    if (selectedRejectReasons.length === 0) {
+      alert('Please select at least one reason for rejection.');
+      return;
+    }
+  
+    setDisableButtons(true);
+    try {
+      const rejectionData = {
+        rejectReasons: selectedRejectReasons,
+        otherReason: selectedRejectReasons.includes('Other') ? otherReason : '',
+      };
+  
+      const response = await axios.patch(`http://localhost:8080/jobs/rejection/${id}`, rejectionData);
+      if (response.status === 200) {
+        setJob((prevJob) => ({ ...prevJob, isActive: false }));
+      }
+    } catch (error) {
+      console.error('Error rejecting job:', error.message);
     }
   };
 
@@ -53,101 +93,89 @@ const SingleJobPosts = () => {
         <Navbar />
         <div className="top">
           <div className="left">
-            <h1 className="title">Information</h1>
-            <div className="item">
-              <img src={job.enterprise.avatar_url} alt="" className="itemImg" />
-              <div className="details">
-                <h1 className="itemTitle">{job.title}</h1>
-                <div className="detailItem">
-                  <span className="itemKey">Enterprise: </span>
-                  <span className="itemValue">{job.enterprise.enterprise_name}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Salary: </span>
-                  <span className="itemValue">{job.minSalary} - {job.maxSalary}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Location: </span>
-                  <span className="itemValue">{job.address}, {job.state}, {job.country}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Experience: </span>
-                  <span className="itemValue">{job.experience}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Created At: </span>
-                  <span className="itemValue">{job.createdAt}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Skills: </span>
-                  <span className="itemValue">{job.skills}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Qualifications: </span>
-                  <span className="itemValue">{job.qualifications}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Industry: </span>
-                  <span className="itemValue">{job.industry}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Company Story: </span>
-                  <span className="itemValue">{job.enterprise.companyStory}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Founder: </span>
-                  <span className="itemValue">{job.enterprise.founder}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Web URL: </span>
-                  <span className="itemValue"><a href={job.enterprise.web_url} target="_blank" rel="noopener noreferrer">{job.enterprise.web_url}</a></span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Phone: </span>
-                  <span className="itemValue">{job.enterprise.phone}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Headquarter: </span>
-                  <span className="itemValue">{job.enterprise.headquarter}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Founded: </span>
-                  <span className="itemValue">{job.enterprise.founded}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Resume URL: </span>
-                  <span className="itemValue"><a href={job.enterprise.resume_url} target="_blank" rel="noopener noreferrer">{job.enterprise.resume_url}</a></span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Enterprise User: </span>
-                  <span className="itemValue">{job.enterprise.user.user_name} ({job.enterprise.user.email})</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Active Status: </span>
-                  <span className="itemValue">{job.isActive ? 'Active' : 'Inactive'}</span>
-                </div>
+            <h1>Job Post Review</h1>
+            <div className="jobDetails">
+              <h2>{job.title}</h2>
+              <div className="jobInfo">
+                <p><strong>Enterprise:</strong> {job.enterprise.enterprise_name}</p>
+                <p><strong>Description:</strong> {job.description}</p>
+                <p><strong>Skills:</strong> {job.skills}</p>
+                <p><strong>Salary:</strong> {job.minSalary} - {job.maxSalary}</p>
+                <p><strong>Salary Type:</strong> {job.salaryType}</p>
+                <p><strong>Location:</strong> {job.address}, {job.state}, {job.country}</p>
+                <p><strong>Experience:</strong> {job.experience}</p>
+                <p><strong>Created At:</strong> {job.createdAt}</p>
+                <p><strong>Qualifications:</strong> {job.qualifications}</p>
+                <p><strong>Industry:</strong> {job.industry}</p>
+                <p><strong>Active Status:</strong> {job.isActive ? 'Active' : 'Inactive'}</p>
+              </div>
+              <h2>Contact Information</h2>
+              <div className="contactInfo">
+                <p><strong>Enterprise:</strong> {job.enterprise.enterprise_name}</p>
+                <p><strong>Enterprise User:</strong> {job.enterprise.user.user_name} ({job.enterprise.user.email})</p>
+                <p><strong>Founder:</strong> {job.enterprise.founder}</p>
+                <p><strong>Enterprise Email:</strong> {job.enterprise.user.email}</p>
+                <p><strong>Phone:</strong> {job.enterprise.phone}</p>
+                <p><strong>Headquarter:</strong> {job.enterprise.headquarter}</p>
+                <p><strong>Founded:</strong> {job.enterprise.founded}</p>
               </div>
             </div>
-            <div className="buttons">
+            <div className="actionButtons">
               <Button
                 variant="contained"
                 color="success"
-                className="approveButton"
                 onClick={() => handleApproval(true)}
-                disabled={job.isActive}
+                disabled={disableButtons}
               >
-                Approve
+                Approver
               </Button>
               <Button
                 variant="contained"
                 color="error"
-                className="rejectButton"
-                onClick={() => handleApproval(false)}
-                disabled={!job.isActive}
+                onClick={handleReject}
+                disabled={disableButtons}
               >
                 Reject
               </Button>
             </div>
+            <FormControl component="fieldset" className="rejectReasons">
+              <FormGroup>
+                <p>Please select reasons for rejection:</p>
+                <FormControlLabel
+                  control={<Checkbox checked={selectedRejectReasons.includes('Violating the law')} onChange={handleCheckboxChange} value="Violating the law" />}
+                  label="Violating the law"
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={selectedRejectReasons.includes('Inappropriate job description')} onChange={handleCheckboxChange} value="Inappropriate job description" />}
+                  label="Inappropriate job description"
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={selectedRejectReasons.includes('Incomplete information')} onChange={handleCheckboxChange} value="Incomplete information" />}
+                  label="Incomplete information"
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={selectedRejectReasons.includes('Cheat')} onChange={handleCheckboxChange} value="Cheat" />}
+                  label="Cheat"
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={selectedRejectReasons.includes('Limiting candidates\' benefits')} onChange={handleCheckboxChange} value="Limiting candidates' benefits" />}
+                  label="Limiting candidates' benefits"
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={selectedRejectReasons.includes('Other')} onChange={handleCheckboxChange} value="Other" />}
+                  label="Other"
+                />
+                {selectedRejectReasons.includes('Other') && (
+                  <TextField
+                    id="other-reason"
+                    label="Other reason"
+                    value={otherReason}
+                    onChange={(e) => setOtherReason(e.target.value)}
+                    fullWidth
+                  />
+                )}
+              </FormGroup>
+            </FormControl>
           </div>
         </div>
       </div>
@@ -155,4 +183,4 @@ const SingleJobPosts = () => {
   );
 };
 
-export default SingleJobPosts;
+export default SingleJobPostsModeration;
