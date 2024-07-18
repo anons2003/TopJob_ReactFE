@@ -9,6 +9,8 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import './singleJobPosts.scss';
 
 const SingleJobPostsModeration = () => {
@@ -19,6 +21,7 @@ const SingleJobPostsModeration = () => {
   const [disableButtons, setDisableButtons] = useState(false);
   const [selectedRejectReasons, setSelectedRejectReasons] = useState([]);
   const [otherReason, setOtherReason] = useState('');
+  const [successMessage, setSuccessMessage] = useState('Successfully');
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -41,9 +44,12 @@ const SingleJobPostsModeration = () => {
       const response = await axios.patch(`http://localhost:8080/jobs/approval/${id}`, { isActive: approve });
       if (response.status === 200) {
         setJob((prevJob) => ({ ...prevJob, isActive: approve }));
+        setSuccessMessage('Job approval successful.');
       }
     } catch (error) {
       console.error('Error updating job status:', error.message);
+    } finally {
+      setDisableButtons(false);
     }
   };
 
@@ -72,10 +78,17 @@ const SingleJobPostsModeration = () => {
       const response = await axios.patch(`http://localhost:8080/jobs/rejection/${id}`, rejectionData);
       if (response.status === 200) {
         setJob((prevJob) => ({ ...prevJob, isActive: false }));
+        setSuccessMessage('Job rejection successful.');
       }
     } catch (error) {
       console.error('Error rejecting job:', error.message);
+    } finally {
+      setDisableButtons(false);
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSuccessMessage('');
   };
 
   if (loading) {
@@ -127,7 +140,7 @@ const SingleJobPostsModeration = () => {
                 onClick={() => handleApproval(true)}
                 disabled={disableButtons}
               >
-                Approver
+                Approve
               </Button>
               <Button
                 variant="contained"
@@ -179,6 +192,11 @@ const SingleJobPostsModeration = () => {
           </div>
         </div>
       </div>
+      <Snackbar open={!!successMessage} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <MuiAlert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };
