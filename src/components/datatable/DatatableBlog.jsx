@@ -42,26 +42,23 @@ const DatatableBlog = () => {
         setFilteredBlogs(filtered);
     };
 
-
-    const handleToggleActive = async (id, currentIsActive) => {
+    const handleToggleActive = async (id) => {
         try {
-            const newIsActive = !currentIsActive;
-            const response = await axios.put(`http://localhost:8080/blogs/toggle-active/${id}`, { isActive: newIsActive });
+            const response = await axios.patch(`http://localhost:8080/blogs/toggle-active/${id}`);
             if (response.status === 200) {
                 const updatedBlogs = blogs.map(blog => {
                     if (blog.id === id) {
-                        return { ...blog, isActive: newIsActive };
+                        return { ...blog, isActive: !blog.isActive };
                     }
                     return blog;
                 });
                 setBlogs(updatedBlogs);
-                setFilteredBlogs(updatedBlogs); // Update filteredBlogs if needed
+                setFilteredBlogs(updatedBlogs);
             } else {
                 throw new Error('Failed to toggle active status');
             }
         } catch (error) {
             console.error('Error toggling active status:', error);
-
         }
     };
 
@@ -110,7 +107,7 @@ const DatatableBlog = () => {
                                     <Link to={`/blogs/edit/${params.row.id}`} className="viewButton">Edit</Link>
                                     <button
                                         className="lockButton"
-                                        onClick={() => handleToggleActive(params.row.id, params.row.isActive)}
+                                        onClick={() => handleToggleActive(params.row.id)}
                                     >
                                         {params.row.isActive ? 'Deactivate' : 'Activate'}
                                     </button>
