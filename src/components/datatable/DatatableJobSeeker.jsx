@@ -14,7 +14,7 @@ const DatatableJobSeeker = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:8080/jobSeeker/list');
+        const response = await fetch('http://localhost:8080/job-seekers/list');
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
