@@ -4,7 +4,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import NavbarDark from "../../components/navbarDark";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import api from '../../api/http';
 function JobSeekersTable() {
   const [category, setCategory] = useState("");
   const [jobType, setJobType] = useState("");
@@ -18,6 +18,9 @@ function JobSeekersTable() {
   const [doNotShowAgain, setDoNotShowAgain] = useState(false);
   const [selectedReasons, setSelectedReasons] = useState([]);
   const [otherReason, setOtherReason] = useState("");
+
+  const [jobTypes, setJobTypes] = useState([]);
+  const [jobCategories, setJobCategories] = useState([]);
 
   const reasons = [
     "Incomplete Application",
@@ -48,6 +51,26 @@ function JobSeekersTable() {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchFilterData = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        const jobTypesResponse = await api.get("/job-types", {
+          headers: { Authorization: token },
+        });
+        const jobCategoriesResponse = await api.get("/job-categories", {
+          headers: { Authorization: token },
+        });
+        setJobTypes(jobTypesResponse.data);
+        setJobCategories(jobCategoriesResponse.data);
+      } catch (error) {
+        toast.error("Error fetching job types and categories", error);
+      }
+    };
+
+    fetchFilterData();
   }, []);
 
   const handleCategoryChange = (event) => {
@@ -200,9 +223,11 @@ function JobSeekersTable() {
               onChange={handleCategoryChange}
             >
               <option value="">All</option>
-              <option value="Software Developer">Software Developer</option>
-              <option value="Data Scientist">Data Scientist</option>
-              {/* Add more categories as needed */}
+              {jobCategories.map((jobCategory) => (
+                <option key={jobCategory.jobCategoryId} value={jobCategory.jobCategoryName}>
+                  {jobCategory.jobCategoryName}
+                </option>
+              ))}
             </select>
           </div>
           <div className="col-md-3">
@@ -216,10 +241,11 @@ function JobSeekersTable() {
               onChange={handleJobTypeChange}
             >
               <option value="">All</option>
-              <option value="Full-time">Full-time</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Contract">Contract</option>
-              {/* Add more job types as needed */}
+              {jobTypes.map((jobType) => (
+                <option key={jobType.jobTypeId} value={jobType.jobTypeName}>
+                  {jobType.jobTypeName}
+                </option>
+              ))}
             </select>
           </div>
           <div className="col-md-3">

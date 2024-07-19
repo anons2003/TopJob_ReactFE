@@ -115,7 +115,7 @@ export default function Blogs() {
                                                 <ul className="list-unstyled text-muted small mb-2">
                                                     <li className="d-inline-flex align-items-center me-2">
                                                         <FiCalendar className="fea icon-ex-sm me-1 text-dark" />
-                                                        {item.createdAt}
+                                                        {item.createdDate}
                                                     </li>
                                                 </ul>
 

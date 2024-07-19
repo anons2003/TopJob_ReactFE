@@ -90,7 +90,7 @@ export default function NavbarDark() {
   };
 
   // Determine the link destination based on the role
-  const linkDestination = enterpriseRole ? "/Ehome" : "/"; 
+  const linkDestination = enterpriseRole ? "/Ehome" : "/";
   // Function to get avatar_url from user or enterprise
   const getAvatarUrl = () => {
     if (jobSeekerRole && jobseeker?.avatar_url) {
@@ -304,11 +304,11 @@ export default function NavbarDark() {
 
               <ul className="submenu">
                 {/* Job Categories */}
-                <li className={manu === "job-categories" ? "active" : ""}>
+                {/* <li className={manu === "job-categories" ? "active" : ""}>
                   <Link to="/job-categories" className="sub-menu-item">
                     Job Categories
                   </Link>
-                </li>
+                </li> */}
                 {/* Job Grids Two */}
                 <li className={manu === "job-grid-two" ? "active" : ""}>
                   <Link to="/job-grid-two" className="sub-menu-item">
@@ -333,7 +333,7 @@ export default function NavbarDark() {
                 </Link>
               </li>
             )}
-            
+
             {enterpriseRole && (
               <li className={manu === "job-post" ? "active" : ""}>
                 <Link to="/job-list-by-enterprise" className="sub-menu-item">
@@ -341,6 +341,11 @@ export default function NavbarDark() {
                 </Link>
               </li>
             )}
+            <li className={manu === "blogs" ? "active" : ""}>
+              <Link to="/employers" className="sub-menu-item">
+                Enterprise
+              </Link>
+            </li>
             <li
               className={`${[
                 "aboutus",

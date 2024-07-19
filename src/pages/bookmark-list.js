@@ -70,7 +70,7 @@ const BookmarksList = () => {
           <h2 className="my-4">Bookmarked Jobs</h2>
           <div className="list-group">
             {bookmarks.map((bookmark) => {
-              const createdAtDate = formatDateTime(bookmark.createdAt);
+              const createdAtDate = formatDateTime(bookmark.createdDate);
               const daysAgo = compareWithCurrentDate(createdAtDate);
 
               return (

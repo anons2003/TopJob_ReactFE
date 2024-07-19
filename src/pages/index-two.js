@@ -1,21 +1,117 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-import heroImg from "../assets/images/hero/bg.jpg"
-
+import useJobInfo from "../hook/useJobInfo";
+import useJobSeekerInfo from "../hook/useJobSeekerInfo";
+import heroImg from "../assets/images/hero/bg.jpg";
+import api from "../api/http";
 import Navbar from "../components/navbar";
 import FormSelect from "../components/search-global/formSelect-global";
 import AboutUs from "../components/aboutUs";
 import Companies from "../components/companies";
 import Footer from "../components/footer";
 import ScrollTop from "../components/scrollTop";
+import { useMutation } from "@tanstack/react-query";
+import { FiClock, FiMapPin, FiBookmark } from "../assets/icons/vander";
+import { toast } from "react-toastify";
 
-import { jobData } from "../data/data";
-import { FiClock, FiMapPin, FiBookmark } from "../assets/icons/vander"
+const formatDateTime = (dateArray) => {
+    if (!dateArray) return null;
+    const [year, month, day, hour, minute, second, nanosecond] = dateArray;
+    const millisecond = Math.floor(nanosecond / 1000000);
+    return new Date(year, month - 1, day, hour, minute, second, millisecond);
+};
+
+const compareWithCurrentDate = (date) => {
+    if (!date) return null;
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+    return diffDays;
+};
 
 export default function IndexTwo() {
+    const { data: jobData, isLoading, error } = useJobInfo();
+    const [filteredJobs, setFilteredJobs] = useState([]);
+    const { data: userData } = useJobSeekerInfo();
+    const jobSeeker = userData?.data;
 
-    
+    const [bookmarkChanges, setBookmarkChanges] = useState([]);
+    const [changedJobId, setChangedJobId] = useState(null);
+
+    const bookmarkMutation = useMutation({
+        mutationFn: (jobId) => {
+            const token = sessionStorage.getItem("token");
+            return api.post(
+                `/jobSeeker/job/${jobId}`,
+                {},
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            );
+        },
+    });
+
+    const unbookmarkMutation = useMutation({
+        mutationFn: (jobId) => {
+            const token = sessionStorage.getItem("token");
+            return api.delete(`/jobSeeker/job/${jobId}`, {
+                headers: {
+                    Authorization: token,
+                },
+            });
+        },
+    });
+
+    useEffect(() => {
+        if (jobData && Array.isArray(jobData.data)) {
+            setFilteredJobs(jobData.data);
+        }
+    }, [jobData]);
+
+    useEffect(() => {
+        if (bookmarkMutation.isSuccess || unbookmarkMutation.isSuccess) {
+            setBookmarkChanges((prevChanges) => [...prevChanges, changedJobId]);
+        }
+    }, [bookmarkMutation.isSuccess, unbookmarkMutation.isSuccess]);
+
+    useEffect(() => {
+        if (changedJobId !== null && jobSeeker && jobSeeker.jid) {
+            setFilteredJobs((prevJobs) =>
+                prevJobs.map((job) =>
+                    job.id === changedJobId
+                        ? {
+                            ...job,
+                            bookmarks: job.bookmarks.map((bookmark) =>
+                                bookmark.jobSeekers.jid === jobSeeker.jid
+                                    ? { ...bookmark, isBookmarked: !bookmark.isBookmarked }
+                                    : bookmark
+                            ),
+                        }
+                        : job
+                )
+            );
+        }
+    }, [bookmarkChanges, jobSeeker, changedJobId]);
+
+    const toggleBookmark = (jobId, isBookmarked) => {
+        const userType = sessionStorage.getItem("roleJobSeeker");
+        if (userType !== "Job-seeker") {
+            toast.error("You need to log in as a job seeker to bookmark jobs.");
+            return;
+        }
+        setChangedJobId(jobId);
+        if (isBookmarked === 0) {
+            bookmarkMutation.mutate(jobId);
+        } else {
+            unbookmarkMutation.mutate(jobId);
+        }
+    };
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error loading jobs</div>;
+
     return (
         <>
             <Navbar navClass="defaultscroll sticky" navLight={true} />
@@ -26,12 +122,12 @@ export default function IndexTwo() {
                         <div className="col-lg-10">
                             <div className="title-heading text-center">
                                 <h1 className="heading text-white fw-bold">Find & Hire Experts <br /> for any Job</h1>
-                                <p className="para-desc text-white-50 mx-auto mb-0">Find Jobs, Employment & Career Opportunities. Some of the companies we've helped recruit excellent applicants over the years.</p>
+                                <p className="para-desc text-white-50 mx-auto mb-0">Find Jobs, Employment. Some of the companies we've helped recruit excellent applicants over the years.</p>
 
                                 <div className="d-md-flex justify-content-between align-items-center bg-white shadow rounded p-2 mt-4">
                                     <FormSelect />
                                 </div>
-                                
+
                                 <div className="mt-2">
                                     <span className="text-white-50"><span className="text-white">Popular Searches :</span> Designer, Developer, Web, IOS, PHP Senior Engineer</span>
                                 </div>
@@ -74,12 +170,19 @@ export default function IndexTwo() {
                     </div>
 
                     <div className="row g-4 mt-0">
-                        {jobData.slice(0, 8).map((item, index) => {
+                        {filteredJobs.slice(0, 8).map((item, index) => {
+                            const createdAtDate = formatDateTime(item.createdDate);
+                            const daysAgo = compareWithCurrentDate(createdAtDate);
+                            const isBookmarked = jobSeeker
+                                ? item.bookmarks.some(
+                                    (bookmark) => bookmark.jobSeekers.jid === jobSeeker.jid && bookmark.isBookmarked === 1
+                                )
+                                : false;
                             return (
                                 <div className="col-12" key={index}>
                                     <div className="job-post job-post-list rounded shadow p-4 d-md-flex align-items-center justify-content-between position-relative">
                                         <div className="d-flex align-items-center w-310px">
-                                            <img src={item.image} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
+                                            <img src={item.enterprise.avatar_url || ""} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
 
                                             <div className="ms-3">
                                                 <Link to={`/job-detail-three/${item.id}`} className="h5 title text-dark">{item.title}</Link>
@@ -88,21 +191,26 @@ export default function IndexTwo() {
 
                                         <div className="d-flex align-items-center justify-content-between d-md-block mt-3 mt-md-0 w-100px">
                                             <span className="badge bg-soft-primary rounded-pill">{item.jobTime}</span>
-                                            <span className="text-muted d-flex align-items-center fw-medium mt-md-2"><FiClock className="fea icon-sm me-1 align-middle" />{item.posted} days ago</span>
+                                            <span className="text-muted d-flex align-items-center fw-medium mt-md-2"><FiClock className="fea icon-sm me-1 align-middle" />{daysAgo} days ago</span>
                                         </div>
 
                                         <div className="d-flex align-items-center justify-content-between d-md-block mt-2 mt-md-0 w-130px">
-                                            <span className="text-muted d-flex align-items-center"><FiMapPin className="fea icon-sm me-1 align-middle" />{item.country}</span>
-                                            <span className="d-flex fw-medium mt-md-2">{item.salary}/mo</span>
+                                            <span className="text-muted d-flex align-items-center"><FiMapPin className="fea icon-sm me-1 align-middle" />{item.state}</span>
+                                            <span className="d-flex fw-medium mt-md-2">{item.minSalary} - {item.maxSalary}/mo</span>
                                         </div>
 
                                         <div className="mt-3 mt-md-0">
-                                            <Link to="" className="btn btn-sm btn-icon btn-pills btn-soft-primary bookmark"><FiBookmark className="icons" /></Link>
+                                            <button
+                                                className={`btn btn-sm btn-icon btn-pills ${isBookmarked ? "btn-primary" : "btn-soft-primary"} bookmark`}
+                                                onClick={() => toggleBookmark(item.id, isBookmarked ? 1 : 0)}
+                                            >
+                                                <FiBookmark className="icons" />
+                                            </button>
                                             <Link to={`/job-detail-three/${item.id}`} className="btn btn-sm btn-primary w-full ms-md-1">Apply Now</Link>
                                         </div>
                                     </div>
                                 </div>
-                            )
+                            );
                         })}
 
                         <div className="col-12">
@@ -120,5 +228,5 @@ export default function IndexTwo() {
             <Footer />
             <ScrollTop />
         </>
-    )
+    );
 }

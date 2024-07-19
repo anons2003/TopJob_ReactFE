@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from "react-router-dom";
 
 import bg1 from "../assets/images/bg2.png"
 import hero1 from '../assets/images/hero1.png'
@@ -18,12 +18,58 @@ import Footer from '../components/footer';
 import Companies from '../components/companies';
 import AboutTwo from '../components/aboutTwo';
 import ScrollTop from '../components/scrollTop';
-
-import { jobData } from "../data/data";
-
 import { FiSearch, FiClock, FiMapPin } from "../assets/icons/vander"
+import useEnterpriseInfo from "../hook/useEnterpriseInfo";
+import useEnterpriseJobs from "../hook/useEnterpriseJobs";
+import FormSelect from "../components/search-global/formSelect-global";
+const formatDateTime = (dateArray) => {
+    if (!dateArray) return null;
+    const [year, month, day, hour, minute, second, nanosecond] = dateArray;
+    const millisecond = Math.floor(nanosecond / 1000000);
+    return new Date(year, month - 1, day, hour, minute, second, millisecond);
+};
+
+const compareWithCurrentDate = (date) => {
+    if (!date) return null;
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+    return diffDays;
+};
 
 export default function Index() {
+    const { eid } = useParams(); // Lấy eid từ URL
+    const enterpriseRole = sessionStorage.getItem("roleEnterprise");
+    const { data: enterpriseData } = useEnterpriseInfo(eid);
+    const enterprise = enterpriseData?.data;
+    const { jobData: jobs } = useEnterpriseJobs(enterprise?.eid);
+
+    // const { data: jobData} = useJobInfo();
+    console.log("jobs", jobs);
+    console.log("eid", enterprise?.eid);
+    console.log("enterprise id from URL:", eid);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredJobs, setFilteredJobs] = useState([]);
+
+
+
+    useEffect(() => {
+        if (searchTerm === '') {
+            setFilteredJobs([]);
+        } else {
+            const filtered = jobs?.filter(job =>
+                job.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                job.enterprise?.enterprise_name?.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredJobs(filtered);
+        }
+    }, [searchTerm, jobs]);
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
     return (
         <>
             <Navbar navClass="defaultscroll sticky" />
@@ -34,18 +80,49 @@ export default function Index() {
                         <div className="col-md-6">
                             <div className="title-heading">
                                 <h1 className="heading text-white fw-bold">Get hired <br /> by the popular <br /> candidates.</h1>
-                                <p className="para-desc text-white-50 mb-0">Find Jobs, Employment & Career Opportunities. Some of the companies we've helped recruit excellent applicants over the years.</p>
+                                <p className="para-desc text-white-50 mb-0">Find Jobs, Employment. Checking Applied</p>
+                                {/* search golbal */}
+                                {/* <div className="d-md-flex justify-content-between align-items-center bg-white shadow rounded p-2 mt-4"> */}
+                                {/* <FormSelect /> */}
 
+                                {/* search inside */}
                                 <div className="text-center subscribe-form mt-4">
                                     <form style={{ maxWidth: '800px' }}>
                                         <div className="mb-0">
                                             <div className="position-relative">
                                                 <FiSearch className="fea icon-20 position-absolute top-50 start-0 translate-middle-y ms-3" />
-                                                <input type="text" id="help" name="name" className="shadow rounded-pill bg-white ps-5" required="" placeholder="Search jobs & candidates ..." />
+                                                <input
+                                                    type="text"
+                                                    id="help"
+                                                    name="name"
+                                                    className="shadow rounded-pill bg-white ps-5"
+                                                    required
+                                                    placeholder="Search Your Jobs"
+                                                    value={searchTerm}
+                                                    onChange={handleSearchChange}
+                                                />
                                             </div>
                                             <button type="submit" className="btn btn-primary btn-pills">Search</button>
                                         </div>
                                     </form>
+                                    {searchTerm && (
+                                        <div className="search-results mt-3 bg-white rounded shadow p-3">
+                                            {filteredJobs.length > 0 ? (
+                                                <ul className="list-group">
+                                                    {filteredJobs.map((job, index) => (
+                                                        <li key={index} className="list-group-item">
+                                                            <Link to={`/job-detail-three/${job.id}`} className="text-dark">
+                                                                {job.title} - {job.enterprise?.enterprise_name}
+                                                            </Link>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p className="text-muted">No matching jobs found</p>
+                                            )}
+                                        </div>
+                                    )}
+                                  
                                 </div>
                             </div>
                         </div>
@@ -107,17 +184,19 @@ export default function Index() {
                     </div>
 
                     <div className="row g-4 mt-0">
-                        {jobData.slice(0, 6).map((item, index) => {
+                        {jobs?.slice(0, 6).map((item, index) => {
+                            const createdAtDate = formatDateTime(item.createdDate);
+                            const daysAgo = compareWithCurrentDate(createdAtDate);
                             return (
                                 <div className="col-lg-4 col-md-6 col-12" key={index}>
                                     <div className="job-post rounded shadow p-4">
                                         <div className="d-flex align-items-center justify-content-between">
                                             <div className="d-flex align-items-center">
-                                                <img src={item.image} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
+                                                <img src={item.enterprise.avatar_url} className="avatar avatar-small rounded shadow p-3 bg-white" alt="" />
 
                                                 <div className="ms-3">
                                                     <Link to="/employer-profile" className="h5 company text-dark">{item.name}</Link>
-                                                    <span className="text-muted d-flex align-items-center small mt-2"><FiClock className="fea icon-sm me-1" /> {item.posted} days ago</span>
+                                                    <span className="text-muted d-flex align-items-center small mt-2"><FiClock className="fea icon-sm me-1" /> Poster {daysAgo} days ago</span>
                                                 </div>
                                             </div>
 
@@ -127,14 +206,14 @@ export default function Index() {
                                         <div className="mt-4">
                                             <Link to={`/job-detail-three/${item.id}`} className="text-dark title h5">{item.title}</Link>
 
-                                            <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1" />{item.country}</span>
+                                            <span className="text-muted d-flex align-items-center mt-2"><FiMapPin className="fea icon-sm me-1" />{item.state}</span>
 
                                             <div className="progress-box mt-3">
                                                 <div className="progress mb-2">
                                                     <div className="progress-bar position-relative bg-primary" style={{ width: '50%' }}></div>
                                                 </div>
 
-                                                <span className="text-dark">{item.applied} applied of <span className="text-muted">{item.vacancy} vacancy</span></span>
+                                                <span className="text-dark">{item.applied} applied of <span className="text-muted">{item.minSalary}-{item.maxSalary} vacancy</span></span>
                                             </div>
                                         </div>
                                     </div>
@@ -144,7 +223,7 @@ export default function Index() {
 
                         <div className="col-12 d-md-none d-block">
                             <div className="text-center">
-                                <Link to="/job-grid-one" className="btn btn-link primary text-muted">See More Jobs <i className="mdi mdi-arrow-right"></i></Link>
+                                <Link to="/job-list-by-enterprise" className="btn btn-link primary text-muted">See More Jobs <i className="mdi mdi-arrow-right"></i></Link>
                             </div>
                         </div>
                     </div>
@@ -152,9 +231,9 @@ export default function Index() {
 
                 <AboutTwo />
 
-                <div className="container mt-100 mt-60">
+                {/* <div className="container mt-100 mt-60">
                     <Companies />
-                </div>
+                </div> */}
 
             </section>
             <Footer />

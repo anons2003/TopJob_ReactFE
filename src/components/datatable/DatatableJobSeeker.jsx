@@ -6,22 +6,19 @@ import "./datatable.scss";
 
 const DatatableJobSeeker = () => {
   const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:8080/job-seekers/list');
+        const response = await fetch('http://localhost:8080/jobSeeker/list');
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
         const data = await response.json();
         const transformedData = transformData(data);
         setUsers(transformedData);
-        setFilteredUsers(transformedData); // Initialize filteredUsers
       } catch (error) {
         setError(error.message);
       } finally {
@@ -31,14 +28,7 @@ const DatatableJobSeeker = () => {
 
     fetchUsers();
   }, []);
-
-  useEffect(() => {
-    const filtered = users.filter(user =>
-      user.user_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredUsers(filtered);
-  }, [searchTerm, users]);
-
+  console.log(users);
   const transformData = (data) => {
     return data.map(item => ({
       id: item.jid,  // Assuming 'jid' is the job seeker ID
@@ -48,6 +38,7 @@ const DatatableJobSeeker = () => {
       role: item.user.roleType ? item.user.roleType.roleTypeName : 'Unknown Role',
       is_active: item.user.isActive === 1 ? "Active" : "Inactive", // Check if isActive is 1 or 0
       avatarUrl: `https://avatars.dicebear.com/api/initials/${item.user.user_name}.svg`
+      // avatar_url: item.avatar_url
     }));
   };
 
@@ -69,6 +60,7 @@ const DatatableJobSeeker = () => {
       );
     } catch (error) {
       console.error('Error toggling active status:', error.message);
+      // Optionally, you can handle error states here, such as displaying an error message.
     }
   };
 
@@ -80,14 +72,6 @@ const DatatableJobSeeker = () => {
           Add New
         </Link>
       </div>
-      <div className="search">
-        <input
-          type="text"
-          placeholder="Search by username"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -95,7 +79,7 @@ const DatatableJobSeeker = () => {
       ) : (
         <DataGrid
           className="datagrid"
-          rows={filteredUsers}
+          rows={users}
           columns={[
             ...userColumns,
             {

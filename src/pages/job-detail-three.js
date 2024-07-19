@@ -183,21 +183,7 @@ export default function JobDetailThree() {
                             <div className="mt-4">
                                 <h5>Job Description: </h5>
                                 <p className="text-muted">
-                                    One disadvantage of Lorum Ipsum is that in Latin certain
-                                    letters appear more frequently than others - which creates a
-                                    distinct visual impression. Moreover, in Latin only words at
-                                    the beginning of sentences are capitalized.
-                                </p>
-                                <p className="text-muted">
-                                    This means that Lorem Ipsum cannot accurately represent, for
-                                    example, German, in which all nouns are capitalized. Thus,
-                                    Lorem Ipsum has only limited suitability as a visual filler
-                                    for German texts. If the fill text is intended to illustrate
-                                    the characteristics of different typefaces.
-                                </p>
-                                <p className="text-muted">
-                                    It sometimes makes sense to select texts containing the
-                                    various letters and symbols specific to the output language.
+                                    {data?.description}
                                 </p>
 
                                 <h5 className="mt-4">Responsibilities and Duties: </h5>

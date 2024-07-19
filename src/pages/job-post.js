@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import bg1 from '../assets/images/hero/bg.jpg';
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
@@ -11,7 +11,7 @@ export default function JobPost() {
     //get enterpirse id
     const { data: enterpriseData } = useEnterpriseInfo();
     const enterpriseReponse = enterpriseData?.data;
-
+    const navigate = useNavigate();
     console.log(enterpriseReponse);
     const [formData, setFormData] = useState({
         title: "",
@@ -57,7 +57,12 @@ export default function JobPost() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        // Kiểm tra thông tin công ty trước khi đăng tin tuyển dụng
+        if (!enterpriseReponse?.enterprise_name || !enterpriseReponse?.founder || !enterpriseReponse?.headquarter ||  !enterpriseReponse?.state || !enterpriseReponse?.founded || !enterpriseReponse?.web_url || !enterpriseReponse?.phone || !enterpriseReponse?.employees) {
+            toast.error("Please complete your enterprise profile information before posting a job.");
+            navigate.push('/enterprise-profile-setting'); // Điều hướng tới trang cài đặt thông tin công ty
+            return;
+        }
         const payload = {
             ...formData,
             jobTypeEntity: { jobTypeId: parseInt(formData.jobType, 10) },

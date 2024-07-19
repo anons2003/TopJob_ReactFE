@@ -250,14 +250,14 @@ export default function CandidateProfile() {
                   <div className="p-3 rounded shadow bg-white mt-2">
                     <div className="d-flex align-items-center mb-2">
                       <FiFileText className="fea icon-md" />
-                      <h6 className="mb-0 ms-2">user?.resume_url</h6>
+                      <h6 className="mb-0 ms-2">Download Resume Now</h6>
                     </div>
 
                     <button
                       className="btn btn-primary w-100"
                       onClick={handleDownload}
                     >
-                      <FiDownload className="fea icon-sm me-1" /> Download CV
+                      <FiDownload className="fea icon-sm me-1" /> Download Resume
                     </button>
                   </div>
                 </div>

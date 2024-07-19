@@ -317,11 +317,11 @@ export default function Navbar({ navClass, navLight }) {
               <span className="menu-arrow"></span>
               <ul className="submenu">
                 {/* Job Categories */}
-                <li className={manu === "job-categories" ? "active" : ""}>
+                {/* <li className={manu === "job-categories" ? "active" : ""}>
                   <Link to="/job-categories" className="sub-menu-item">
                     Job Categories
                   </Link>
-                </li>
+                </li> */}
                 {/* Job Grids Two */}
                 <li className={manu === "job-grid-two" ? "active" : ""}>
                   <Link to="/job-grid-two" className="sub-menu-item">
@@ -351,6 +351,12 @@ export default function Navbar({ navClass, navLight }) {
                 </Link>
               </li>
             )}
+
+            <li className={manu === "blogs" ? "active" : ""}>
+              <Link to="/employers" className="sub-menu-item">
+                Enterprise
+              </Link>
+            </li>
             <li
               className={`${[
                 "aboutus",

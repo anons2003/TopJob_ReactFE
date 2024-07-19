@@ -1,20 +1,20 @@
 import "./sidebarA.scss";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+
 import StoreIcon from "@mui/icons-material/Store";
 import ExtensionIcon from '@mui/icons-material/Extension';
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import AnalyticsIcon from '@mui/icons-material/Analytics';
+
 import { Link, useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useState } from "react";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import GroupIcon from '@mui/icons-material/Group';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+
 const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
   const [manageUsersOpen, setManageUsersOpen] = useState(false);

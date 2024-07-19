@@ -61,14 +61,14 @@ const SingleJobPostsModeration = () => {
       alert('Please select at least one reason for rejection.');
       return;
     }
-  
+
     setDisableButtons(true);
     try {
       const rejectionData = {
         rejectReasons: selectedRejectReasons,
         otherReason: selectedRejectReasons.includes('Other') ? otherReason : '',
       };
-  
+
       const response = await axios.patch(`http://localhost:8080/jobs/rejection/${id}`, rejectionData);
       if (response.status === 200) {
         setJob((prevJob) => ({ ...prevJob, isActive: false }));

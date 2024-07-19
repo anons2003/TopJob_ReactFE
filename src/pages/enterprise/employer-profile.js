@@ -40,46 +40,6 @@ export default function EmployerProfile() {
     console.log("eid", enterprise?.eid);
     console.log("enterprise id from URL:", eid);
 
-    const [formData, setFormData] = useState({
-        enterprise_name: '',
-        city: '',
-        state: '',
-        founded: '',
-        founder: '',
-        headquarter: '',
-        employees: '',
-        web_url: '',
-        avatar_url: ''
-    });
-
-    useEffect(() => {
-        if (enterpriseData) {
-            const {
-                enterprise_name,
-                city,
-                state,
-                founded,
-                founder,
-                headquarter,
-                employees,
-                web_url,
-                avatar_url
-            } = enterpriseData.data;
-
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                enterprise_name,
-                city,
-                state,
-                founded,
-                founder,
-                headquarter,
-                employees,
-                web_url,
-                avatar_url
-            }));
-        }
-    }, [enterpriseData]);
 
 
 
@@ -120,8 +80,7 @@ export default function EmployerProfile() {
                                             </div>
                                         ) : (
                                             <div className="mt-4 mt-md-0">
-                                                <Link to="/" className="btn btn-sm btn-primary me-1">Follow</Link>
-                                                    <Link className="btn btn-sm btn-soft-primary">See Enterprise Job</Link>
+                                                <Link to={`/job-list-guest/${eid}`} className="btn btn-sm btn-soft-primary">See Enterprise Job</Link>
                                             </div>
                                         )}
                                     </div>
@@ -136,8 +95,8 @@ export default function EmployerProfile() {
                         <div className="col-lg-8 col-md-7 col-12">
                             <h4 className="mb-4">Company Story:</h4>
 
-                            <p className="text-muted">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed.</p>
-                            <p className="text-muted">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage.</p>
+                            <p className="text-muted">{enterprise?.companyStory}</p>
+
 
                             <div className="row g-4">
                                 <div className="col-12"><img src={image1} className="rounded shadow img-fluid" alt="" /></div>
@@ -149,13 +108,13 @@ export default function EmployerProfile() {
 
                             <div className="row g-4">
                                 {jobs?.slice(0, 4).map((item, index) => {
-                                    const createdAtDate = formatDateTime(item.createdAt);
+                                    const createdAtDate = formatDateTime(item.createdDate);
                                     const daysAgo = compareWithCurrentDate(createdAtDate);
                                     return (
                                         <div className="col-lg-6 col-12" key={index} >
                                             <div className="job-post rounded shadow bg-white">
                                                 <div className="p-4">
-                                                    <Link to={`/job-detail-one/${item.id}`} className="text-dark title h5">{item.title}</Link>
+                                                    <Link to={`/job-detail-three/${item.id}`} className="text-dark title h5">{item.title}</Link>
                                                     <p className="text-muted d-flex align-items-center small mt-3">
                                                         <FiClock className="fea icon-sm text-primary me-1" />
                                                         Posted {daysAgo} days ago
@@ -216,11 +175,11 @@ export default function EmployerProfile() {
                                         <span className="text-muted fw-medium">Social:</span>
 
                                         <ul className="list-unstyled social-icon text-sm-end mb-0">
-                                            <li className="list-inline-item"><Link to="https://dribbble.com/shreethemes" target="_blank" className="rounded"><FiDribbble className="fea icon-sm align-middle" /></Link></li>
-                                            <li className="list-inline-item"><Link to="http://linkedin.com/company/shreethemes" target="_blank" className="rounded"><FiLinkedin className="fea icon-sm align-middle" /></Link></li>
-                                            <li className="list-inline-item"><Link to="https://www.facebook.com/shreethemes" target="_blank" className="rounded"><FiFacebook className="fea icon-sm align-middle" /></Link></li>
-                                            <li className="list-inline-item"><Link to="https://www.instagram.com/shreethemes/" target="_blank" className="rounded"><FiInstagram className="fea icon-sm align-middle" /></Link></li>
-                                            <li className="list-inline-item"><Link to="https://twitter.com/shreethemes" target="_blank" className="rounded"><FiTwitter className="fea icon-sm align-middle" /></Link></li>
+                                            <li className="list-inline-item"><Link to="https://dribbble.com/" target="_blank" className="rounded"><FiDribbble className="fea icon-sm align-middle" /></Link></li>
+                                            <li className="list-inline-item"><Link to="https://www.linkedin.com/" target="_blank" className="rounded"><FiLinkedin className="fea icon-sm align-middle" /></Link></li>
+                                            <li className="list-inline-item"><Link to="https://www.facebook.com/" target="_blank" className="rounded"><FiFacebook className="fea icon-sm align-middle" /></Link></li>
+                                            <li className="list-inline-item"><Link to="https://www.instagram.com/" target="_blank" className="rounded"><FiInstagram className="fea icon-sm align-middle" /></Link></li>
+                                            <li className="list-inline-item"><Link to="https://twitter.com/" target="_blank" className="rounded"><FiTwitter className="fea icon-sm align-middle" /></Link></li>
                                         </ul>
                                     </div>
                                 </div>

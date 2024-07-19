@@ -14,8 +14,6 @@ import NotificationSettings from "../../components/notification-setting/notifica
 import RichTextEditor from "../../components/richtexteditor/RichTextEditor";
 
 export default function EnterpriseProfileSetting() {
-  //   let [file, setFile] = useState(image1);
-
   const queryClient = useQueryClient();
   const token = sessionStorage.getItem("token");
   const { data: enterpriseData } = useEnterpriseInfo();
@@ -30,9 +28,9 @@ export default function EnterpriseProfileSetting() {
   const [webUrl, setWebUrl] = useState("");
   const [companyStory, setCompanyStory] = useState("");
   const [phone, setPhone] = useState("");
-  const [errors, setErrors] = useState({}); // Define errors state
+  const [errors, setErrors] = useState({});
   const [employees, setEmployees] = useState("");
-  console.log(enterpriseName); // Check if it's undefined
+
   const updateUserInfoMutation = useMutation({
     mutationFn: (body) => {
       return api.patch("/enterprises/update-info", body, {
@@ -45,94 +43,61 @@ export default function EnterpriseProfileSetting() {
 
   useEffect(() => {
     if (user) {
-      setEnterpriseName(user.enterprise_name);
-      setFounder(user.founder);
-      setHeadquarter(user.headquarter);
-      setSelectedState(user.state);
-      setCompanyStory(user.companyStory);
-      setCity(user.city);
-      setFounded(user.founded);
-      setWebUrl(user.web_url);
-      setPhone(user.phone);
-      setEmployees(user.employees);
+      console.log("User data loaded:", user);
+      setEnterpriseName(user.enterprise_name || "");
+      setFounder(user.founder || "");
+      setHeadquarter(user.headquarter || "");
+      setSelectedState(user.state || "");
+      setCompanyStory(user.companyStory || "");
+      setCity(user.city || "");
+      setFounded(user.founded || "");
+      setWebUrl(user.web_url || "");
+      setPhone(user.phone || "");
+      setEmployees(user.employees || "");
     }
   }, [user]);
 
   const handleInfoSubmit = (e) => {
     e.preventDefault();
-    updateUserInfo(); // Trigger user info update
-    // if (resume) {
-    //   handleUploadResume();
-    // }
+    console.log("Form submitted with:", {
+      enterpriseName,
+      founder,
+      headquarter,
+      selectedState,
+      founded,
+      webUrl,
+      companyStory,
+      phone,
+      employees,
+    });
+    updateUserInfo();
   };
 
   function updateUserInfo() {
-    if (validateForm()) {
-      const body = {
-        state: selectedState,
-        enterprise_name: enterpriseName,
-        founder: founder,
-        founded: founded,
-        headquarter: headquarter,
-        companyStory: companyStory,
-        city: city,
-        web_url: webUrl,
-        employees: employees,
-      };
+    const body = {
+      state: selectedState,
+      enterprise_name: enterpriseName,
+      founder: founder,
+      founded: founded,
+      headquarter: headquarter,
+      companyStory: companyStory,
+      city: city,
+      web_url: webUrl,
+      employees: employees,
+    };
 
-      updateUserInfoMutation.mutate(body, {
-        onSuccess: (data) => {
-          notification.success({ message: "User info updated successfully:" });
-          // Optionally, you can perform any other actions here after updating the user info
-        },
-        onError: (error) => {
-          notification.error({ message: "Error updating user info:" });
-          // Optionally, handle the error or show a notification to the user
-        },
-      });
-    }
-  }
+    console.log("Sending update request with body:", body);
 
-  const firstNameRegex = /^[a-zA-Z\u00C0-\u017F\s]+$/u;
-
-  const lastNameRegex = /^[a-zA-Z]/u;
-  function validateForm() {
-    let valid = true;
-    const errorsCopy = { ...errors };
-
-    // Validate First Name using regex
-    if (!firstNameRegex.test(enterpriseName.trim())) {
-      errorsCopy.firstName = "Invalid First Name";
-      valid = false;
-      notification.error({ message: "Please enter a valid first name!" });
-    }
-
-    // Validate Last Name using regex
-    if (!lastNameRegex.test(founder.trim())) {
-      errorsCopy.lastName = "Invalid Last Name";
-      valid = false;
-      notification.error({ message: "Please enter a valid last name!" });
-    }
-
-    // // Validate Email
-    // if (!webUrl.trim()) {
-    //   errorsCopy.email = "Url is Required";
-    //   valid = false;
-    //   notification.error({ message: "Please enter url address!" });
-    // } else {
-    //   const emailRegex = /^\S+@\S+\.\S+$/;
-    //   if (!emailRegex.test(webUrl)) {
-    //     errorsCopy.email = "Invalid Email Format";
-    //     valid = false;
-    //     notification.error({ message: "Please enter a valid email address!" });
-    //   } else {
-    //     errorsCopy.email = "";
-    //   }
-    // }
-
-    setErrors(errorsCopy);
-
-    return valid;
+    updateUserInfoMutation.mutate(body, {
+      onSuccess: (data) => {
+        console.log("Update Success:", data);
+        notification.success({ message: "User info updated successfully:" });
+      },
+      onError: (error) => {
+        console.error("Update Error:", error);
+        notification.error({ message: "Error updating user info:" });
+      },
+    });
   }
   //Contact Info Update
   const updateContactInfo = useMutation({
@@ -147,65 +112,25 @@ export default function EnterpriseProfileSetting() {
 
   const handleSubmitContactInfo = (e) => {
     e.preventDefault();
-    if (validateContactForm()) {
-      const body = {
-        phone: phone,
-        web_url: webUrl,
-      };
+    const body = {
+      phone: phone,
+      web_url: webUrl,
+    };
 
-      updateContactInfo.mutate(body, {
-        onSuccess: (data) => {
-          notification.success({
-            message: "Contact info updated successfully:",
-          });
-        },
-        onError: (error) => {
-          notification.error({ message: "Error updating contact info:" });
-        },
-      });
-    }
+    updateContactInfo.mutate(body, {
+      onSuccess: (data) => {
+        notification.success({
+          message: "Contact info updated successfully:",
+        });
+      },
+      onError: (error) => {
+        notification.error({ message: "Error updating contact info:" });
+      },
+    });
+
   };
 
-  function validateContactForm() {
-    let valid = true;
-    const errorsCopy = {};
 
-    // Validate Phone Number
-    if (phone.trim()) {
-      // Check if the phone number is in a valid format
-      const phoneRegex = /^[0-9]{10}$/; // Assuming a 10-digit phone number format
-      if (!phoneRegex.test(phone)) {
-        errorsCopy.phone = "Invalid Phone Number Format";
-        valid = false;
-        notification.error({ message: "Please enter correct phone number" });
-      } else {
-        errorsCopy.phone = "";
-      }
-    } else {
-      errorsCopy.phone = "Phone Number is Required";
-      valid = false;
-    }
-
-    // Validate Website URL
-    if (webUrl.trim()) {
-      // Check if the website URL is in a valid format
-      const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
-      if (!urlRegex.test(webUrl)) {
-        errorsCopy.webUrl = "Invalid Website URL Format";
-        valid = false;
-      } else {
-        errorsCopy.webUrl = "";
-      }
-    } else {
-      errorsCopy.webUrl = "Website URL is Required";
-      valid = false;
-    }
-
-    // Set the updated errors object to the state
-    setErrors(errorsCopy);
-
-    return valid;
-  }
   //  update password
 
   // Function to handle form submission
@@ -319,11 +244,11 @@ export default function EnterpriseProfileSetting() {
       setDeletionStatus("Error deleting user. Please try again.");
     }
   };
-  //
-  //Upload CV
+
+  //Upload avatar
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState(null);
-  // // const [resume, setResume] = useState(null);
+
 
   const uploadAvatar = useMutation({
     mutationFn: (formData) => {
@@ -343,36 +268,6 @@ export default function EnterpriseProfileSetting() {
     },
   });
 
-  // const uploadResume = useMutation({
-  //   mutationFn: (formData) => {
-  //     return api.patch("/enterprises/update-resume", formData, {
-  //       headers: {
-  //         "content-type": "multipart/form-data",
-  //         Authorization: token,
-  //       },
-  //     });
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries("ENTERPRISE_PROFILE");
-  //     notification.success({ message: "Upload resume successfully" });
-  //   },
-  //   onError: () => {
-  //     notification.error({ message: "Upload resume failed" });
-  //   },
-  // });
-
-  // Function to handle file selection
-  // const handleFileChange = (e) => {
-  //   setResume(e.target.files[0]); // Update state with the selected resume file
-  // };
-
-  // Function to handle form submission or other action to upload resume
-  // const handleUploadResume = () => {
-  //   const formData = new FormData();
-  //   formData.append("resume", resume);
-  //   console.log("FormData:", formData);
-  //   uploadResume.mutate(formData);
-  // };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -396,43 +291,8 @@ export default function EnterpriseProfileSetting() {
     setIsModalOpen(false);
   };
 
-  const changeNameMutation = useMutation({
-    mutationFn: (body) => {
-      return api.patch("/enterprises/update-profile", body, {
-        headers: {
-          Authorization: token,
-        },
-      });
-    },
-  });
 
-
-  const [isModalNameOpen, setIsModalNameOpen] = useState(false);
-  const [name, setName] = useState(user?.enterprise_name);
-
-  useEffect(() => {
-    setName(user?.enterprise_name);
-    // setAbout(user?.about);
-  }, [user]);
-
-  const handleNameOk = () => {
-    const body = { puser_name: name };
-    changeNameMutation.mutate(body, {
-      onSuccess() {
-        queryClient.invalidateQueries("ENTERPRISE_PROFILE");
-        notification.success({ message: "Edit name successfully" });
-      },
-      onError() {
-        notification.error({ message: "Edit name failed, Try again later" });
-      },
-    });
-    setIsModalNameOpen(false);
-  };
-
-  const handleNameCancel = () => {
-    setIsModalNameOpen(false);
-  };
-
+  console.log('data from backend',user)
   return (
     <>
       <>
@@ -519,18 +379,13 @@ export default function EnterpriseProfileSetting() {
                           </label>
                           <input
                             name="name"
-                            id="enterpriseName"
+                            id="EnterpriseName"
                             type="text"
-                            className={`form-control ${errors.firstName} ? "is-invalid" :""`}
-                            placeholder="First Name :"
+                            className="form-control"
+                            placeholder="Enterprise Name :"
                             value={enterpriseName}
                             onChange={(e) => setEnterpriseName(e.target.value)}
                           />
-                          {errors.firstName && (
-                            <div className="invalid-feedback">
-                              {errors.firstName}
-                            </div>
-                          )}
                         </div>
                       </div>
 
@@ -543,16 +398,12 @@ export default function EnterpriseProfileSetting() {
                             name="name"
                             id="Founder"
                             type="text"
-                            className={`form-control ${errors.lastName} ? "is-invalid" :""`}
-                            placeholder="Last Name :"
+                            className="form-control"
+                            placeholder="Founder :"
                             value={founder}
                             onChange={(e) => setFounder(e.target.value)}
                           />
-                          {errors.lastName && (
-                            <div className="invalid-feedback">
-                              {errors.lastName}
-                            </div>
-                          )}
+
                         </div>
                       </div>
 
@@ -610,7 +461,7 @@ export default function EnterpriseProfileSetting() {
                       <div className="col-md-6">
                         <div className="mb-3">
                           <label className="form-label fw-semibold">
-                            Province:
+                            Province:<span className="text-danger">*</span>
                           </label>
                           <select
                             className="form-control form-select"
@@ -690,23 +541,6 @@ export default function EnterpriseProfileSetting() {
                           </select>
                         </div>
                       </div>
-
-                      {/* <div className="col-md-6">
-                        <div className="mb-3">
-                          <label
-                            htmlFor="formFile"
-                            className="form-label fw-semibold"
-                          >
-                            Upload Your Cv / Resume :
-                          </label>
-                          <input
-                            className="form-control"
-                            type="file"
-                            id="formFile"
-                            onChange={handleFileChange}
-                          />
-                        </div>
-                      </div> */}
 
                       <div className="col-12">
                         <div className="mb-3">
@@ -864,9 +698,9 @@ export default function EnterpriseProfileSetting() {
                   </div>
                 </div>
 
-                <div className="rounded shadow p-4 mt-4">
+                {/* <div className="rounded shadow p-4 mt-4">
                   <NotificationSettings />
-                </div>
+                </div> */}
                 <div>
                   <form>
                     <h5 className="text-danger">Delete Account :</h5>
@@ -954,18 +788,7 @@ export default function EnterpriseProfileSetting() {
           placeholder="Choose avatar"
         />
       </Modal>
-      <Modal
-        title="Edit name"
-        open={isModalNameOpen}
-        onOk={handleNameOk}
-        onCancel={handleNameCancel}
-      >
-        <Input
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          placeholder="New name"
-        />
-      </Modal>
+
     </>
   );
 }

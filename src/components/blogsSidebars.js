@@ -87,7 +87,7 @@ export default function BlogsSidebars() {
                                         >
                                             {item.title}
                                         </Link>
-                                        <span className="text-muted small">{item.createdAt}</span>
+                                        <span className="text-muted small">{item.createdDate}</span>
                                     </div>
                                 </div>
                             ))

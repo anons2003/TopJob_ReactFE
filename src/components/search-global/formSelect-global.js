@@ -167,7 +167,7 @@ export default function FormSelect({ onSearch }) {
                 {results.length > 0 && (
                     <div className="search-results mt-4">
                         {results.map((item, index) => {
-                            const createdAtDate = formatDateTime(item.createdAt);
+                            const createdAtDate = formatDateTime(item.createdDate);
                             const daysAgo = compareWithCurrentDate(createdAtDate);
                             return (
                                 <div  key={index}>

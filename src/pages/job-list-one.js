@@ -94,7 +94,7 @@ export default function JobListOne() {
             }
             : job
         )
-      );
+      );  
     }
   }, [bookmarkChanges]);
 
@@ -202,7 +202,7 @@ export default function JobListOne() {
                 (currentPage - 1) * jobsPerPage,
                 currentPage * jobsPerPage
               ).map((item, index) => {
-                const createdAtDate = formatDateTime(item.createdAt);
+                const createdAtDate = formatDateTime(item.createdDate);
                 const daysAgo = compareWithCurrentDate(createdAtDate);
 
                 return (
