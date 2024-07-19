@@ -31,16 +31,20 @@ export const jobColumns = [
   },
 ];
 
-const DatatablejobModeration  = () => {
+const DatatablejobModeration = () => {
   const [jobs, setJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get('http://localhost:8080/jobs/inactive-list');
-        setJobs(transformData(response.data));
+        const transformedData = transformData(response.data);
+        setJobs(transformedData);
+        setFilteredJobs(transformedData); // Initialize filteredJobs
       } catch (error) {
         setError(error.message);
       } finally {
@@ -50,6 +54,13 @@ const DatatablejobModeration  = () => {
 
     fetchJobs();
   }, []);
+
+  useEffect(() => {
+    const filtered = jobs.filter(job =>
+      job.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredJobs(filtered);
+  }, [searchTerm, jobs]);
 
   const transformData = (data) => {
     return data.map((job) => ({
@@ -66,6 +77,14 @@ const DatatablejobModeration  = () => {
 
   return (
     <div className="datatable">
+      <div className="search">
+        <input
+          type="text"
+          placeholder="Search by title"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -73,7 +92,7 @@ const DatatablejobModeration  = () => {
       ) : (
         <DataGrid
           className="datagrid"
-          rows={jobs}
+          rows={filteredJobs}
           columns={jobColumns}
           pageSize={10}
           rowsPerPageOptions={[10]}

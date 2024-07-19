@@ -6,8 +6,10 @@ import "./datatable.scss";
 
 const DatatableEnterprise = () => {
     const [enterprises, setEnterprises] = useState([]);
+    const [filteredEnterprises, setFilteredEnterprises] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchEnterprises = async () => {
@@ -19,6 +21,7 @@ const DatatableEnterprise = () => {
                 const data = await response.json();
                 const transformedData = transformData(data);
                 setEnterprises(transformedData);
+                setFilteredEnterprises(transformedData); // Initialize filteredEnterprises
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -28,6 +31,13 @@ const DatatableEnterprise = () => {
 
         fetchEnterprises();
     }, []);
+
+    useEffect(() => {
+        const filtered = enterprises.filter(enterprise =>
+            enterprise.enterprise_name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredEnterprises(filtered);
+    }, [searchTerm, enterprises]);
 
     const transformData = (data) => {
         return data.map(item => ({
@@ -75,6 +85,14 @@ const DatatableEnterprise = () => {
                     Add New
                 </Link>
             </div>
+            <div className="search">
+                <input
+                    type="text"
+                    placeholder="Search by enterprise name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -82,7 +100,7 @@ const DatatableEnterprise = () => {
             ) : (
                 <DataGrid
                     className="datagrid"
-                    rows={enterprises}
+                    rows={filteredEnterprises}
                     columns={[
                         ...enterpriseColumns,
                         {
