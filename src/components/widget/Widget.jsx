@@ -41,13 +41,13 @@ const Widget = ({ type }) => {
           setIsLoading(false);
         });
     } else if (type === "earning") {
-      axios.get("http://localhost:8080/packageServices/totalPackageService")
+      axios.get("http://localhost:8080/blogs/totalBlog")
         .then(response => {
           setTotalPackageServices(response.data);
           setIsLoading(false);
         })
         .catch(error => {
-          console.error("There was an error fetching the total package services!", error);
+          console.error("There was an error fetching the total blog!", error);
           setError(error);
           setIsLoading(false);
         });
@@ -92,9 +92,9 @@ const Widget = ({ type }) => {
       break;
     case "earning":
       data = {
-        title: "Package Services",
-        link: "View all package services",
-        linkAddress: "/packageServices",
+        title: "Blog",
+        link: "View all Blog",
+        linkAddress: "/blogs",
         icon: (
           <ExtensionIcon
             className="icon"

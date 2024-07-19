@@ -80,6 +80,7 @@ import NewPackage from "./pages/newUser/NewPackage";
 import ListBlog from "./pages/list/ListBlog";
 import ListEditBlog from "./pages/list/ListEditBlog";
 import NewBlog from "./pages/newUser/NewBlog";
+import ListStatistic from "./pages/list/ListStatistic";
 
 function App() {
   return (
@@ -222,6 +223,9 @@ function App() {
             path="add"
             element={<NewPackage inputs={userInputs} title="Add New Package" />}
           />
+        </Route>
+        <Route path="statistic">
+          <Route index element={<ListStatistic />} />
         </Route>
         <Route path="transactions">
           <Route index element={<ListTransaction />} />
