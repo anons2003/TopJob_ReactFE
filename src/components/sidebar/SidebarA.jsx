@@ -73,12 +73,12 @@ const Sidebar = () => {
                 </Link>
               </li>
 
-              <li>
+              {/* <li>
                 <Link to="/users/admins" style={{ textDecoration: "none" }}>
                   <AdminPanelSettingsIcon className="icon" />
                   <span>   Admin</span>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           )}
 

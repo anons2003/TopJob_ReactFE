@@ -11,7 +11,7 @@ const Featured = () => {
   const [dailyRevenue, setDailyRevenue] = useState(0);
   const [weeklyRevenue, setWeeklyRevenue] = useState(0);
   const [monthlyRevenue, setMonthlyRevenue] = useState(0);
-  const [target, setTarget] = useState(12000); // Example target value
+  const [target, setTarget] = useState(10000); // Example target value
 
   useEffect(() => {
     const fetchDailyRevenue = async () => {
@@ -68,21 +68,21 @@ const Featured = () => {
           <div className="item">
             <div className="itemTitle">Target</div>
             <div className="itemResult negative">
-              <KeyboardArrowDownIcon fontSize="small"/>
+              
               <div className="resultAmount">${target}</div>
             </div>
           </div>
           <div className="item">
             <div className="itemTitle">Last Week</div>
             <div className="itemResult positive">
-              <KeyboardArrowUpOutlinedIcon fontSize="small"/>
+             
               <div className="resultAmount">${weeklyRevenue}</div>
             </div>
           </div>
           <div className="item">
             <div className="itemTitle">Last Month</div>
             <div className="itemResult positive">
-              <KeyboardArrowUpOutlinedIcon fontSize="small"/>
+             
               <div className="resultAmount">${monthlyRevenue}</div>
             </div>
           </div>

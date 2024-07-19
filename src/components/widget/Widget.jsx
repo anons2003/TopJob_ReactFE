@@ -1,7 +1,6 @@
 import "./widget.scss";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import ExtensionIcon from '@mui/icons-material/Extension';
 import WorkIcon from '@mui/icons-material/Work';
@@ -55,7 +54,6 @@ const Widget = ({ type }) => {
   }, [type]);
 
   const amount = type === "user" ? totalUsers : (type === "postjob" ? totalJobs : totalPackageServices); // Adjusted to include totalPackageServices
-  const diff = 20;
 
   switch (type) {
     case "user":
@@ -120,10 +118,6 @@ const Widget = ({ type }) => {
         </span>
       </div>
       <div className="right">
-        <div className="percentage positive">
-          <KeyboardArrowUpIcon />
-          {diff} %
-        </div>
         {data.icon}
       </div>
       {error && <div className="error">Error: {error.message}</div>}
