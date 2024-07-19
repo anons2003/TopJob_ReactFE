@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/SidebarA';
 import Navbar from '../../components/navbar/Navbar';
 import Button from '@mui/material/Button';
@@ -15,13 +15,14 @@ import './singleJobPosts.scss';
 
 const SingleJobPostsModeration = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // Use navigate hook for redirection
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [disableButtons, setDisableButtons] = useState(false);
   const [selectedRejectReasons, setSelectedRejectReasons] = useState([]);
   const [otherReason, setOtherReason] = useState('');
-  const [successMessage, setSuccessMessage] = useState('Successfully');
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -38,27 +39,20 @@ const SingleJobPostsModeration = () => {
     fetchJob();
   }, [id]);
 
-  const handleApproval = async (approve) => {
+  const handleApproval = async () => {
     setDisableButtons(true);
     try {
-      const response = await axios.patch(`http://localhost:8080/jobs/approval/${id}`, { isActive: approve });
+      const response = await axios.patch(`http://localhost:8080/jobs/approval/${id}`, { isActive: true });
       if (response.status === 200) {
-        setJob((prevJob) => ({ ...prevJob, isActive: approve }));
+        setJob((prevJob) => ({ ...prevJob, isActive: true }));
         setSuccessMessage('Job approval successful.');
+        // Redirect to the job posts list page
+        setTimeout(() => {
+          navigate('/jobs/jobPosts');
+        }, 2000); // Redirect after 2 seconds
       }
     } catch (error) {
       console.error('Error updating job status:', error.message);
-    } finally {
-      setDisableButtons(false);
-    }
-  };
-
-  const handleCheckboxChange = (event) => {
-    const { value } = event.target;
-    if (selectedRejectReasons.includes(value)) {
-      setSelectedRejectReasons(selectedRejectReasons.filter((reason) => reason !== value));
-    } else {
-      setSelectedRejectReasons([...selectedRejectReasons, value]);
     }
   };
 
@@ -79,11 +73,22 @@ const SingleJobPostsModeration = () => {
       if (response.status === 200) {
         setJob((prevJob) => ({ ...prevJob, isActive: false }));
         setSuccessMessage('Job rejection successful.');
+        // Redirect to the job moderation list page
+        setTimeout(() => {
+          navigate('/jobs/jobPostsModerations');
+        }, 2000); // Redirect after 2 seconds
       }
     } catch (error) {
       console.error('Error rejecting job:', error.message);
-    } finally {
-      setDisableButtons(false);
+    }
+  };
+
+  const handleCheckboxChange = (event) => {
+    const { value } = event.target;
+    if (selectedRejectReasons.includes(value)) {
+      setSelectedRejectReasons(selectedRejectReasons.filter((reason) => reason !== value));
+    } else {
+      setSelectedRejectReasons([...selectedRejectReasons, value]);
     }
   };
 
@@ -137,7 +142,7 @@ const SingleJobPostsModeration = () => {
               <Button
                 variant="contained"
                 color="success"
-                onClick={() => handleApproval(true)}
+                onClick={handleApproval}
                 disabled={disableButtons}
               >
                 Approve
@@ -171,7 +176,7 @@ const SingleJobPostsModeration = () => {
                   label="Cheat"
                 />
                 <FormControlLabel
-                  control={<Checkbox checked={selectedRejectReasons.includes('Limiting candidates\' benefits')} onChange={handleCheckboxChange} value="Limiting candidates' benefits" />}
+                  control={<Checkbox checked={selectedRejectReasons.includes('Limiting candidates\' benefits')} onChange={handleCheckboxChange} value="Limiting candidates\' benefits" />}
                   label="Limiting candidates' benefits"
                 />
                 <FormControlLabel
