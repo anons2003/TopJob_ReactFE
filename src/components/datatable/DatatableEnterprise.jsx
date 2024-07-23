@@ -38,7 +38,7 @@ const DatatableEnterprise = () => {
             created_at: new Date(item.created_at).toLocaleDateString(),  // Format date
             role: item.user.roleType ? item.user.roleType.roleTypeName : 'Unknown Role',
             is_active: item.user.isActive === 1 ? "Active" : "Inactive", // Check if isActive is 1 or 0
-            avatarUrl: `https://avatars.dicebear.com/api/initials/${item.enterprise_name}.svg`
+            // avatarUrl: `https://avatars.dicebear.com/api/initials/${item.avatar_url}.svg`
         }));
     };
 

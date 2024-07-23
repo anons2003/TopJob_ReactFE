@@ -1,5 +1,5 @@
 import axios from "axios";
-//change to session storage
+
 class Api {
   instance;
   constructor() {
@@ -10,30 +10,32 @@ class Api {
         "Content-Type": "application/json",
       },
     });
+
     this.instance.interceptors.response.use(
       (response) => {
-        if (
-          response.config.url === "login" ||
-          response.config.url === "social"
-        ) {
+        if (response.config.url === "login" || response.config.url === "social") {
           console.log("Response data:", response.data);
           sessionStorage.setItem("token", response.data.token);
 
+          let redirectPath = "/"; // Default redirect path
+
           // Check the role and store accordingly
           if (response.data.role === "Job-seeker") {
-            
             sessionStorage.setItem("roleJobSeeker", response.data.role);
           } else if (response.data.role === "Enterprise") {
             sessionStorage.setItem("roleEnterprise", response.data.role);
+            redirectPath = "/Ehome"; // Set redirect path for Enterprise
           } else if (response.data.role === "Admin") {
             sessionStorage.setItem("roleAdmin", response.data.role);
           }
-          window.location.replace("/");
+
+          // Redirect based on the role
+          window.location.replace(redirectPath);
         }
         return response;
       },
       (error) => {
-        if (error.response.data.message === "expired_session") {
+        if (error.response?.data?.message === "expired_session") {
           sessionStorage.removeItem("token");
           window.location.replace("login");
         }
@@ -42,6 +44,7 @@ class Api {
     );
   }
 }
+
 // https://topjobbackend-production.up.railway.app
 const api = new Api().instance;
 export default api;

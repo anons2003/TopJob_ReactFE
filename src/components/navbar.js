@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logoDark from "../assets/images/logo-dark.png";
-import logoWhite from "../assets/images/logo-white.png";
-import logoLight from "../assets/images/logo-light.png";
+import logoDark from "../assets/images/logo2/logo-dark.png";
+import logoWhite from "../assets/images/logo2/logo-white.png";
+import logoLight from "../assets/images/logo2/logo-light.png";
 import {
   LuSearch,
   FiUser,
@@ -13,7 +13,7 @@ import {
   FiBook,
 } from "../assets/icons/vander";
 
-import useEnterpriseInfo from '../hook/useEnterpriseInfo';
+import useEnterpriseInfo from "../hook/useEnterpriseInfo";
 import useJobSeekerInfo from "../hook/useJobSeekerInfo";
 
 export default function Navbar({ navClass, navLight }) {
@@ -31,9 +31,10 @@ export default function Navbar({ navClass, navLight }) {
   const { data: enterpriseData } = useEnterpriseInfo();
   const jobSeekerRole = sessionStorage.getItem("roleJobSeeker");
   const enterpriseRole = sessionStorage.getItem("roleEnterprise");
+  const adminRole = sessionStorage.getItem("roleAdmin");
   const jobseeker = jobseekerData?.data;
   const enterprise = enterpriseData?.data;
-
+  const user = jobseeker?.user ?? enterprise?.user;
   useEffect(() => {
     const current = location.pathname.substring(
       location.pathname.lastIndexOf("/") + 1
@@ -89,6 +90,9 @@ export default function Navbar({ navClass, navLight }) {
     }
   };
 
+  // Determine the link destination based on the role
+  const linkDestination = enterpriseRole ? "/Ehome" : "/";
+
   // Function to get avatar_url from user or enterprise
   const getAvatarUrl = () => {
     if (jobSeekerRole && jobseeker?.avatar_url) {
@@ -96,6 +100,7 @@ export default function Navbar({ navClass, navLight }) {
     } else if (enterpriseRole && enterprise?.avatar_url) {
       return enterprise.avatar_url;
     }
+    return "https://res.cloudinary.com/dz9kynjwb/image/upload/v1717770585/OIP_bsmlku.jpg";
   };
 
   const renderUser = () => (
@@ -140,7 +145,7 @@ export default function Navbar({ navClass, navLight }) {
           )}
           {enterpriseRole && (
             <Link
-              to="/employer-profile"
+              to="/enterprise-profile-setting"
               className="dropdown-item fw-medium fs-6"
             >
               <FiSettings className="fea icon-sm me-2 align-middle" />
@@ -163,7 +168,29 @@ export default function Navbar({ navClass, navLight }) {
             </Link>
           )}
           <div className="dropdown-divider border-top"></div>
+          {(enterpriseRole || jobSeekerRole) && (
+            <Link to="/recharge" className="dropdown-item fw-medium fs-6">
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              Balance: {user?.account_balance ?? 0}$
+            </Link>
+          )}
 
+          {(enterpriseRole || jobSeekerRole) && (
+            <Link to="/history" className="dropdown-item fw-medium fs-6">
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              History
+            </Link>
+          )}
+
+          {adminRole && (
+            <Link
+              to="/admin/dashboard"
+              className="dropdown-item fw-medium fs-6"
+            >
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              Admin Dashboard
+            </Link>
+          )}
           <span
             onClick={() => {
               sessionStorage.clear();
@@ -184,7 +211,7 @@ export default function Navbar({ navClass, navLight }) {
     <header id="topnav" className={`${scroll ? "nav-sticky" : ""} ${navClass}`}>
       <div className="container">
         {navLight === true ? (
-          <Link className="logo" to="/">
+          <Link className="logo" to={linkDestination}>
             <span className="logo-light-mode">
               <img src={logoDark} className="l-dark" alt="" />
               <img src={logoLight} className="l-light" alt="" />
@@ -192,7 +219,7 @@ export default function Navbar({ navClass, navLight }) {
             <img src={logoLight} className="logo-dark-mode" alt="" />
           </Link>
         ) : (
-          <Link className="logo" to="/">
+          <Link className="logo" to={linkDestination}>
             <span className="logo-light-mode">
               <img src={logoDark} className="l-dark" alt="" />
               <img src={logoWhite} className="l-light" alt="" />
@@ -261,7 +288,7 @@ export default function Navbar({ navClass, navLight }) {
           </li>
 
           <li className="list-inline-item ps-1 mb-0">
-            {jobSeekerRole || enterpriseRole ? (
+            {jobSeekerRole || enterpriseRole || adminRole ? (
               renderUser()
             ) : (
               <div className="dropdown dropdown-primary">
@@ -279,11 +306,12 @@ export default function Navbar({ navClass, navLight }) {
         <div id="navigation">
           <ul className="navigation-menu nav-right nav-light">
             <li className={manu === "index-two" ? "active" : ""}>
-              <Link to="/index-two">Home</Link>
+              <Link to={linkDestination}>Home</Link>
             </li>
 
             <li
-              className={`${[
+              className={`${
+                [
                   "job-categories",
                   "job-grid-two",
                   "job-list-one",
@@ -294,17 +322,12 @@ export default function Navbar({ navClass, navLight }) {
                 ].includes(manu)
                   ? "active"
                   : ""
-                } has-submenu parent-menu-item`}
+              } has-submenu parent-menu-item`}
+              name="job-controll"
             >
               <Link to="#"> Jobs </Link>
               <span className="menu-arrow"></span>
               <ul className="submenu">
-                {/* Job Categories */}
-                <li className={manu === "job-categories" ? "active" : ""}>
-                  <Link to="/job-categories" className="sub-menu-item">
-                    Job Categories
-                  </Link>
-                </li>
                 {/* Job Grids Two */}
                 <li className={manu === "job-grid-two" ? "active" : ""}>
                   <Link to="/job-grid-two" className="sub-menu-item">
@@ -313,7 +336,11 @@ export default function Navbar({ navClass, navLight }) {
                 </li>
                 {/* Job Lists One */}
                 <li className={manu === "job-list-one" ? "active" : ""}>
-                  <Link to="/job-list-one" className="sub-menu-item">
+                  <Link
+                    to="/job-list-one"
+                    className="sub-menu-item"
+                    name="JostList"
+                  >
                     Job Lists
                   </Link>
                 </li>
@@ -328,14 +355,21 @@ export default function Navbar({ navClass, navLight }) {
               </li>
             )}
             {enterpriseRole && (
-              <li className={manu === "job-list-by-enterprise" ? "active" : ""}>
+              <li className={manu === "job-post" ? "active" : ""}>
                 <Link to="/job-list-by-enterprise" className="sub-menu-item">
-                  Your Job
+                  Your Jobs
                 </Link>
               </li>
             )}
+
+            <li className={manu === "blogs" ? "active" : ""}>
+              <Link to="/employers" className="sub-menu-item">
+                Enterprise
+              </Link>
+            </li>
             <li
-              className={`${[
+              className={`${
+                [
                   "aboutus",
                   "services",
                   "pricing",
@@ -355,7 +389,7 @@ export default function Navbar({ navClass, navLight }) {
                 ].includes(manu)
                   ? "active"
                   : ""
-                } has-submenu parent-menu-item`}
+              } has-submenu parent-menu-item`}
             >
               <Link to="#">Support</Link>
               <span className="menu-arrow"></span>
@@ -377,7 +411,8 @@ export default function Navbar({ navClass, navLight }) {
                 </li>
 
                 <li
-                  className={`${[
+                  className={`${
+                    [
                       "helpcenter-overview",
                       "helpcenter-faqs",
                       "helpcenter-guides",
@@ -385,7 +420,7 @@ export default function Navbar({ navClass, navLight }) {
                     ].includes(manu)
                       ? "active"
                       : ""
-                    } has-submenu parent-menu-item`}
+                  } has-submenu parent-menu-item`}
                 >
                   <Link to="#"> Helpcenter </Link>
                   <span className="submenu-arrow"></span>
@@ -420,45 +455,21 @@ export default function Navbar({ navClass, navLight }) {
                 </li>
               </ul>
             </li>
-            {jobSeekerRole && (
-              <li
-                className={`${["blogs", "blog-sidebar", "blog-detail"].includes(manu)
-                  ? "active"
-                  : ""
-                  } has-submenu parent-menu-item`}
-              >
-                <Link to="#"> Blog </Link>
-                <span className="submenu-arrow"></span>
-                <ul className="submenu">
-                  <li className={manu === "blogs" ? "active" : ""}>
-                    <Link to="/blogs" className="sub-menu-item">
-                      Blogs
-                    </Link>
-                  </li>
-                  <li className={manu === "blog-sidebar" ? "active" : ""}>
-                    <Link to="/blog-sidebar" className="sub-menu-item">
-                      Blog Sidebar
-                    </Link>
-                  </li>
-                  <li className={manu === "blog-detail" ? "active" : ""}>
-                    <Link to="/blog-detail" className="sub-menu-item">
-                      Blog Detail
-                    </Link>
-                  </li>
-                </ul>
-              </li>
-            )}
 
-
+            <li className={manu === "blogs" ? "active" : ""}>
+              <Link to="/blogss" className="sub-menu-item">
+                Blogs
+              </Link>
+            </li>
             {jobSeekerRole && (
-              <li className={manu === "createCV" ? "active" : ""}>
-                <Link to="/template" className="sub-menu-item">
+              <li className={manu === "template" ? "active" : ""}>
+                <Link to="/template" className="sub-menu-item" name="CreateCV">
                   Create CV
                 </Link>
               </li>
             )}
             <li className={manu === "contactus" ? "active" : ""}>
-              <Link to="/contactus" className="sub-menu-item">
+              <Link to="/contactus" className="sub-menu-item create-cv">
                 Contact Us
               </Link>
             </li>

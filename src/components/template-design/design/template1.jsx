@@ -329,7 +329,7 @@ const Template1 = () => {
     const canvas = await htmlToImage.toCanvas(resumeRef.current);
     const imgData = canvas.toDataURL('image/png');
     pdf.addImage(imgData, 'PNG', 0, 0);
-    pdf.save('document.pdf');
+    pdf.save('resume.pdf');
   };
 
   const generateImage = async () => {
