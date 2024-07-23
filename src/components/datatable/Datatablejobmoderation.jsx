@@ -31,7 +31,7 @@ export const jobColumns = [
   },
 ];
 
-const Datatablejob = () => {
+const DatatablejobModeration = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -83,4 +83,4 @@ const Datatablejob = () => {
   );
 };
 
-export default Datatablejob;
+export default DatatablejobModeration;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logoDark from "../assets/images/logo-dark.png";
-import logoLight from "../assets/images/logo-light.png";
+import logoDark from "../assets/images/logo2/logo-dark.png";
+import logoLight from "../assets/images/logo2/logo-light.png";
 import {
   LuSearch,
   FiUser,
@@ -30,9 +30,10 @@ export default function NavbarDark() {
   const { data: enterpriseData } = useEnterpriseInfo();
   const jobSeekerRole = sessionStorage.getItem("roleJobSeeker");
   const enterpriseRole = sessionStorage.getItem("roleEnterprise");
+  const adminRole = sessionStorage.getItem("roleAdmin");
   const jobseeker = jobseekerData?.data;
   const enterprise = enterpriseData?.data;
-
+  const user = jobseeker?.user ?? enterprise?.user;
   useEffect(() => {
     let current = location.pathname.substring(
       location.pathname.lastIndexOf("/") + 1
@@ -88,12 +89,16 @@ export default function NavbarDark() {
     }
   };
 
+  // Determine the link destination based on the role
+  const linkDestination = enterpriseRole ? "/Ehome" : "/";
+  // Function to get avatar_url from user or enterprise
   const getAvatarUrl = () => {
     if (jobSeekerRole && jobseeker?.avatar_url) {
       return jobseeker.avatar_url;
     } else if (enterpriseRole && enterprise?.avatar_url) {
       return enterprise.avatar_url;
     }
+    return "https://res.cloudinary.com/dz9kynjwb/image/upload/v1717770585/OIP_bsmlku.jpg";
   };
 
   const renderUser = () => (
@@ -162,8 +167,40 @@ export default function NavbarDark() {
             </Link>
           )}
           <div className="dropdown-divider border-top"></div>
+          {(enterpriseRole || jobSeekerRole) && (
+            <Link to="/recharge" className="dropdown-item fw-medium fs-6">
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              Balance: {user?.account_balance ?? 0}$
+            </Link>
+          )}
 
-          {/* <Link to="/lock-screen" className="dropdown-item fw-medium fs-6"><FiLock className="fea icon-sm me-2 align-middle" />Lockscreen</Link> */}
+          {(enterpriseRole || jobSeekerRole) && (
+            <Link to="/history" className="dropdown-item fw-medium fs-6">
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              History
+            </Link>
+          )}
+
+          {adminRole && (
+            <Link
+              to="/admin/dashboard"
+              className="dropdown-item fw-medium fs-6"
+            >
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              Admin Dashboard
+            </Link>
+          )}
+          
+          {adminRole && (
+            <Link
+              to="/admin/dashboard"
+              className="dropdown-item fw-medium fs-6"
+            >
+              <FiBook className="fea icon-sm me-2 align-middle" />
+              Admin Dashboard
+            </Link>
+          )}
+          <div className="dropdown-divider border-top"></div>
 
           <span
             onClick={() => {
@@ -187,7 +224,7 @@ export default function NavbarDark() {
       className={`${scroll ? "nav-sticky" : ""} defaultscroll sticky`}
     >
       <div className="container">
-        <Link className="logo" to="/">
+        <Link className="logo" to={linkDestination}>
           <img src={logoDark} className="logo-light-mode" alt="" />
           <img src={logoLight} className="logo-dark-mode" alt="" />
         </Link>
@@ -252,7 +289,7 @@ export default function NavbarDark() {
           </li>
 
           <li className="list-inline-item ps-1 mb-0">
-            {jobSeekerRole || enterpriseRole ? (
+            {jobSeekerRole || enterpriseRole || adminRole ? (
               renderUser()
             ) : (
               <Link
@@ -268,7 +305,7 @@ export default function NavbarDark() {
         <div id="navigation">
           <ul className="navigation-menu nav-right">
             <li className={manu === "index-two" ? "active" : ""}>
-              <Link to="/index-two">Home</Link>
+              <Link to={linkDestination}>Home</Link>
             </li>
 
             <li
@@ -291,11 +328,11 @@ export default function NavbarDark() {
 
               <ul className="submenu">
                 {/* Job Categories */}
-                <li className={manu === "job-categories" ? "active" : ""}>
+                {/* <li className={manu === "job-categories" ? "active" : ""}>
                   <Link to="/job-categories" className="sub-menu-item">
                     Job Categories
                   </Link>
-                </li>
+                </li> */}
                 {/* Job Grids Two */}
                 <li className={manu === "job-grid-two" ? "active" : ""}>
                   <Link to="/job-grid-two" className="sub-menu-item">
@@ -321,6 +358,18 @@ export default function NavbarDark() {
               </li>
             )}
 
+            {enterpriseRole && (
+              <li className={manu === "job-post" ? "active" : ""}>
+                <Link to="/job-list-by-enterprise" className="sub-menu-item">
+                  Your Jobs
+                </Link>
+              </li>
+            )}
+            <li className={manu === "blogs" ? "active" : ""}>
+              <Link to="/employers" className="sub-menu-item">
+                Enterprise
+              </Link>
+            </li>
             <li
               className={`${
                 [
@@ -431,35 +480,10 @@ export default function NavbarDark() {
                 </li>
               </ul>
             </li>
-            <li
-              className={`${
-                ["blogs", "blog-sidebar", "blog-detail"].includes(manu)
-                  ? "active"
-                  : ""
-              } has-submenu parent-menu-item`}
-            >
-              <Link to="#"> Blog </Link>
-              <span className="submenu-arrow"></span>
-              <ul className="submenu">
-                <li className={manu === "blogs" ? "active" : ""}>
-                  <Link to="/blogs" className="sub-menu-item">
-                    {" "}
-                    Blogs
-                  </Link>
-                </li>
-                <li className={manu === "blog-sidebar" ? "active" : ""}>
-                  <Link to="/blog-sidebar" className="sub-menu-item">
-                    {" "}
-                    Blog Sidebar
-                  </Link>
-                </li>
-                <li className={manu === "blog-detail" ? "active" : ""}>
-                  <Link to="/blog-detail" className="sub-menu-item">
-                    {" "}
-                    Blog Detail
-                  </Link>
-                </li>
-              </ul>
+            <li className={manu === "blogs" ? "active" : ""}>
+              <Link to="/blogss" className="sub-menu-item">
+                Blogs
+              </Link>
             </li>
             {jobSeekerRole && (
               <li className={manu === "createCV" ? "active" : ""}>
